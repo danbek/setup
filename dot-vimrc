@@ -1,0 +1,35 @@
+set nocompatible
+
+set tabstop=4
+set shiftwidth=4
+set softtabstop=4
+set expandtab
+
+set encoding=utf-8
+set scrolloff=3
+set autoindent
+set showmode
+set showcmd
+set wildmenu
+set wildmode=list:longest
+set ttyfast
+set ruler
+"set statusline=2
+
+if v:version > 701
+    let g:netrw_silent = 1
+    let mapleader = ","
+endif
+
+set ignorecase
+set smartcase
+set gdefault
+set incsearch
+set showmatch
+set hlsearch
+nnoremap <leader><space> :noh<cr>
+"set autochdir
+
+set guifont=Inconsolata:h14
+set hidden
+

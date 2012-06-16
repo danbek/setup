@@ -1,0 +1,49 @@
+#!/bin/sh
+
+# 
+# helper functions
+# 
+
+make_link() {
+    TARGET=$1
+    SOURCE=`echo "$1" | sed -e 's/^\./dot-/'`
+    if [ -h $HOME/$TARGET ]; then
+        rm $HOME/$TARGET
+    elif [ -f $HOME/$TARGET ]; then
+        mv $HOME/$TARGET $ORIG_DIR/$SOURCE
+    fi
+    ln -s $HOME/setup/$SOURCE $HOME/$TARGET
+}
+
+setup_slime() {
+    SITE_LISP=~/setup/dot-emacs.d/site-lisp
+    mkdir -p $SITE_LISP
+    cd $SITE_LISP
+    echo $PWD
+    cvs -d :pserver:anonymous:anonymous@common-lisp.net:/project/slime/cvsroot co slime
+
+    cd slime
+    sbcl --no-userinit --eval "(mapc 'require '(sb-bsd-sockets sb-posix sb-introspect sb-cltl2 asdf))" --eval '(save-lisp-and-die "sbcl.core-for-slime")'
+    exit 0
+}
+
+make_all_links() {
+    mkdir -p $ORIG_DIR # location to move old files (if they exist)
+    for link in bin .emacs.d .vimrc .sbclrc .profile .bashrc
+    do
+        make_link $link
+    done
+}
+
+# 
+# main body
+# 
+
+ORIG_DIR=~/setup/orig
+
+if [ "x$1" = "x--slime" ]; then
+    slime_setup
+fi
+
+make_all_links
+
