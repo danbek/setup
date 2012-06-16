@@ -30,6 +30,11 @@ set hlsearch
 nnoremap <leader><space> :noh<cr>
 "set autochdir
 
-set guifont=Inconsolata:h14
+if has("mac")
+    set guifont=Inconsolata:h14
+else
+    set guifont="Inconsolata"
+endif
+
 set hidden
 
