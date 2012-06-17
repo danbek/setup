@@ -21,9 +21,10 @@ Download & Installation
 
 Login again to pick up all the changes.
 
-The installer has one special options as well:
+The installer has special options as well:
 
     installer --slime # download slime and build sbcl core, then exit
+    installer --vim-pandoc # download and install vim-pandoc, then exit
 
 To-do
 -----
@@ -31,3 +32,4 @@ To-do
 * git-completion apparently not where I thought it was on ubuntu 12.04. Need to fix this.
 * installer should probably create any required empty directory (i.e. emacs backups).
 * add .gitconfig
+* add stuff to generate ssh key, and print message reminding to push to github if desired

@@ -15,7 +15,7 @@ make_link() {
     ln -s $HOME/setup/$SOURCE $HOME/$TARGET
 }
 
-setup_slime() {
+slime_setup() {
     SITE_LISP=~/setup/dot-emacs.d/site-lisp
     mkdir -p $SITE_LISP
     cd $SITE_LISP
@@ -27,9 +27,15 @@ setup_slime() {
     exit 0
 }
 
+setup_vim_pandoc() {
+    cd ~/.vim/bundle
+    git clone git@github.com:vim-pandoc/vim-pandoc.git
+    exit 0
+}
+
 make_all_links() {
     mkdir -p $ORIG_DIR # location to move old files (if they exist)
-    for link in bin .emacs.d .vimrc .sbclrc .profile .bashrc
+    for link in bin .vim .emacs.d .vimrc .sbclrc .profile .bashrc
     do
         make_link $link
     done
@@ -42,7 +48,9 @@ make_all_links() {
 ORIG_DIR=~/setup/orig
 
 if [ "x$1" = "x--slime" ]; then
-    slime_setup
+    setup_slime
+elif [ "x$1" = "x--vim-pandoc" ]; then
+    setup_vim_pandoc
 fi
 
 make_all_links
