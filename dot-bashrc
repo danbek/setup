@@ -79,9 +79,15 @@ alias lsd='ls -l | grep ^d'
 alias mce='ssh -Y mce@817thzdev'
 alias grumpy='ssh -Y beckerd@grumpy'
 
+# deal with frogfly stuff
+alias frog='ssh -Y ubuntu@frogfly.org'
+alias mblog='sshfs ubuntu@frogfly.org:blog ~/blog'
+alias umblog='fusermount -u ~/blog'
+
 alias mlab='matlab -nosplash -nodesktop'
 
 # from ubuntu 12.04. Need to check on OSX
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
