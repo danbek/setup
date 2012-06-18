@@ -14,9 +14,14 @@ Organization
 
 Download & Installation
 -----------------------
+If I don't already have a key pair for the host, do:
+
+    $ ssh-keygen -t rsa -C "user@hostname"
+
+and then put the public key on github. Then the following:
 
     cd
-    # download from github
+    git clone git@github.com:danbek/setup.git
     cd setup && ./installer
 
 Login again to pick up all the changes.
@@ -32,4 +37,4 @@ To-do
 * git-completion apparently not where I thought it was on ubuntu 12.04. Need to fix this.
 * installer should probably create any required empty directory (i.e. emacs backups).
 * add .gitconfig
-* add stuff to generate ssh key, and print message reminding to push to github if desired
+* add ssh config regarding hostnames, usernames (see zeus)
