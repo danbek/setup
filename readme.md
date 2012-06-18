@@ -22,7 +22,7 @@ and then put the public key on github. Then the following:
 
     cd
     git clone git@github.com:danbek/setup.git
-    cd setup && ./installer
+    cd setup/bin && ./installer
 
 Login again to pick up all the changes.
 
