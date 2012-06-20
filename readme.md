@@ -37,4 +37,16 @@ To-do
 * git-completion apparently not where I thought it was on ubuntu 12.04. Need to fix this.
 * installer should probably create any required empty directory (i.e. emacs backups).
 * add .gitconfig
-* add ssh config regarding hostnames, usernames (see zeus)
+
+Other Setup Notes
+=================
+
+ssh config
+----------
+`.ssh/config` has the form:
+
+    Host <nickname>
+         HostName <full hostname>
+         User <username>
+
+

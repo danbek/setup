@@ -76,12 +76,12 @@ alias l='ls -FC'
 alias ll='ls -alF'
 alias lsd='ls -l | grep ^d'
 
-alias mce='ssh -Y mce@817thzdev'
-alias grumpy='ssh -Y beckerd@grumpy'
+alias mce='ssh -Y 817thzdev'
+alias grumpy='ssh -Y grumpy'
 
 # deal with frogfly stuff
-alias frog='ssh -Y ubuntu@frogfly.org'
-alias mblog='sshfs ubuntu@frogfly.org:blog ~/blog'
+alias frog='ssh -Y frogfly.org'
+alias mblog='sshfs frogfly.org:blog ~/blog'
 alias umblog='fusermount -u ~/blog'
 
 alias mlab='matlab -nosplash -nodesktop'
