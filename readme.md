@@ -18,7 +18,12 @@ If I don't already have a key pair for the host, do:
 
     $ ssh-keygen -t rsa -C "user@hostname"
 
-and then put the public key on github. Then the following:
+and then put the public key on github. On windows you will want to do
+
+    git config --global core.autocrlf=false
+    
+or else cygwin will be unhappy about line endings on the installer. Then
+the following:
 
     cd
     git clone git@github.com:danbek/setup.git
@@ -48,5 +53,4 @@ ssh config
     Host <nickname>
          HostName <full hostname>
          User <username>
-
 

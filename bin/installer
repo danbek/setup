@@ -35,7 +35,7 @@ setup_vim_pandoc() {
 
 make_all_links() {
     mkdir -p $ORIG_DIR # location to move old files (if they exist)
-    for link in bin .vim .emacs.d .vimrc .sbclrc .profile .bashrc
+    for link in bin .vim .emacs.d .vimrc .sbclrc .profile .bashrc .gitconfig
     do
         make_link $link
     done

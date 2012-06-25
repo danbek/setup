@@ -71,6 +71,33 @@ else
     alias ls='ls -FC'
 fi
 
+
+# 
+# Get ssh-agent working under cygwin
+# 
+
+if [ `uname -s` == "CYGWIN_NT-5.1" ]; then
+    export SSH_AUTH_SOCK=/tmp/.ssh-socket
+
+    ssh-add -l >/dev/null 2>&1
+
+    if [ $? = 2 ]; then
+        # Exit status 2 means couldn't connect to ssh-agent; start one now
+        rm -rf /tmp/.ssh-*
+        ssh-agent -a $SSH_AUTH_SOCK >/tmp/.ssh-script
+        . /tmp/.ssh-script
+        echo $SSH_AGENT_PID >/tmp/.ssh-agent-pid
+    fi
+
+
+    function kill-agent {
+        pid=`cat /tmp/.ssh-agent-pid`
+        kill $pid
+    }
+
+    alias add-key='ssh-add ~/.ssh/id_rsa'
+fi
+
 # aliases
 alias l='ls -FC'
 alias ll='ls -alF'
