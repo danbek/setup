@@ -23,7 +23,7 @@ HISTSIZE=10000
 HISTFILESIZE=$HISTSIZE
 
 # EDITOR
-EDITOR=vi
+export EDITOR=vi
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -73,10 +73,13 @@ fi
 
 
 # 
-# Get ssh-agent working under cygwin
+# CYGWIN-specific customizations
 # 
 
 if [ `uname -s` == "CYGWIN_NT-5.1" ]; then
+
+    # Get ssh-agent working under cygwin
+
     export SSH_AUTH_SOCK=/tmp/.ssh-socket
 
     ssh-add -l >/dev/null 2>&1
@@ -96,6 +99,10 @@ if [ `uname -s` == "CYGWIN_NT-5.1" ]; then
     }
 
     alias add-key='ssh-add ~/.ssh/id_rsa'
+
+    # Now I can ssh -Y directly from mintty shell
+    export DISPLAY=:0.0
+
 fi
 
 # aliases
