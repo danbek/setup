@@ -23,7 +23,7 @@ HISTSIZE=10000
 HISTFILESIZE=$HISTSIZE
 
 # EDITOR
-EDITOR=vi
+export EDITOR=vi
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -69,6 +69,40 @@ if [ -x /usr/bin/dircolors ]; then
     alias egrep='egrep --color=auto'
 else
     alias ls='ls -FC'
+fi
+
+
+# 
+# CYGWIN-specific customizations
+# 
+
+if [ `uname -s` == "CYGWIN_NT-5.1" ]; then
+
+    # Get ssh-agent working under cygwin
+
+    export SSH_AUTH_SOCK=/tmp/.ssh-socket
+
+    ssh-add -l >/dev/null 2>&1
+
+    if [ $? = 2 ]; then
+        # Exit status 2 means couldn't connect to ssh-agent; start one now
+        rm -rf /tmp/.ssh-*
+        ssh-agent -a $SSH_AUTH_SOCK >/tmp/.ssh-script
+        . /tmp/.ssh-script
+        echo $SSH_AGENT_PID >/tmp/.ssh-agent-pid
+    fi
+
+
+    function kill-agent {
+        pid=`cat /tmp/.ssh-agent-pid`
+        kill $pid
+    }
+
+    alias add-key='ssh-add ~/.ssh/id_rsa'
+
+    # Now I can ssh -Y directly from mintty shell
+    export DISPLAY=:0.0
+
 fi
 
 # aliases

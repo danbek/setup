@@ -19,7 +19,8 @@ set ttyfast
 set ruler
 set number
 set hidden
-"set statusline=2
+set modeline
+set ls=2
 
 if v:version > 701
     let g:netrw_silent = 1

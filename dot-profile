@@ -2,7 +2,7 @@
 # exists.
 if [ `uname -s` == "Darwin" ]; then
     # following for macports
-    export PATH=DAN:/opt/local/bin:/opt/local/sbin:$PATH
+    export PATH=/opt/local/bin:/opt/local/sbin:$PATH
     export MANPATH=/opt/local/share/man:$MANPATH
 else
     # tex on command line
