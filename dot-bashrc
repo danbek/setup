@@ -71,7 +71,6 @@ else
     alias ls='ls -FC'
 fi
 
-
 # 
 # CYGWIN-specific customizations
 # 
@@ -92,7 +91,6 @@ if [ `uname -s` == "CYGWIN_NT-5.1" ]; then
         echo $SSH_AGENT_PID >/tmp/.ssh-agent-pid
     fi
 
-
     function kill-agent {
         pid=`cat /tmp/.ssh-agent-pid`
         kill $pid
@@ -102,6 +100,13 @@ if [ `uname -s` == "CYGWIN_NT-5.1" ]; then
 
     # Now I can ssh -Y directly from mintty shell
     export DISPLAY=:0.0
+
+    # Set a variable indicated MINTTY for use in .vimrc
+    case "$(< /proc/$PPID/exename)" in
+        */mintty) 
+            export MINTTY=true
+            ;;
+    esac
 
 fi
 
