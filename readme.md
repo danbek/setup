@@ -35,6 +35,8 @@ The installer has special options as well:
 
     installer --slime # download slime and build sbcl core, then exit
     installer --vim-pandoc # download and install vim-pandoc, then exit
+    installer --vim-netrw # download and install vim-netrw 142, which
+                          # fixes an annoying bug
 
 To-do
 -----

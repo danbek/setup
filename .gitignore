@@ -2,3 +2,7 @@ orig
 *~
 \#*\#
 .*.sw[a-z]
+dot-vim/.VimballRecord
+dot-vim/autoload/netrw.vim
+dot-vim/autoload/netrwFileHandlers.vim
+dot-vim/autoload/netrwSettings.vim

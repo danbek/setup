@@ -33,6 +33,15 @@ setup_vim_pandoc() {
     exit 0
 }
 
+setup_vim_netrw() {
+    wget -O /tmp/netrw.vba.gz "http://www.vim.org/scripts/download_script.php?src_id=15782"
+    cat > /tmp/netrw.expander <<HERE
+:so %
+:q
+HERE
+    vim -S /tmp/netrw.expander /tmp/netrw.vba.gz 
+}
+
 make_all_links() {
     mkdir -p $ORIG_DIR # location to move old files (if they exist)
     for link in bin .vim .emacs.d .vimrc .sbclrc .profile .bashrc .gitconfig
@@ -51,7 +60,14 @@ if [ "x$1" = "x--slime" ]; then
     setup_slime
 elif [ "x$1" = "x--vim-pandoc" ]; then
     setup_vim_pandoc
+elif [ "x$1" = "x--vim-netrw" ]; then
+    setup_vim_netrw
 fi
 
 make_all_links
 
+
+if [ `uname -s` == "CYGWIN_NT-5.1" ]; then
+    echo "vim netrw might be buggy; run ':echo g:loaded_netrwPlugin' from vim, and"
+    echo "if the version is 140, install version 142 via 'installer --vim-netrw"
+fi
