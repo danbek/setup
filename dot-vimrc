@@ -39,5 +39,5 @@ nnoremap <leader><space> :noh<cr>
 if has("mac")
     set guifont=Inconsolata:h14
 else
-    set guifont="Inconsolata"
+    set guifont=Inconsolata\ Medium\ 12
 endif
