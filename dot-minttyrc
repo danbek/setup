@@ -1,0 +1,8 @@
+BoldAsFont=no
+ForegroundColour=0,0,0
+BackgroundColour=255,255,255
+CursorColour=0,0,0
+Font=Consolas
+FontHeight=11
+CursorType=block
+CursorBlinks=no

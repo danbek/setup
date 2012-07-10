@@ -44,7 +44,7 @@ HERE
 
 make_all_links() {
     mkdir -p $ORIG_DIR # location to move old files (if they exist)
-    for link in bin .vim .emacs.d .vimrc .sbclrc .profile .bashrc .gitconfig
+    for link in bin .vim .emacs.d .vimrc .sbclrc .profile .bashrc .gitconfig .minttyrc
     do
         make_link $link
     done
@@ -66,9 +66,15 @@ fi
 
 make_all_links
 
+# 
+# Remove anything that should be removed
+#
+if [ -f $HOME/.bash_profile ]; then
+    mv $HOME/.bash_profile $ORIG_DIR/dot-bash_profile
+fi
 
 if [ `uname -s | head -c 6` == "CYGWIN" ]; then
-    touch .startxwinrc
+    touch $HOME/.startxwinrc
     echo "vim netrw might be buggy; run ':echo g:loaded_netrwPlugin' from vim, and"
     echo "if the version is 140, install version 142 via 'installer --vim-netrw"
 fi
