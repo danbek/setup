@@ -22,8 +22,9 @@ and then put the public key on github. On windows you will want to do
 
     git config --global core.autocrlf=false
     
-or else cygwin will be unhappy about line endings on the installer. Then
-the following:
+or else cygwin will be unhappy about line endings on the installer. The last
+time I did this I found that git complained about setting this in --global,
+so you may need to use --system instead.  Then the following:
 
     cd
     git clone git@github.com:danbek/setup.git
@@ -43,7 +44,6 @@ To-do
 * automatically download emacs stuff?
 * git-completion apparently not where I thought it was on ubuntu 12.04. Need to fix this.
 * installer should probably create any required empty directory (i.e. emacs backups).
-* add .gitconfig
 
 Other Setup Notes
 =================

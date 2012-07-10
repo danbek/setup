@@ -67,7 +67,8 @@ fi
 make_all_links
 
 
-if [ `uname -s` == "CYGWIN_NT-5.1" ]; then
+if [ `uname -s | head -c 6` == "CYGWIN" ]; then
+    touch .startxwinrc
     echo "vim netrw might be buggy; run ':echo g:loaded_netrwPlugin' from vim, and"
     echo "if the version is 140, install version 142 via 'installer --vim-netrw"
 fi

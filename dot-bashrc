@@ -75,7 +75,7 @@ fi
 # CYGWIN-specific customizations
 # 
 
-if [ `uname -s` == "CYGWIN_NT-5.1" ]; then
+if [ `uname -s | head -c 6` == "CYGWIN" ]; then
 
     # Get ssh-agent working under cygwin
 
