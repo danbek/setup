@@ -56,3 +56,14 @@ ssh config
          HostName <full hostname>
          User <username>
 
+Make capslock a control under Windows
+-------------------------------------
+
+An [MSDN article][msdn] covers this. You have to edit the registry.
+
+* Go to the `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Keyboard Layout` registry entry.
+* Add a `REG_BINARY` value named `Scancode Map`
+* The value should be `00000000 00000000 02000000 3A001D00 00000000`
+* reboot.
+
+[msdn]: http://msdn.microsoft.com/en-us/library/windows/hardware/gg463447.aspx
