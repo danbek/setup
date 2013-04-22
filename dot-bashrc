@@ -43,9 +43,9 @@ set term -blength 0
 # my prompt
 
 if [ "x$GIT_COMPLETION" == "xtrue" ]; then
-    PS1='\[\e]0;\u@\h: \w\a\][${debian_chroot:+($debian_chroot)}\u@\h:\w]$(__git_ps1 "(%s)")\n$ '
+    PS1='[${debian_chroot:+($debian_chroot)}\u@\h:\w]$(__git_ps1 "(%s)")\n$ '
 else
-    PS1='\[\e]0;\u@\h: \w\a\][${debian_chroot:+($debian_chroot)}\u@\h:\w]\n$ '
+    PS1='[${debian_chroot:+($debian_chroot)}\u@\h:\w]\n$ '
 fi
 
 # terminal stuff

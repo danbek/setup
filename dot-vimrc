@@ -1,7 +1,9 @@
-set nocompatible
-call pathogen#infect()
-syntax on
-filetype plugin indent on
+if v:version > 702
+    set nocompatible
+    call pathogen#infect()
+    syntax on
+    filetype plugin indent on
+endif
 
 set tabstop=4
 set shiftwidth=4
