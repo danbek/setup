@@ -21,6 +21,10 @@
 
 (defvar emacs-root "~/.emacs.d/")
 
+(defun package-installed-p (pkg-name)
+  (or (file-exists-p (expand-file-name (concat emacs-root "site-lisp/" pkg-name)))
+      (file-exists-p (expand-file-name (concat emacs-root "site-lisp/" pkg-name ".el")))))
+
 (labels
     ((add-path (p)
 	       (add-to-list 'load-path (concat emacs-root p))))
@@ -40,6 +44,7 @@
 (set-default-font
  (cond ((string-match "817becker" system-name) "Inconsolata-14")
        ((string-match "twiggy" system-name) "Inconsolata-9")
+       ((string-match "686DB1" system-name) "Consolas-12")
        (t "Inconsolata-12")))
 (setq-default cursor-type 'bar)
 (set-cursor-color "black")
@@ -92,19 +97,13 @@
 ;; Non-standard modes
 ;;
 
-;; CEDET
-(load-file "~/.emacs.d/site-lisp/cedet-1.0.1/common/cedet.el")
-(global-ede-mode 1)                      ; Enable the Project management system
-(semantic-load-enable-code-helpers)      ; Enable prototype help and smart completion 
-(global-srecode-minor-mode 1)            ; Enable template insertion menu
-
 ;; paredit mode
 (autoload 'paredit-mode "paredit"  "Turn on pseudo-structural editing of Lisp code." t)
 (mapc (lambda (mode)   
         (let ((hook (intern (concat (symbol-name mode)   
                                     "-mode-hook"))))   
           (add-hook hook (lambda () (paredit-mode +1)))))   
-      '(emacs-lisp lisp inferior-lisp slime slime-repl))
+      '(emacs-lisp lisp inferior-lisp slime slime-repl clojure))
 (show-paren-mode)
 
 ;; Smart Tab mode (see emacswiki)
@@ -130,25 +129,27 @@
 ;; $ sbcl
 ;; * (mapc 'require '(sb-bsd-sockets sb-posix sb-introspect sb-cltl2 asdf))
 ;; * (save-lisp-and-die "sbcl.core-for-slime")
+(when (package-installed-p "slime")
+  (setq slime-lisp-implementations
+        `((sbcl ,(let ((sbcl-core-filename
+                        (expand-file-name (concat emacs-root "site-lisp/slime/sbcl.core-for-slime"))))
+                   (if (file-exists-p sbcl-core-filename) 
+                       (list "/usr/local/bin/sbcl"
+                             "--core"
+                             sbcl-core-filename)
+                     (list "/usr/local/bin/sbcl"))))))
+  
+  (expand-file-name "~/.emacs.d")
+  
+  (require 'slime)
+  (slime-setup '(slime-fancy))
+  (global-set-key "\C-cs" 'slime-selector)
+  
+  ;; hyperspec lookup
+  (require 'clhs)
+  (setq common-lisp-hyperspec-root "file:///usr/share/doc/hyperspec/")
+  )
 
-(setq slime-lisp-implementations
-      `((sbcl ,(let ((sbcl-core-filename
-                      (expand-file-name (concat emacs-root "site-lisp/slime/sbcl.core-for-slime"))))
-                 (if (file-exists-p sbcl-core-filename) 
-                     (list "/usr/local/bin/sbcl"
-                           "--core"
-                           sbcl-core-filename)
-                   (list "/usr/local/bin/sbcl"))))))
-
-(expand-file-name "~/.emacs.d")
-
-(require 'slime)
-(slime-setup '(slime-fancy))
-(global-set-key "\C-cs" 'slime-selector)
-
-;; hyperspec lookup
-(require 'clhs)
-(setq common-lisp-hyperspec-root "file:///usr/share/doc/hyperspec/")
 
 ;; url browsing
 (setq browse-url-browser-function 'browse-url-firefox
@@ -159,25 +160,38 @@
 (setq tramp-default-method "ssh")
 
 ;; matlab-mode
-(load-library "matlab-load")
-;;(matlab-cedet-setup)
-(setq matlab-shell-emacsclient-command "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient")
+(defun my-matlab-mode-hook ()
+  (auto-fill-mode 0)
+  (toggle-truncate-lines 0))
 
-;(add-hook 'matlab-mode-hook 'my-matlab-mode-hook)
+(when (package-installed-p "matlab-emacs")
+  (load-library "matlab-load")
+  (matlab-cedet-setup)
+  (setq matlab-shell-emacsclient-command "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient")
+  (add-hook 'matlab-mode-hook 'my-matlab-mode-hook))
 
-;; (defun my-matlab-mode-hook ()
-;;   (auto-fill-mode 0)
-;;   (toggle-truncate-lines 0))
+;; CEDET
+(when (package-installed-p "cedet-1.0.1")
+  (load-file "~/.emacs.d/site-lisp/cedet-1.0.1/common/cedet.el")
+  (global-ede-mode 1)         ; Enable the Project management system
+  (semantic-load-enable-code-helpers) ; Enable prototype help and smart completion 
+  (global-srecode-minor-mode 1)) ; Enable template insertion menu
 
+;;
+;; Clojure support
+;;
+(require 'clojure-mode)
+(require 'clojure-test-mode)
+(require 'nrepl)
 
 ;; enable emacsclient
 (server-start)
 
 ;; windows at startup
-(add-to-list 'default-frame-alist '(left . 0))
-(add-to-list 'default-frame-alist '(top . 0))
-(add-to-list 'default-frame-alist '(height . 65))
-(add-to-list 'default-frame-alist '(width . 270))
+;(add-to-list 'default-frame-alist '(left . 0))
+;(add-to-list 'default-frame-alist '(top . 0))
+;(add-to-list 'default-frame-alist '(height . 65))
+;(add-to-list 'default-frame-alist '(width . 270))
 ;(split-window-horizontally 80) ;;; this errors for some reason ...
 
 
