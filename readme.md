@@ -20,7 +20,7 @@ If I don't already have a key pair for the host, do:
 
 and then put the public key on github. On windows you will want to do
 
-    git config --global core.autocrlf=false
+    git config --global core.autocrlf false
     
 or else cygwin will be unhappy about line endings on the installer. The last
 time I did this I found that git complained about setting this in --global,
