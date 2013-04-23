@@ -21,7 +21,7 @@
 
 (defvar emacs-root "~/.emacs.d/")
 
-(defun package-installed-p (pkg-name)
+(defun package-present-p (pkg-name)
   (or (file-exists-p (expand-file-name (concat emacs-root "site-lisp/" pkg-name)))
       (file-exists-p (expand-file-name (concat emacs-root "site-lisp/" pkg-name ".el")))))
 
@@ -34,6 +34,23 @@
   (add-path "site-lisp/matlab-emacs")
   )
 
+;;
+;; Emacs 24 has the package manager!
+;;
+(require 'package)
+(add-to-list 'package-archives
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
+(package-initialize)
+
+(unless (package-installed-p 'clojure-mode)
+  (package-refresh-contents)
+  (package-install 'clojure-mode))
+(unless (package-installed-p 'clojure-test-mode)
+  (package-refresh-contents)
+  (package-install 'clojure-test-mode))
+(unless (package-installed-p 'nrepl)
+  (package-refresh-contents)
+  (package-install 'nrepl))
 
 ;;
 ;; general customizations
@@ -130,7 +147,7 @@
 ;; $ sbcl
 ;; * (mapc 'require '(sb-bsd-sockets sb-posix sb-introspect sb-cltl2 asdf))
 ;; * (save-lisp-and-die "sbcl.core-for-slime")
-(when (package-installed-p "slime")
+(when (package-present-p "slime")
   (setq slime-lisp-implementations
         `((sbcl ,(let ((sbcl-core-filename
                         (expand-file-name (concat emacs-root "site-lisp/slime/sbcl.core-for-slime"))))
@@ -165,14 +182,14 @@
   (auto-fill-mode 0)
   (toggle-truncate-lines 0))
 
-(when (package-installed-p "matlab-emacs")
+(when (package-present-p "matlab-emacs")
   (load-library "matlab-load")
   (matlab-cedet-setup)
   (setq matlab-shell-emacsclient-command "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient")
   (add-hook 'matlab-mode-hook 'my-matlab-mode-hook))
 
 ;; CEDET
-(when (package-installed-p "cedet-1.0.1")
+(when (package-present-p "cedet-1.0.1")
   (load-file "~/.emacs.d/site-lisp/cedet-1.0.1/common/cedet.el")
   (global-ede-mode 1)         ; Enable the Project management system
   (semantic-load-enable-code-helpers) ; Enable prototype help and smart completion 
@@ -181,9 +198,9 @@
 ;;
 ;; Clojure support
 ;;
-(require 'clojure-mode)
-(require 'clojure-test-mode)
-(require 'nrepl)
+;(require 'clojure-mode)
+;(require 'clojure-test-mode)
+;(require 'nrepl)
 
 ;; enable emacsclient
 (server-start)
