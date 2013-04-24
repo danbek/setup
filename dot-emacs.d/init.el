@@ -104,7 +104,7 @@
         (let ((hook (intern (concat (symbol-name mode)   
                                     "-mode-hook"))))   
           (add-hook hook (lambda () (paredit-mode +1)))))   
-      '(emacs-lisp lisp inferior-lisp slime slime-repl clojure))
+      '(emacs-lisp lisp inferior-lisp slime slime-repl clojure nrepl))
 (show-paren-mode)
 
 ;; Smart Tab mode (see emacswiki)
@@ -184,6 +184,29 @@
 (require 'clojure-mode)
 (require 'clojure-test-mode)
 (require 'nrepl)
+
+;; following is from
+;; http://stackoverflow.com/questions/13002685/kill-previous-nrepl-sessions-when-nrepl-jack-in-called
+
+;; Disable prompt on killing buffer with a process
+(setq kill-buffer-query-functions
+      (remq 'process-kill-buffer-query-function
+            kill-buffer-query-functions))
+
+(defun nrepl-kill ()
+  "Kill all nrepl buffers and processes"
+  (interactive)
+  (when (get-process "nrepl-server")
+    (set-process-sentinel (get-process "nrepl-server")
+                          (lambda (proc evt) t)))
+  (dolist (buffer (buffer-list))
+    (when (string-prefix-p "*nrepl" (buffer-name buffer))
+      (kill-buffer buffer))))
+
+(defun nrepl-me ()
+  (interactive)
+  (nrepl-kill)
+  (nrepl-jack-in nil))
 
 ;; enable emacsclient
 (server-start)
