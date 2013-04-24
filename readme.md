@@ -18,13 +18,13 @@ If I don't already have a key pair for the host, do:
 
     $ ssh-keygen -t rsa -C "user@hostname"
 
-and then put the public key on github. On windows you will want to do
+and then put the public key on github. On windows I will want to do
 
     git config --global core.autocrlf false
     
 or else cygwin will be unhappy about line endings on the installer. The last
 time I did this I found that git complained about setting this in --global,
-so you may need to use --system instead.  Then the following:
+so youI may need to use --system instead.  Then the following:
 
     cd
     git clone git@github.com:danbek/setup.git
@@ -63,7 +63,7 @@ An [MSDN article][msdn] covers this. You have to edit the registry.
 
 * Go to the `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Keyboard Layout` registry entry.
 * Add a `REG_BINARY` value named `Scancode Map`
-* The value should be `00000000 00000000 02000000 3A001D00 00000000`
+* The value should be `00000000 00000000 02000000 1D003A00 00000000`
 * reboot.
 
 [msdn]: http://msdn.microsoft.com/en-us/library/windows/hardware/gg463447.aspx

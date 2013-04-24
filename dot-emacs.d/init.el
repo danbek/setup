@@ -44,7 +44,7 @@
 (set-default-font
  (cond ((string-match "817becker" system-name) "Inconsolata-14")
        ((string-match "twiggy" system-name) "Inconsolata-9")
-       ((string-match "686DB1" system-name) "Consolas-12")
+       ((string-match "686DB1" system-name) "Consolas-10")
        ((string-match "dan-homePC" system-name) "Consolas-10")
        (t "Inconsolata-12")))
 (setq-default cursor-type 'bar)
