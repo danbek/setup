@@ -44,7 +44,7 @@ HERE
 
 make_all_links() {
     mkdir -p $ORIG_DIR # location to move old files (if they exist)
-    for link in bin .vim .emacs.d .vimrc .sbclrc .profile .bashrc .gitconfig .minttyrc
+    for link in bin .vim .emacs.d .vimrc .sbclrc .profile .bashrc .gitconfig .minttyrc .xmonad
     do
         make_link $link
     done
