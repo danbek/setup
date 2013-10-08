@@ -73,7 +73,7 @@ if [ -f $HOME/.bash_profile ]; then
     mv $HOME/.bash_profile $ORIG_DIR/dot-bash_profile
 fi
 
-if [ `uname -s | head -c 6` == "CYGWIN" ]; then
+if [ `uname -s | head -c 6` = "CYGWIN" ]; then
     touch $HOME/.startxwinrc
     echo "vim netrw might be buggy; run ':echo g:loaded_netrwPlugin' from vim, and"
     echo "if the version is 140, install version 142 via 'installer --vim-netrw"
