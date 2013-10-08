@@ -37,20 +37,20 @@
 ;;
 ;; Emacs 24 has the package manager!
 ;;
-(require 'package)
-(add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/"))
-(package-initialize)
-
-(unless (package-installed-p 'clojure-mode)
-  (package-refresh-contents)
-  (package-install 'clojure-mode))
-(unless (package-installed-p 'clojure-test-mode)
-  (package-refresh-contents)
-  (package-install 'clojure-test-mode))
-(unless (package-installed-p 'nrepl)
-  (package-refresh-contents)
-  (package-install 'nrepl))
+;(require 'package)
+;(add-to-list 'package-archives
+;             '("marmalade" . "http://marmalade-repo.org/packages/"))
+;(package-initialize)
+;
+;(unless (package-installed-p 'clojure-mode)
+;  (package-refresh-contents)
+;  (package-install 'clojure-mode))
+;(unless (package-installed-p 'clojure-test-mode)
+;  (package-refresh-contents)
+;  (package-install 'clojure-test-mode))
+;(unless (package-installed-p 'nrepl)
+;  (package-refresh-contents)
+;  (package-install 'nrepl))
 
 ;;
 ;; general customizations
