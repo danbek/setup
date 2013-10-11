@@ -6,13 +6,19 @@
 
 make_link() {
     TARGET=$1
-    SOURCE=`echo "$1" | sed -e 's/^\./dot-/'`
+    SOURCE=$2
     if [ -h $HOME/$TARGET ]; then
         rm $HOME/$TARGET
     elif [ -f $HOME/$TARGET ]; then
         mv $HOME/$TARGET $ORIG_DIR/$SOURCE
     fi
     ln -s $HOME/setup/$SOURCE $HOME/$TARGET
+}
+
+make_dot_link() {
+    TARGET=$1
+    SOURCE=`echo "$1" | sed -e 's/^\./dot-/'`
+    make_link $TARGET $SOURCE
 }
 
 slime_setup() {
@@ -44,10 +50,12 @@ HERE
 
 make_all_links() {
     mkdir -p $ORIG_DIR # location to move old files (if they exist)
-    for link in bin .vim .emacs.d .vimrc .sbclrc .profile .bashrc .gitconfig .minttyrc .xmonad .Xkbmap .xmobarrc
+    for link in bin .vim .emacs.d .vimrc .sbclrc .profile .bashrc .gitconfig .minttyrc .Xkbmap 
     do
-        make_link $link
+        make_dot_link $link
     done
+
+    make_link .config/awesome awesome
 }
 
 # 
