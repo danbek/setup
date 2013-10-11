@@ -7,6 +7,7 @@ function update_volume(widget)
     fd:close()
     
     local volume = tonumber(string.match(status, "(%d?%d?%d)%%"))
+    volume = string.format("%02d", volume)
 
     status = string.match(status, "%[(o[^%]]*)%]")
 
@@ -29,4 +30,10 @@ separator = widget({ type = "textbox" })
 separator.text = " :: "
 
 cpuwidget = widget({ type = "textbox" })
-vicious.register(cpuwidget, vicious.widgets.cpu, "CPU $2% $3%", 2)
+vicious.register(cpuwidget, vicious.widgets.cpu,
+    function (widget ,args) 
+        return ("CPU %02d%% %02d%%"):format(args[2],args[3])
+    end)
+
+    --return 
+
