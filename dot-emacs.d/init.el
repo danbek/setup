@@ -32,6 +32,7 @@
   (add-path "site-lisp") ;; external elisp packages & files
   (add-path "site-lisp/slime")
   (add-path "site-lisp/matlab-emacs")
+  (add-path "site-lisp/evil")
   )
 
 ;;
@@ -52,9 +53,19 @@
   (package-refresh-contents)
   (package-install 'nrepl))
 
+(require 'evil)
+(evil-mode 1)
+
 ;;
 ;; general customizations
 ;;
+
+(global-linum-mode 1)
+
+;; ido mode
+(ido-mode 1)
+(setq ido-enable-flex-matching t)
+;;(setq ido-everywhere t)
 
 ;; appearance
 (global-font-lock-mode t)
@@ -92,7 +103,8 @@
 ;(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 
 ;; from http://xenon.stanford.edu/~manku/dotemacs.html
-(setq inhibit-startup-screen t)
+(setq inhibit-startup-screen t
+      inhibit-startup-echo-area-message t)
 (setq require-final-newline t)
 (setq display-time-day-and-date t) (display-time) 
 
@@ -107,6 +119,8 @@
 
 ;; Some of my favorites
 (global-set-key "\C-xg" 'goto-line)
+
+(define-key global-map (kbd "RET") 'newline-and-indent)
 
 ;; C-arrows to switch between windows
 (windmove-default-keybindings)
