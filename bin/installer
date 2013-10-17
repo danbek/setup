@@ -6,13 +6,19 @@
 
 make_link() {
     TARGET=$1
-    SOURCE=`echo "$1" | sed -e 's/^\./dot-/'`
+    SOURCE=$2
     if [ -h $HOME/$TARGET ]; then
         rm $HOME/$TARGET
     elif [ -f $HOME/$TARGET ]; then
         mv $HOME/$TARGET $ORIG_DIR/$SOURCE
     fi
     ln -s $HOME/setup/$SOURCE $HOME/$TARGET
+}
+
+make_dot_link() {
+    TARGET=$1
+    SOURCE=`echo "$1" | sed -e 's/^\./dot-/'`
+    make_link $TARGET $SOURCE
 }
 
 slime_setup() {
@@ -44,10 +50,12 @@ HERE
 
 make_all_links() {
     mkdir -p $ORIG_DIR # location to move old files (if they exist)
-    for link in bin .vim .emacs.d .vimrc .sbclrc .profile .bashrc .gitconfig .minttyrc
+    for link in bin .vim .emacs.d .vimrc .sbclrc .profile .bashrc .gitconfig .minttyrc .Xkbmap 
     do
-        make_link $link
+        make_dot_link $link
     done
+
+    make_link .config/awesome awesome
 }
 
 # 
@@ -73,7 +81,7 @@ if [ -f $HOME/.bash_profile ]; then
     mv $HOME/.bash_profile $ORIG_DIR/dot-bash_profile
 fi
 
-if [ `uname -s | head -c 6` == "CYGWIN" ]; then
+if [ `uname -s | head -c 6` = "CYGWIN" ]; then
     touch $HOME/.startxwinrc
     echo "vim netrw might be buggy; run ':echo g:loaded_netrwPlugin' from vim, and"
     echo "if the version is 140, install version 142 via 'installer --vim-netrw"

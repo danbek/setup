@@ -1,14 +1,9 @@
 # This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login
 # exists.
-if [ `uname -s` == "Darwin" ]; then
+if [ `uname -s` = "Darwin" ]; then
     # following for macports
     export PATH=/opt/local/bin:/opt/local/sbin:$PATH
     export MANPATH=/opt/local/share/man:$MANPATH
-else
-    # tex on command line
-    PATH=/usr/local/texlive/2011/bin/i386-linux:$PATH
-    #MANPATH=$MANPATH:/usr/local/texlive/2011/texmf/doc/man
-    #INFOPATH=$INFOPATH:/usr/local/texlive/2011/texmf/doc/info
 fi
 
 # set PATH so it includes user's private bin if it exists
