@@ -67,3 +67,21 @@ An [MSDN article][msdn] covers this. You have to edit the registry.
 * reboot.
 
 [msdn]: http://msdn.microsoft.com/en-us/library/windows/hardware/gg463447.aspx
+
+AUCTex Under Cygwin/Windows
+---------------------------
+
+Assumes TeXLive installed outside cygwin
+
+    $ git clone git://git.savannah.gnu.org/auctex.git
+    $ cd auctex
+    $ ./autogen.sh
+    $ ./configure --with-texmf-dir=/cygdrive/c/texlive/2013/texmf-dist
+    $ make
+    $ make install
+
+Also need line
+
+    (load "auctex.el" nil t t)
+
+in init.el, but this should already be there.

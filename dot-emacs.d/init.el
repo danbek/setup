@@ -195,6 +195,10 @@
 (setq ispell-program-name "aspell")
 (setq ispell-list-command "list")
 
+;; AUCTeX
+(load "auctex.el" nil t t)
+;(load "perview-latex.el" nil t t)
+
 ;; matlab-mode
 (defun my-matlab-mode-hook ()
   (auto-fill-mode 0)
