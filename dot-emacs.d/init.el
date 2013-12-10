@@ -63,8 +63,8 @@
 (global-linum-mode 1)
 
 ;; ido mode
-(ido-mode 1)
-(setq ido-enable-flex-matching t)
+;(ido-mode 1)
+;(setq ido-enable-flex-matching t)
 ;;(setq ido-everywhere t)
 
 ;; appearance
