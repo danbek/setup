@@ -85,3 +85,9 @@ Also need line
     (load "auctex.el" nil t t)
 
 in init.el, but this should already be there.
+
+References:
+
+* [AUCTeX From Git] (http://permalink.gmane.org/gmane.emacs.auctex.general/5019)
+* [AUCTeX On Cygwin] (http://emacsworld.blogspot.com/2013/11/updated-instructions-for-installng.html)
+ 

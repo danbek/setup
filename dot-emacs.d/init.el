@@ -197,7 +197,15 @@
 
 ;; AUCTeX
 (load "auctex.el" nil t t)
-;(load "perview-latex.el" nil t t)
+;(load "perview-latex.el" nil t t) ; not ready for this yet
+
+(setq TeX-PDF-mode t)
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq-default TeX-master nil)
+(setq LaTeX-command-style '(("" "%(PDF)%(latex) -file-line-error %S%(PDFout)"))) ; see [1]
+
+; [1]: http://tex.stackexchange.com/questions/124246/uninformative-error-message-when-using-auctex
 
 ;; matlab-mode
 (defun my-matlab-mode-hook ()
