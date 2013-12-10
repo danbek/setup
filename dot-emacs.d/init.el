@@ -53,8 +53,11 @@
 ;  (package-refresh-contents)
 ;  (package-install 'nrepl))
 
-(require 'evil)
-(evil-mode 1)
+;; Not sure why, but I have this idea that I should load evil before
+;; anything else
+(when (package-present-p "evil")
+  (require 'evil)
+  (evil-mode 1))
 
 ;;
 ;; general customizations
@@ -62,7 +65,7 @@
 
 (global-linum-mode 1)
 
-;; ido mode
+;; ido mode - commenting out because of problem interacting with tramp
 ;(ido-mode 1)
 ;(setq ido-enable-flex-matching t)
 ;;(setq ido-everywhere t)
@@ -182,7 +185,6 @@
   (setq common-lisp-hyperspec-root "file:///usr/share/doc/hyperspec/")
   )
 
-
 ;; url browsing
 (setq browse-url-browser-function 'browse-url-firefox
       browse-url-new-window-flag  t
@@ -264,8 +266,6 @@
 ;(add-to-list 'default-frame-alist '(height . 65))
 ;(add-to-list 'default-frame-alist '(width . 270))
 ;(split-window-horizontally 80) ;;; this errors for some reason ...
-
-
 
 ;; run a shell at start
 ;(shell)
