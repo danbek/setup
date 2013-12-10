@@ -6,3 +6,5 @@ dot-vim/.VimballRecord
 dot-vim/autoload/netrw.vim
 dot-vim/autoload/netrwFileHandlers.vim
 dot-vim/autoload/netrwSettings.vim
+dot-emacs.d/tramp
+
