@@ -191,6 +191,10 @@
 ;; TRAMP defaults
 (setq tramp-default-method "ssh")
 
+;; ispell mode
+(setq ispell-program-name "aspell")
+(setq ispell-list-command "list")
+
 ;; matlab-mode
 (defun my-matlab-mode-hook ()
   (auto-fill-mode 0)
