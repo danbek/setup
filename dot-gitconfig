@@ -3,3 +3,6 @@
 [user]
 	name = Dan Becker
 	email = db19606@gmail.com
+[alias]
+    l = log --graph --pretty=format:'%C(yellow)%h%Creset%C(blue)%d%Creset %C(white bold)%s%Creset %C(white dim)(by %an %ar)%Creset'
+    ll = !git l --all
