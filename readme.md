@@ -86,6 +86,12 @@ Also need line
 
 in init.el, but this should already be there.
 
+For ubuntu, I needed to install autoconf and texinfo, and run
+configure like
+
+    $ ./configure --with-texmf-dir=/usr/local/texlive/2013/texmf-dist
+
+
 References:
 
 * [AUCTeX From Git] (http://permalink.gmane.org/gmane.emacs.auctex.general/5019)
