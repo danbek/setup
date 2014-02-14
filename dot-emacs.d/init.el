@@ -197,6 +197,28 @@
 (setq ispell-program-name "aspell")
 (setq ispell-list-command "list")
 
+;; This is the crazy way to get ispell to ignore arguments to custom TeX
+;; macros [2]. Unfortunately it is apparently a much bigger pain to
+;; get flyspell to do the same.
+; [2]: http://tex.stackexchange.com/a/150882/35130
+(setq ispell-tex-skip-alists
+      (list
+       (append
+        (car ispell-tex-skip-alists) 
+        '(("\\\\figref"       ispell-tex-arg-end)
+          ("\\\\tableref"    ispell-tex-arg-end)
+          ("\\\\sectionref"    ispell-tex-arg-end)
+          ("\\\\chapterref"    ispell-tex-arg-end)
+          ("\\\\eqnref"    ispell-tex-arg-end)))
+       (cadr ispell-tex-skip-alists)))
+
+; This will tries to get ispell to ignore $ ... $ inline math environments
+; Is possibly quite fragile
+(setcar ispell-tex-skip-alists
+        (append
+         (car ispell-tex-skip-alists)
+         '(("[^\\]\\$" . "[^\\]\\$"))))
+
 ;; AUCTeX
 (load "auctex.el" nil t t)
 ;(load "perview-latex.el" nil t t) ; not ready for this yet
