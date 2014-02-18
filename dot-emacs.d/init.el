@@ -35,7 +35,8 @@
   (add-path "site-lisp/evil")
   )
 
-;;
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/");;
+
 ;; Emacs 24 has the package manager!
 ;;
 ;(require 'package)
