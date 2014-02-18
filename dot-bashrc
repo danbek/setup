@@ -145,7 +145,7 @@ alias cth='cd ~/projects/thesis/'
 # to work under awesome
 wmname LG3D
 
-% simple binary diffs
+# simple binary diffs
 function bdiff() {
   diff <(xxd ${1}) <(xxd ${2})
 }
