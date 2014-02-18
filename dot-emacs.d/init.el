@@ -293,3 +293,7 @@
 
 ;; run a shell at start
 ;(shell)
+
+; put custom stuff in its own file
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
