@@ -1,3 +1,4 @@
+# -*-Shell-script-*-
 # This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login
 # exists.
 if [ `uname -s` = "Darwin" ]; then
