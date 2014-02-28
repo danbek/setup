@@ -144,6 +144,9 @@
 
 (define-key global-map (kbd "RET") 'newline-and-indent)
 
+;; register e holds emacs init file. Jump to it via C-x r j e
+(set-register ?e (cons 'file user-init-file))
+
 (blink-cursor-mode 0)
 
 ;; C-arrows to switch between windows
