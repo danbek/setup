@@ -54,6 +54,24 @@
 ;  (package-refresh-contents)
 ;  (package-install 'nrepl))
 
+;; Need to declare the theme as safe prior to loading it.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes (quote ("3ee402a796b1bf92ad3175ac5d6f48582aa232aa7854b5edaba54801a28dd08a" default))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+;; Need to load zenburn prior to evil in order for cursor color to be
+;; set properly
+(load-theme 'zenburn)
+
 ;; Not sure why, but I have this idea that I should load evil before
 ;; anything else
 (when (package-present-p "evil")
@@ -79,8 +97,8 @@
        ((string-match "686DB1" system-name) "Consolas-10")
        ((string-match "dan-homePC" system-name) "Consolas-10")
        (t "Inconsolata-12")))
-(setq-default cursor-type 'bar)
-(set-cursor-color "black")
+;(setq-default cursor-type 'bar)
+;(set-cursor-color "black")
 (ansi-color-for-comint-mode-on) ;; allows colors to work in shell mode
 
 ;; tabs
@@ -125,6 +143,8 @@
 (global-set-key "\C-xg" 'goto-line)
 
 (define-key global-map (kbd "RET") 'newline-and-indent)
+
+(blink-cursor-mode 0)
 
 ;; C-arrows to switch between windows
 (windmove-default-keybindings)
