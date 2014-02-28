@@ -157,13 +157,14 @@
 ;;
 
 ;; paredit mode
-(autoload 'paredit-mode "paredit"  "Turn on pseudo-structural editing of Lisp code." t)
-(mapc (lambda (mode)   
-        (let ((hook (intern (concat (symbol-name mode)   
-                                    "-mode-hook"))))   
-          (add-hook hook (lambda () (paredit-mode +1)))))   
-      '(emacs-lisp lisp inferior-lisp slime slime-repl clojure nrepl))
-(show-paren-mode)
+(when (package-present-p "paredit")
+  (autoload 'paredit-mode "paredit"  "Turn on pseudo-structural editing of Lisp code." t)
+  (mapc (lambda (mode)
+          (let ((hook (intern (concat (symbol-name mode)
+                                      "-mode-hook"))))
+            (add-hook hook (lambda () (paredit-mode +1)))))
+        '(emacs-lisp lisp inferior-lisp slime slime-repl clojure nrepl))
+  (show-paren-mode))
 
 ;; Smart Tab mode (see emacswiki)
 ;;(require 'smart-tab)
@@ -315,3 +316,7 @@
 
 ;; run a shell at start
 ;(shell)
+
+; put custom stuff in its own file
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
