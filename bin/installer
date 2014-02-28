@@ -50,7 +50,7 @@ HERE
 
 make_all_links() {
     mkdir -p $ORIG_DIR # location to move old files (if they exist)
-    for link in bin .vim .emacs.d .vimrc .sbclrc .profile .bashrc .gitconfig .minttyrc .Xkbmap 
+    for link in bin .vim .emacs.d .vimrc .sbclrc .profile .bashrc .gitconfig .minttyrc .Xkbmap .aspell.en.pws
     do
         make_dot_link $link
     done
