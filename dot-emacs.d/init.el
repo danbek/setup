@@ -236,7 +236,7 @@
           ("\\\\eqnref"    ispell-tex-arg-end)))
        (cadr ispell-tex-skip-alists)))
 
-; This will tries to get ispell to ignore $ ... $ inline math environments
+; This tries to get ispell to ignore $ ... $ inline math environments
 ; Is possibly quite fragile
 (setcar ispell-tex-skip-alists
         (append
