@@ -254,6 +254,8 @@
 (setq-default TeX-master nil)
 (setq LaTeX-command-style '(("" "%(PDF)%(latex) -file-line-error %S%(PDFout)"))) ; see [1]
 
+(add-hook 'TeX-mode-hook #'(lambda () (modify-syntax-entry ?- "w")))
+
 ; [1]: http://tex.stackexchange.com/questions/124246/uninformative-error-message-when-using-auctex
 
 ;; matlab-mode
