@@ -91,12 +91,12 @@
 
 ;; appearance
 (global-font-lock-mode t)
-(set-default-font
- (cond ((string-match "817becker" system-name) "Inconsolata-14")
-       ((string-match "twiggy" system-name) "Inconsolata-9")
-       ((string-match "686DB1" system-name) "Consolas-11")
-       ((string-match "dan-homePC" system-name) "Consolas-10")
-       (t "Inconsolata-12")))
+(cond ((string-match "817becker" system-name) (set-default-font "Inconsolata-14"))
+      ((string-match "twiggy" system-name) (set-default-font "Inconsolata-9"))
+      ((string-match "686DB1" system-name) (set-default-font "Consolas-11"))
+      ((string-match "dan-homePC" system-name) (set-default-font "Consolas-10"))
+      ((string-match "harold-xubuntu-1" system-name) (set-default-font "Droid Sans Mono-10"))
+      )
 ;(setq-default cursor-type 'bar)
 ;(set-cursor-color "black")
 (ansi-color-for-comint-mode-on) ;; allows colors to work in shell mode
