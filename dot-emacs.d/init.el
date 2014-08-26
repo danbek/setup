@@ -37,12 +37,7 @@
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/");;
 
-;; Emacs 24 has the package manager!
-;;
-;(require 'package)
-;(add-to-list 'package-archives
-;             '("marmalade" . "http://marmalade-repo.org/packages/"))
-;(package-initialize)
+
 ;
 ;(unless (package-installed-p 'clojure-mode)
 ;  (package-refresh-contents)
@@ -72,11 +67,41 @@
 ;; set properly
 (load-theme 'zenburn)
 
+;; Emacs 24 has the package manager!
+;;
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(package-initialize)
+
+(defvar required-packages
+  '(
+    evil
+    ) "a list of packages to ensure are installed at launch.")
+
+;; method to check if all packages are installed
+(defun packages-installed-p ()
+  (loop for p in required-packages
+        when (not (package-installed-p p)) do (return nil)
+        finally (return t)))
+
+;; if not all packages are installed, check one by one and install the missing ones.
+(unless (packages-installed-p)
+  ; check for new packages (package versions)
+  (message "%s" "Emacs is now refreshing its package database...")
+  (package-refresh-contents)
+  (message "%s" " done.")
+  ; install the missing packages
+  (dolist (p required-packages)
+    (when (not (package-installed-p p))
+      (package-install p))))
+
 ;; Not sure why, but I have this idea that I should load evil before
 ;; anything else
-(when (package-present-p "evil")
-  (require 'evil)
-  (evil-mode 1))
+;;(when (package-present-p "evil")
+  ;(require 'evil)
+  (evil-mode 1)
+;)
 
 ;;
 ;; general customizations
