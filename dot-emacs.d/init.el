@@ -245,7 +245,7 @@
          '(("[^\\]\\$" . "[^\\]\\$"))))
 
 ;; AUCTeX
-(load "auctex.el" nil t t)
+(load "auctex.el" t nil t)
 ;(load "perview-latex.el" nil t t) ; not ready for this yet
 
 (setq TeX-PDF-mode t)
@@ -321,4 +321,4 @@
 
 ; put custom stuff in its own file
 (setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
+(load custom-file t nil t)
