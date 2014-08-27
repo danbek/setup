@@ -74,6 +74,7 @@
 (defvar required-packages
   '(
     evil
+    helm
     ) "a list of packages to ensure are installed at launch.")
 
 ;; method to check if all packages are installed
@@ -189,6 +190,17 @@
 ;; Smart Tab mode (see emacswiki)
 ;;(require 'smart-tab)
 ;;(global-smart-tab-mode 1)
+
+;; helm
+;; nice intro: http://tuhdo.github.io/helm-intro.html
+(require 'helm-config)
+(helm-mode 1)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "C-x b") 'helm-mini)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(define-key helm-map (kbd "<tab>") 'helm-execute-persistent-action) ; rebihnd tab to do persistent action
+(define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
+(define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
 ;; better buffer switching
 (iswitchb-mode)
