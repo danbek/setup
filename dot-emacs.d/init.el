@@ -31,12 +31,9 @@
   (add-path "lisp") ;; personal elisp code
   (add-path "site-lisp") ;; external elisp packages & files
   (add-path "site-lisp/slime")
-  (add-path "site-lisp/matlab-emacs")
-  (add-path "site-lisp/evil")
   )
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/");;
-
 
 ;
 ;(unless (package-installed-p 'clojure-mode)
@@ -98,10 +95,8 @@
 
 ;; Not sure why, but I have this idea that I should load evil before
 ;; anything else
-;;(when (package-present-p "evil")
-  ;(require 'evil)
-  (evil-mode 1)
-;)
+(require 'evil)
+(evil-mode 1)
 
 ;;
 ;; general customizations
@@ -109,14 +104,14 @@
 
 (global-linum-mode 1)
 
-;; ido mode - commenting out because of problem interacting with tramp
-;(ido-mode 1)
-;(setq ido-enable-flex-matching t)
-;;(setq ido-everywhere t)
+;; ido mode. Has problems on 817thzdev, so don't use it there
+(unless (string-match "817thzdev" system-name)
+  (ido-mode 1)
+  (setq ido-enable-flex-matching t))
 
 ;; appearance
 (global-font-lock-mode t)
-(cond ((string-match "817becker" system-name) (set-default-font "Inconsolata-14"))
+(cond ((string-match "817thzdev" system-name) (set-default-font "Inconsolata-12"))
       ((string-match "twiggy" system-name) (set-default-font "Inconsolata-9"))
       ((string-match "686DB1" system-name) (set-default-font "Consolas-11"))
       ((string-match "dan-homePC" system-name) (set-default-font "Consolas-10"))
@@ -282,24 +277,6 @@
 (add-hook 'TeX-mode-hook #'(lambda () (modify-syntax-entry ?- "w")))
 
 ; [1]: http://tex.stackexchange.com/questions/124246/uninformative-error-message-when-using-auctex
-
-;; matlab-mode
-(defun my-matlab-mode-hook ()
-  (auto-fill-mode 0)
-  (toggle-truncate-lines 0))
-
-(when (package-present-p "matlab-emacs")
-  (load-library "matlab-load")
-  (matlab-cedet-setup)
-  (setq matlab-shell-emacsclient-command "/Applications/Emacs.app/Contents/MacOS/bin/emacsclient")
-  (add-hook 'matlab-mode-hook 'my-matlab-mode-hook))
-
-;; CEDET
-(when (package-present-p "cedet-1.0.1")
-  (load-file "~/.emacs.d/site-lisp/cedet-1.0.1/common/cedet.el")
-  (global-ede-mode 1)         ; Enable the Project management system
-  (semantic-load-enable-code-helpers) ; Enable prototype help and smart completion 
-  (global-srecode-minor-mode 1)) ; Enable template insertion menu
 
 ;;
 ;; Clojure support
