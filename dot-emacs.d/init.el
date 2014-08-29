@@ -75,6 +75,8 @@
   '(
     evil
     helm
+    helm-gtags
+    company
     ) "a list of packages to ensure are installed at launch.")
 
 ;; method to check if all packages are installed
@@ -202,8 +204,45 @@
 (define-key helm-map (kbd "C-i") 'helm-execute-persistent-action) ; make TAB works in terminal
 (define-key helm-map (kbd "C-z")  'helm-select-action) ; list actions using C-z
 
+;; helm-gtags, intro: http://tuhdo.github.io/c-ide.html
+(require 'helm-gtags)
+
+(setq
+ helm-gtags-ignore-case t
+ helm-gtags-auto-update t
+ helm-gtags-use-input-at-cursor t
+ helm-gtags-pulse-at-cursor t
+
+ helm-gtags-suggested-key-mapping t
+ )
+
+;; Enable helm-gtags-mode in Dired so you can jump to any tag
+;; when navigate project tree with Dired
+(add-hook 'dired-mode-hook 'helm-gtags-mode)
+
+;; Enable helm-gtags-mode in Eshell for the same reason as above
+(add-hook 'eshell-mode-hook 'helm-gtags-mode)
+
+;; Enable helm-gtags-mode in languages that GNU Global supports
+(add-hook 'c-mode-hook 'helm-gtags-mode)
+(add-hook 'c++-mode-hook 'helm-gtags-mode)
+(add-hook 'java-mode-hook 'helm-gtags-mode)
+(add-hook 'asm-mode-hook 'helm-gtags-mode)
+
+;; key bindings
+(define-key helm-gtags-mode-map (kbd "M-s") 'helm-gtags-select)
+(define-key helm-gtags-mode-map (kbd "M-.") 'helm-gtags-dwim)
+(define-key evil-normal-state-map (kbd "M-.") 'helm-gtags-dwim)
+(define-key helm-gtags-mode-map (kbd "M-,") 'helm-gtags-pop-stack)
+(define-key helm-gtags-mode-map (kbd "C-c <") 'helm-gtags-previous-history)
+(define-key helm-gtags-mode-map (kbd "C-c >") 'helm-gtags-next-history)
+
+;; company mode (completion).
+(require 'company)
+(add-hook 'after-init-hook 'global-company-mode)
+
 ;; better buffer switching
-(iswitchb-mode)
+;(iswitchb-mode)
 
 ;; nice comment autofill
 (require 'newcomment)
