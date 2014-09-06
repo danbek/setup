@@ -97,8 +97,6 @@ if [ `uname -s | head -c 6` == "CYGWIN" ]; then
         kill $pid
     }
 
-    alias add-key='ssh-add ~/.ssh/id_rsa'
-
     # Now I can ssh -Y directly from mintty shell
     export DISPLAY=:0.0
 
@@ -118,6 +116,8 @@ fi
 alias l='ls -FC'
 alias ll='ls -alF'
 alias lsd='ls -l | grep ^d'
+
+alias add-key='ssh-add ~/.ssh/id_rsa'
 
 alias mce='ssh -Y 817thzdev.bqemd.nist.gov'
 alias grumpy='ssh -Y grumpy'
