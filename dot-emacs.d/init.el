@@ -249,6 +249,12 @@
 (setq comment-auto-fill-only-comments 1)
 (setq-default auto-fill-function 'do-auto-fill)
 
+;; C Coding
+
+(add-hook 'c-mode-hook
+          (lambda ()
+            (c-set-style "linux")
+            (setq c-basic-offset 4)))
 ;;
 ;; SLIME setup
 ;;
