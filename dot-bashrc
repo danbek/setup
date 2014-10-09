@@ -149,3 +149,6 @@ command -v wmname >/dev/null 2>&1 && wmname LG3D
 function bdiff() {
   diff <(xxd ${1}) <(xxd ${2})
 }
+
+# OPAM configuration
+. /home/dan/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true

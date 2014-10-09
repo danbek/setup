@@ -77,6 +77,9 @@
     helm
     helm-gtags
     company
+    tuareg
+    utop
+    merlin
     ) "a list of packages to ensure are installed at launch.")
 
 ;; method to check if all packages are installed
@@ -255,6 +258,21 @@
           (lambda ()
             (c-set-style "linux")
             (setq c-basic-offset 4)))
+
+
+;; OCaml coding
+
+(add-hook 'tuareg-mode-hook 'tuareg-imenu-set-imenu)
+(setq auto-mode-alist
+      (append '(("\\.ml[ily]?$" . tuareg-mode)
+                ("\\.topml$" . tuareg-mode))
+              auto-mode-alist)) 
+(autoload 'utop-setup-ocaml-buffer "utop" "Toplevel for OCaml" t)
+(add-hook 'tuareg-mode-hook 'utop-setup-ocaml-buffer)
+(add-hook 'tuareg-mode-hook 'merlin-mode)
+(setq merlin-use-auto-complete-mode t)
+(setq merlin-error-after-save nil)
+
 ;;
 ;; SLIME setup
 ;;
