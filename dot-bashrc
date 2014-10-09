@@ -119,6 +119,12 @@ alias lsd='ls -l | grep ^d'
 
 alias add-key='ssh-add ~/.ssh/id_rsa'
 
+alias gdb='gdb -quiet'
+
+alias e='emacsclient -n'
+alias ec='emacsclient -n -c'
+alias et='emacsclient -t'
+
 alias mce='ssh -Y 817thzdev.bqemd.nist.gov'
 alias grumpy='ssh -Y grumpy'
 
@@ -152,3 +158,8 @@ function bdiff() {
 
 # OPAM configuration
 . /home/dan/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
+
+# extras for 817thzdev
+if [ `uname -n` == "817thzdev" ]; then
+    source ~/.bashrc.817thzdev
+fi;
