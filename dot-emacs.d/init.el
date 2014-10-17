@@ -80,6 +80,7 @@
     tuareg
     utop
     merlin
+    rust-mode
     ) "a list of packages to ensure are installed at launch.")
 
 ;; method to check if all packages are installed
