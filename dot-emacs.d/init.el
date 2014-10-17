@@ -258,8 +258,10 @@
 
 (add-hook 'c-mode-hook
           (lambda ()
+            (setq-default indent-tabs-mode t)
+            (setq-default tab-width 8)
             (c-set-style "linux")
-            (setq c-basic-offset 4)))
+            (setq c-basic-offset 8)))
 
 
 ;; OCaml coding
