@@ -116,6 +116,7 @@
 (global-font-lock-mode t)
 (cond ((string-match "817thzdev" system-name) (set-default-font "Inconsolata-12"))
       ((string-match "twiggy" system-name) (set-default-font "Inconsolata-9"))
+      ((string-match "686db1-linux" system-name) (set-default-font "DejaVu Sans Mono-10"))
       ((string-match "686DB1" system-name) (set-default-font "Consolas-11"))
       ((string-match "dan-homePC" system-name) (set-default-font "Consolas-10"))
       ((string-match "harold-xubuntu-1" system-name) (set-default-font "Droid Sans Mono-10"))
