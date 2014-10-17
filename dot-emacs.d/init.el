@@ -81,6 +81,7 @@
     utop
     iedit
     merlin
+    rust-mode
     ) "a list of packages to ensure are installed at launch.")
 
 ;; method to check if all packages are installed
@@ -123,8 +124,9 @@
       ((string-match "686db1-linux" system-name) (set-default-font "DejaVu Sans Mono-10"))
       ((string-match "686DB1" system-name) (set-default-font "Consolas-11"))
       ((string-match "dan-homePC" system-name) (set-default-font "Consolas-10"))
-      ((string-match "harold-xubuntu-1" system-name) (set-default-font "Droid Sans Mono-10"))
+      ((string-match "harold-xubuntu-" system-name) (set-default-font "Inconsolata-11"))
       )
+
 ;(setq-default cursor-type 'bar)
 ;(set-cursor-color "black")
 (ansi-color-for-comint-mode-on) ;; allows colors to work in shell mode
@@ -258,8 +260,25 @@
 
 (add-hook 'c-mode-hook
           (lambda ()
+            (setq-default indent-tabs-mode t)
+            (setq-default tab-width 8)
             (c-set-style "linux")
-            (setq c-basic-offset 4)))
+            (setq c-basic-offset 8)))
+
+
+;; OCaml coding
+
+(add-hook 'tuareg-mode-hook 'tuareg-imenu-set-imenu)
+(setq auto-mode-alist
+      (append '(("\\.ml[ily]?$" . tuareg-mode)
+                ("\\.topml$" . tuareg-mode))
+              auto-mode-alist)) 
+(autoload 'utop-setup-ocaml-buffer "utop" "Toplevel for OCaml" t)
+(add-hook 'tuareg-mode-hook 'utop-setup-ocaml-buffer)
+(add-hook 'tuareg-mode-hook 'merlin-mode)
+(setq merlin-use-auto-complete-mode t)
+(setq merlin-error-after-save nil)
+
 ;;
 ;; SLIME setup
 ;;
