@@ -174,6 +174,8 @@
 
 (define-key global-map (kbd "RET") 'newline-and-indent)
 
+(define-key global-map (kbd "<f9>") 'compile)
+
 ;; register e holds emacs init file. Jump to it via C-x r j e
 (set-register ?e (cons 'file user-init-file))
 
