@@ -79,6 +79,7 @@
     company
     tuareg
     utop
+    iedit
     merlin
     rust-mode
     ) "a list of packages to ensure are installed at launch.")
@@ -120,6 +121,7 @@
 (global-font-lock-mode t)
 (cond ((string-match "817thzdev" system-name) (set-default-font "Inconsolata-12"))
       ((string-match "twiggy" system-name) (set-default-font "Inconsolata-9"))
+      ((string-match "686db1-linux" system-name) (set-default-font "DejaVu Sans Mono-10"))
       ((string-match "686DB1" system-name) (set-default-font "Consolas-11"))
       ((string-match "dan-homePC" system-name) (set-default-font "Consolas-10"))
       ((string-match "harold-xubuntu-" system-name) (set-default-font "Inconsolata-11"))
@@ -387,6 +389,9 @@
   (nrepl-kill)
   (nrepl-jack-in nil))
 
+;; OCaml coding
+(require 'ocp-indent)
+
 ;; enable emacsclient
 (server-start)
 
@@ -403,3 +408,20 @@
 ; put custom stuff in its own file
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file t nil t)
+
+(add-hook 'tuareg-mode-hook
+	(function (lambda ()
+	  (setq tuareg-in-indent 0)
+	  (setq tuareg-let-always-indent t)
+	  (setq tuareg-let-indent tuareg-default-indent)
+	  (setq tuareg-with-indent 0)
+	  (setq tuareg-function-indent 0)
+	  (setq tuareg-fun-indent 0)
+	  (setq tuareg-parser-indent 0)
+	  (setq tuareg-match-indent 0)
+	  (setq tuareg-begin-indent tuareg-default-indent)
+	  (setq tuareg-parse-indent tuareg-default-indent); .mll
+	  (setq tuareg-rule-indent  tuareg-default-indent)
+	  
+	  (setq tuareg-font-lock-symbols nil)
+          )))
