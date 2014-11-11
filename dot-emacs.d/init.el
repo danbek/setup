@@ -125,7 +125,7 @@
       ((string-match "686db1-linux" system-name) (set-default-font "DejaVu Sans Mono-10"))
       ((string-match "686DB1" system-name) (set-default-font "Consolas-11"))
       ((string-match "dan-homePC" system-name) (set-default-font "Consolas-10"))
-      ((string-match "harold-xubuntu-" system-name) (set-default-font "Deja Vu Sans Mono-10"))
+      ((string-match "harold-xubuntu-" system-name) (set-default-font "Inconsolata-10"))
       )
 
 ;(setq-default cursor-type 'bar)
