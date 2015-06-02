@@ -265,6 +265,15 @@
             (c-set-style "linux")
             (setq c-basic-offset 8)))
 
+(add-hook 'c++-mode-hook
+          (lambda ()
+            (setq-default indent-tabs-mode nil)
+            (setq-default tab-width 4)
+            (c-set-style "linux")
+            (setq c-basic-offset 4)))
+
+(global-set-key (kbd "<f9>") 'compile)
+
 
 ;; OCaml coding
 
