@@ -60,6 +60,11 @@ xterm*|rxvt*)
     ;;
 esac
 
+# Better terminal on xfce
+if [ -e /lib/terminfo/x/xterm-256color ] && [ "$COLORTERM" == "xfce4-terminal" ]; then
+    export TERM=xterm-256color
+fi
+
 ## enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
@@ -116,6 +121,7 @@ fi
 alias l='ls -FC'
 alias ll='ls -alF'
 alias lsd='ls -l | grep ^d'
+alias ldt='ls -al | grep " \."'
 
 alias add-key='ssh-add ~/.ssh/id_rsa'
 
@@ -124,6 +130,7 @@ alias gdb='gdb -quiet'
 alias e='emacsclient -n'
 alias ec='emacsclient -n -c'
 alias et='emacsclient -t'
+alias vi='emacsclient -t'
 
 alias mce='ssh -Y 817thzdev.bqemd.nist.gov'
 alias grumpy='ssh -Y grumpy'
@@ -167,5 +174,5 @@ if [ `uname -n` == "817thzdev" ]; then
     source ~/.bashrc.817thzdev
 fi;
 
-# OPAM configuration
-. /home/beckerd/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
+# Qt4 path
+PATH=$PATH:/usr/local/Trolltech/Qt-4.8.6/bin
