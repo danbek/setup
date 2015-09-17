@@ -32,7 +32,11 @@ separator.text = " :: "
 cpuwidget = widget({ type = "textbox" })
 vicious.register(cpuwidget, vicious.widgets.cpu,
     function (widget ,args) 
-        return ("CPU %02d%% %02d%%"):format(args[2],args[3])
+        if args[3] == nil then
+            return ("CPU %02d%%"):format(args[2])
+        else
+            return ("CPU %02d%% %02d%%"):format(args[2],args[3])
+        end
     end)
 
     --return 

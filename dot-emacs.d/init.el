@@ -82,6 +82,7 @@
     iedit
     merlin
     rust-mode
+    ocp-indent
     ) "a list of packages to ensure are installed at launch.")
 
 ;; method to check if all packages are installed
@@ -124,7 +125,7 @@
       ((string-match "686db1-linux" system-name) (set-default-font "DejaVu Sans Mono-9"))
       ((string-match "686DB1" system-name) (set-default-font "Consolas-11"))
       ((string-match "dan-homePC" system-name) (set-default-font "Consolas-10"))
-      ((string-match "harold-xubuntu-" system-name) (set-default-font "Inconsolata-11"))
+      ((string-match "harold-xubuntu-" system-name) (set-default-font "Inconsolata-10"))
       )
 
 ;(setq-default cursor-type 'bar)
@@ -173,6 +174,8 @@
 (global-set-key "\C-xg" 'goto-line)
 
 (define-key global-map (kbd "RET") 'newline-and-indent)
+
+(define-key global-map (kbd "<f9>") 'compile)
 
 ;; register e holds emacs init file. Jump to it via C-x r j e
 (set-register ?e (cons 'file user-init-file))
