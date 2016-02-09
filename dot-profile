@@ -22,3 +22,5 @@ fi
 
 umask 022
 
+# OPAM configuration
+. /home/beckerd/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
