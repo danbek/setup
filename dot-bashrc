@@ -166,13 +166,7 @@ function bdiff() {
   diff <(xxd ${1}) <(xxd ${2})
 }
 
-# OPAM configuration
-. /home/dan/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
-
 # extras for 817thzdev
 if [ `uname -n` == "817thzdev" ]; then
     source ~/.bashrc.817thzdev
 fi;
-
-# Qt4 path
-PATH=$PATH:/usr/local/Trolltech/Qt-4.8.6/bin
