@@ -24,3 +24,6 @@ umask 022
 
 # OPAM configuration
 . /home/beckerd/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
+
+PATH=$PATH:$HOME/Downloads/fasthenry-3.0wr/bin
+
