@@ -176,3 +176,4 @@ fi;
 
 # Qt4 path
 PATH=$PATH:/usr/local/Trolltech/Qt-4.8.6/bin
+PATH=$PATH:/usr/local/texlive/2015/bin/x86_64-linux
