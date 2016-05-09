@@ -7,10 +7,11 @@ if [ `uname -s` = "Darwin" ]; then
     export MANPATH=/opt/local/share/man:$MANPATH
 fi
 
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
-fi
+add_to_path() {
+    if [ -d "$1" ] ; then
+        PATH="$PATH:$1"
+    fi
+}
 
 # if running bash
 if [ -n "$BASH_VERSION" ]; then
@@ -23,7 +24,9 @@ fi
 umask 022
 
 # OPAM configuration
-. /home/beckerd/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
+. $HOME/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
 
-PATH=$PATH:$HOME/Downloads/fasthenry-3.0wr/bin
-
+add_to_path "$HOME/bin"
+add_to_path "/usr/local/Trolltech/Qt-4.8.6/bin"
+add_to_path "/usr/local/texlive/2015/bin/x86_64-linux"
+add_to_path "$HOME/Downloads/fasthenry-3.0wr/bin"

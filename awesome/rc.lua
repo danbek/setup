@@ -355,9 +355,10 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "gimp" },
       properties = { floating = true } },
-    -- Set Firefox to always map on tags number 2 of screen 1.
-    -- { rule = { class = "Firefox" },
-    --   properties = { tag = tags[1][2] } },
+    { rule = { class = "Emacs" },
+      properties = { tag = tags[1][1] } },
+    { rule = { class = "Firefox" },
+      properties = { tag = tags[1][9] } },
 }
 -- }}}
 
@@ -391,3 +392,18 @@ end)
 client.add_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.add_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
+
+function run_once(cmd)
+  findme = cmd
+  firstspace = cmd:find(" ")
+  if firstspace then
+    findme = cmd:sub(0, firstspace-1)
+  end
+  awful.util.spawn_with_shell("pgrep -u $USER -x " .. findme .. " > /dev/null || (" .. cmd .. ")")
+end
+
+-- The first two should really only load when on specific computers
+run_once("nm-applet --sm-disable")
+run_once("syndaemon -i 1 -K -d") -- disables touchpad while typing
+run_once("emacs")
+run_once("firefox")
