@@ -37,3 +37,11 @@ append_to_path "/usr/local/Trolltech/Qt-4.8.6/bin"
 append_to_path "/usr/local/texlive/2015/bin/x86_64-linux"
 append_to_path "$HOME/projects/algs4/bin"
 prepend_to_path "$HOME/anaconda2/bin"
+append_to_path "$HOME/downloads/julia-3c9d75391c/bin/"
+
+
+# Fix this issue [1], which I ran into installing a julia
+# package.
+#
+# [1]: http://stackoverflow.com/questions/3160909/how-do-i-deal-with-certificates-using-curl-while-trying-to-access-an-https-url
+export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
