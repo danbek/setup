@@ -7,9 +7,15 @@ if [ `uname -s` = "Darwin" ]; then
     export MANPATH=/opt/local/share/man:$MANPATH
 fi
 
-add_to_path() {
+append_to_path() {
     if [ -d "$1" ] ; then
         PATH="$PATH:$1"
+    fi
+}
+
+prepend_to_path() {
+    if [ -d "$1" ] ; then
+        PATH="$1:$PATH"
     fi
 }
 
@@ -26,6 +32,8 @@ umask 022
 # OPAM configuration
 . $HOME/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
 
-add_to_path "$HOME/bin"
-add_to_path "/usr/local/Trolltech/Qt-4.8.6/bin"
-add_to_path "/usr/local/texlive/2015/bin/x86_64-linux"
+append_to_path "$HOME/bin"
+append_to_path "/usr/local/Trolltech/Qt-4.8.6/bin"
+append_to_path "/usr/local/texlive/2015/bin/x86_64-linux"
+append_to_path "$HOME/projects/algs4/bin"
+prepend_to_path "$HOME/anaconda2/bin"
