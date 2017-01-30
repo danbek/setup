@@ -259,6 +259,9 @@ in `dotspacemacs/user-config'."
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
 
+  ;; fixes some bug https://github.com/syl20bnr/spacemacs/issues/7393
+  (fset 'xterm-color-unfontify-region 'font-lock-default-unfontify-region)
+
   ;; better scrolling http://etherplex.org/static/emacs.html
   (setq scroll-conservatively 10)
   (setq scroll-margin 7)
