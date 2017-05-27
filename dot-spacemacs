@@ -29,6 +29,7 @@ values."
      emacs-lisp
      git
      html
+     java
      javascript
      extra-langs
      markdown
