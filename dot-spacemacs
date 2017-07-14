@@ -39,7 +39,6 @@ values."
      auto-completion
      (c-c++ :variables c-c++-enable-clang-support t)
      ivy
-     ;; better-defaults
      emacs-lisp
      git
      html
@@ -49,6 +48,8 @@ values."
      ocaml
      org
      python
+     latex
+     ;; better-defaults
      (shell :variables
             shell-default-shell 'eshell
             shell-enable-smart-eshell nil
@@ -312,7 +313,8 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (add-hook 'after-init-hook #'global-flycheck-mode) 
   (setq c-default-style "linux"
-        c-basic-offset 4)
+        c-basic-offset 4
+        tab-width 4)
 
   (setq ivy-count-format "(%d/%d) ")
   
@@ -355,8 +357,8 @@ you should place your code here."
 
   ;; I like tab to trigger autocompletion, and this should make it work
   ;; see https://github.com/company-mode/company-mode/issues/94
-  (define-key company-mode-map [remap indent-for-tab-command]
-    'company-indent-for-tab-command)
+  ;;(define-key company-mode-map [remap indent-for-tab-command]
+  ;;  'company-indent-for-tab-command)
 
   (setq tab-always-indent 'complete)
 
