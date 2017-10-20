@@ -68,6 +68,13 @@ An [MSDN article][msdn] covers this. You have to edit the registry.
 
 [msdn]: http://msdn.microsoft.com/en-us/library/windows/hardware/gg463447.aspx
 
+Make capslock a control under Xubuntu
+-------------------------------------
+
+$ sudo /etc/default/keyboard
+# change XKBOPTIONS to "ctrl:nocaps"
+$ sudo dpkg-reconfigure keyboard-configuration
+
 AUCTex Under Cygwin/Windows
 ---------------------------
 
