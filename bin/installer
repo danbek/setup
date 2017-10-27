@@ -62,6 +62,8 @@ make_all_links() {
     done
 
     make_link .config/awesome awesome
+    make_link .config/i3/config i3-config
+    make_link .config/i3status/config i3status-config
 }
 
 # 
