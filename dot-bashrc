@@ -156,6 +156,8 @@ alias cdd='cd /cygdrive/e/beckerd/Documents/thz/data/cooldown40'
 alias ctc='cd ~/projects/thz-data-analysis/'
 alias cth='cd ~/projects/thesis/'
 
+alias ipython='ipython --matplotlib'
+
 #set date on BBB
 alias bdate='ssh root@192.168.7.2 date -s "\"$(date)\""'
 
@@ -172,3 +174,4 @@ function bdiff() {
 if [ `uname -n` == "817thzdev" ]; then
     source ~/.bashrc.817thzdev
 fi;
+
