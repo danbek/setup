@@ -45,7 +45,7 @@ values."
      javascript
      extra-langs
      markdown
-     ocaml
+     ;;ocaml
      org
      python
      latex
@@ -69,6 +69,7 @@ values."
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
    dotspacemacs-excluded-packages '(
+				    arduino-mode
 				    fill-column-indicator
 				    )
    ;; Defines the behaviour of Spacemacs when installing packages.

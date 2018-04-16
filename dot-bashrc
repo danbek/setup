@@ -175,3 +175,4 @@ if [ `uname -n` == "817thzdev" ]; then
     source ~/.bashrc.817thzdev
 fi;
 
+source activate sledge3
