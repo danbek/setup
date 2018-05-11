@@ -41,6 +41,7 @@ values."
      ivy
      emacs-lisp
      git
+     (go :variables go-tab-width 4)
      html
      javascript
      extra-langs
@@ -69,6 +70,7 @@ values."
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
    dotspacemacs-excluded-packages '(
+				    org-projectile ;; this is broken as-of v0.200.13
 				    arduino-mode
 				    fill-column-indicator
 				    )
@@ -148,7 +150,7 @@ values."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 13
+                               :size 12
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -305,7 +307,7 @@ executes.
  This function is mostly useful for variables that need to be set
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
-  (setenv "WORKON_HOME" "/home/beckerd/anaconda2/envs")
+  (setenv "WORKON_HOME" "/home/beckerd/installs/anaconda3/envs")
   )
 
 (defun dotspacemacs/user-config ()
