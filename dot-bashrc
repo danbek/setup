@@ -175,6 +175,6 @@ if [ `uname -n` == "817thzdev" ]; then
     source ~/.bashrc.817thzdev
 fi;
 
-. /home/dan/installs/anaconda3/etc/profile.d/conda.sh
+source $HOME/installs/anaconda3/etc/profile.d/conda.sh
 
-source activate sledge3
+#conda activate sledge3
