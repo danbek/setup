@@ -36,13 +36,20 @@ append_to_path "$HOME/bin"
 append_to_path "/usr/local/Trolltech/Qt-4.8.6/bin"
 append_to_path "/usr/local/texlive/2017/bin/x86_64-linux"
 append_to_path "$HOME/projects/algs4/bin"
-append_to_path "$HOME/downloads/julia-3c9d75391c/bin/"
+append_to_path "$HOME/installs/julia-d55cadc350/bin"
 append_to_path "$HOME/Downloads/fasthenry-3.0wr/bin"
 append_to_path "$HOME/Downloads/pycharm-community-2016.1.3/bin"
-prepend_to_path "$HOME/anaconda3/bin"
+prepend_to_path "$HOME/installs/anaconda3/bin"
 
+export MANPATH
 MANPATH=$MANPATH:/usr/local/texlive/2017/texmf-dist/doc/man
+MANPATH=$MANPATH:$HOME/installs/julia-d55cadc350/share/man
 INFOPATH=$INFOPATH:/usr/local/texlive/2017/texmf-dist/doc/info
+
+# setup go
+export GOROOT=$HOME/installs/go
+append_to_path "$HOME/installs/go/bin"
+append_to_path "$(go env GOPATH)/bin"
 
 # Fix this issue [1], which I ran into installing a julia
 # package.

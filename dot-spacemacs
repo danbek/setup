@@ -41,6 +41,7 @@ values."
      ivy
      emacs-lisp
      git
+     (go :variables go-tab-width 4)
      html
      javascript
      extra-langs

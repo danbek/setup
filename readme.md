@@ -75,6 +75,17 @@ Make capslock a control under Xubuntu
     $ # change XKBOPTIONS to "ctrl:nocaps"
     $ sudo dpkg-reconfigure keyboard-configuration
 
+Zenburn for xfce terminal
+-------------------------
+See https://pastebin.com/6xQhZd84
+
+    # Zenburn colours scheme for Xfce Terminal updated for Xfce4-terminal 0.6.3. Copy and paste the following in ${HOME}/.config/xfce4/Terminal/terminalrc:
+
+    ColorBackground=#404040
+    ColorForeground=#F6F3E8
+    ColorCursor=#8f8fafaf9f9f
+    ColorPalette=#3f3f3f3f3f3f;#e8e893939393;#9e9ecece9e9e;#f0f0dfdfafaf;#8c8cd0d0d3d3;#c0c0bebed1d1;#dfdfafaf8f8f;#efefefefefef;#3f3f3f3f3f3f;#e8e893939393;#9e9ecece9e9e;#f0f0dfdfafaf;#8c8cd0d0d3d3;#c0c0bebed1d1;#dfdfafaf8f8f;#efefefefefef
+
 AUCTex Under Cygwin/Windows
 ---------------------------
 
@@ -97,8 +108,8 @@ For ubuntu, I needed to install autoconf and texinfo, and run
 configure like
 
     $ ./configure --with-texmf-dir=/usr/local/texlive/2013/texmf-dist
-
-
+    
+    
 References:
 
 * [AUCTeX From Git] (http://permalink.gmane.org/gmane.emacs.auctex.general/5019)
