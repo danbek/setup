@@ -129,8 +129,7 @@ alias gdb='gdb -quiet'
 
 alias e='emacsclient -n'
 alias ec='emacsclient -n -c'
-alias et='emacsclient -t'
-alias vi='emacsclient -t'
+alias vi='emacsclient -t --alternate-editor=vi'
 
 alias mce='ssh -Y 817thzdev.bqemd.nist.gov'
 alias grumpy='ssh -Y grumpy'
