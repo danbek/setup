@@ -51,6 +51,9 @@ MANPATH=$MANPATH:/usr/local/texlive/2018/texmf-dist/doc/man
 MANPATH=$MANPATH:$HOME/installs/julia-d55cadc350/share/man
 INFOPATH=$INFOPATH:/usr/local/texlive/2018/texmf-dist/doc/info
 
+# Python virtual environment support in emacs
+export WORKON_HOME=$HOME/installs/anaconda3/envs
+
 # Fix this issue [1], which I ran into installing a julia
 # package.
 #
