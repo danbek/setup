@@ -40,7 +40,6 @@ append_to_path "$HOME/installs/julia-d55cadc350/bin"
 append_to_path "$HOME/Downloads/fasthenry-3.0wr/bin"
 append_to_path "$HOME/Downloads/pycharm-community-2016.1.3/bin"
 append_to_path "$HOME/.gem/ruby/2.3.0/bin"
-prepend_to_path "$HOME/installs/anaconda3/bin"
 
 # go installation
 export GOROOT=$HOME/installs/go
