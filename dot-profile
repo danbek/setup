@@ -41,10 +41,12 @@ append_to_path "$HOME/Downloads/fasthenry-3.0wr/bin"
 append_to_path "$HOME/Downloads/pycharm-community-2016.1.3/bin"
 append_to_path "$HOME/.gem/ruby/2.3.0/bin"
 
-# go installation
-export GOROOT=$HOME/installs/go
-append_to_path "$GOROOT/bin"
-append_to_path "$(go env GOPATH)/bin"
+# setup golang, if present
+if [ -d "$HOME/installs/go" ] ; then
+    export GOROOT=$HOME/installs/go
+    append_to_path "$GOROOT/bin"
+    append_to_path "$(go env GOPATH)/bin"
+fi
 
 export MANPATH
 MANPATH=$MANPATH:/usr/local/texlive/2018/texmf-dist/doc/man
