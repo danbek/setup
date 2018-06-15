@@ -46,11 +46,11 @@
   )
 
 
-(defun dtb/switch-to-previous-buffer ()
-  "Switch to previously open buffer.
+(defun dtb/switch-to-other-buffer ()
+  "Switch to 'other' buffer.
 Repeated invocations toggle between the two most recently open buffers."
   (interactive)
-  (switch-to-buffer (other-buffer (current-buffer) 1)))
+  (switch-to-buffer (other-buffer)))
 
 (use-package evil
   :ensure t
@@ -66,8 +66,9 @@ Repeated invocations toggle between the two most recently open buffers."
       ;; files
      "f e" (lambda () (interactive) (find-file user-init-file))
      "f f" 'counsel-find-file
-     "f r" 'counsel-recentf
      "f o" (lambda () (interactive) (find-file "~/notes/organizer.org"))
+     "f r" 'counsel-recentf
+     "f v" 'find-alternate-file
 
      ;; org-mode
      "o l" 'org-store-link
@@ -124,11 +125,13 @@ Repeated invocations toggle between the two most recently open buffers."
 ;;
 ;; Python setup. Let's try elpy
 ;;
+;; Apparently the only way to turn off highlight-indentation-mode is
+;; to remove it from the list of elpy modules, which can be done
+;; through M-x customize-variable RET elpy-modules
 (use-package elpy
   :ensure t
   :config
   (elpy-enable)
-  ;(highlight-indentation-mode nil) ; I don't like this mode
   )
 
 ;;
@@ -164,7 +167,7 @@ Repeated invocations toggle between the two most recently open buffers."
 (setq require-final-newline t)
 (setq display-time-day-and-date t) (display-time)
 
-;; appearance
+;; Stuff specific to particular computers
 (global-font-lock-mode t)
 (cond ((string-match "817thzdev" system-name)
        (set-default-font "Inconsolata-12"))
@@ -179,6 +182,9 @@ Repeated invocations toggle between the two most recently open buffers."
       ((string-match "harold-xubuntu-" system-name)
        (set-default-font "Inconsolata-10"))
       ((string-match "687db2vm1" system-name)
+       (when window-system
+	 (set-frame-size (selected-frame) 130 67)
+	 (set-frame-position (selected-frame) 0 0))
        (set-default-font "DejaVu Sans Mono-10"))
       ((string-match "ovid-xubuntu5" system-name)
        (set-default-font "DejaVu Sans Mono-10"))
