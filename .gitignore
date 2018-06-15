@@ -8,4 +8,4 @@ dot-vim/autoload/netrwFileHandlers.vim
 dot-vim/autoload/netrwSettings.vim
 dot-emacs.d/tramp
 dot-emacs.d/elpa
-
+dot-emacs.d/custom.el

@@ -48,15 +48,9 @@ HERE
     vim -S /tmp/netrw.expander /tmp/netrw.vba.gz 
 }
 
-setup_spacemacs() {
-    cd ~
-    mv .emacs.d .emacs.d.bak
-    git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
-}
-
 make_all_links() {
     mkdir -p $ORIG_DIR # location to move old files (if they exist)
-    for link in bin .vim .spacemacs .vimrc .sbclrc .profile .bashrc .gitconfig .minttyrc .Xkbmap .aspell.en.pws
+    for link in bin .vim .emacs.d .vimrc .sbclrc .profile .bashrc .gitconfig .minttyrc .Xkbmap .aspell.en.pws
     do
         make_dot_link $link
     done
@@ -78,8 +72,6 @@ elif [ "x$1" = "x--vim-pandoc" ]; then
     setup_vim_pandoc
 elif [ "x$1" = "x--vim-netrw" ]; then
     setup_vim_netrw
-elif [ "x$1" = "x--spacemacs" ]; then
-    setup_spacemacs
 fi
 
 make_all_links
