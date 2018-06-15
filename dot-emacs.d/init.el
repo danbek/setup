@@ -178,6 +178,8 @@ Repeated invocations toggle between the two most recently open buffers."
        (set-default-font "Consolas-10"))
       ((string-match "harold-xubuntu-" system-name)
        (set-default-font "Inconsolata-10"))
+      ((string-match "687db2vm1" system-name)
+       (set-default-font "DejaVu Sans Mono-10"))
       ((string-match "ovid-xubuntu5" system-name)
        (set-default-font "DejaVu Sans Mono-10"))
        ;(set-default-font "Source Code Pro-9"))
