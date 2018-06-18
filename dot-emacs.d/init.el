@@ -187,7 +187,10 @@ Repeated invocations toggle between the two most recently open buffers."
 	 (set-frame-position (selected-frame) 0 0))
        (set-default-font "DejaVu Sans Mono-10"))
       ((string-match "ovid-xubuntu5" system-name)
-       (set-default-font "DejaVu Sans Mono-10"))
+       (set-default-font "DejaVu Sans Mono-10")
+       (when window-system
+	 (set-frame-size (selected-frame) 94 44)
+	 (set-frame-position (selected-frame) 0 0)))
        ;(set-default-font "Source Code Pro-9"))
       )
 
