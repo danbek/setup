@@ -10,3 +10,4 @@ dot-emacs.d/tramp
 dot-emacs.d/elpa
 dot-emacs.d/custom.el
 dot-emacs.d/recentf
+dot-emacs.d/session.*
