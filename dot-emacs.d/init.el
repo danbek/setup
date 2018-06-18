@@ -168,6 +168,8 @@ Repeated invocations toggle between the two most recently open buffers."
 (setq require-final-newline t)
 (setq display-time-day-and-date t) (display-time)
 
+(blink-cursor-mode 0)
+
 ;; Stuff specific to particular computers
 (global-font-lock-mode t)
 (cond ((string-match "817thzdev" system-name)
