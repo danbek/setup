@@ -46,7 +46,7 @@
   )
 
 
-(defun dtb/switch-to-other-buffer ()
+(defun dtb-switch-to-other-buffer ()
   "Switch to 'other' buffer.
 Repeated invocations toggle between the two most recently open buffers."
   (interactive)
@@ -79,9 +79,10 @@ Repeated invocations toggle between the two most recently open buffers."
      ;; other
      "b b" 'ivy-switch-buffer
      "g" 'magit-status
-     "TAB" 'dtb/switch-to-previous-buffer
+     "TAB" 'dtb-switch-to-other-buffer
      )
     )
+
   (global-set-key "\C-cl" 'org-store-link)
   (global-set-key "\C-ca" 'org-agenda)
   (global-set-key "\C-cc" 'org-capture)
