@@ -77,9 +77,10 @@ Repeated invocations toggle between the two most recently open buffers."
      "o b" 'org-switchb
 
      ;; other
-     "b b" 'ivy-switch-buffer
+     "b" 'counsel-ibuffer
      "g" 'magit-status
      "TAB" 'dtb-switch-to-other-buffer
+     "r" 'counsel-rg
      )
     )
 
@@ -129,10 +130,15 @@ Repeated invocations toggle between the two most recently open buffers."
 ;; Apparently the only way to turn off highlight-indentation-mode is
 ;; to remove it from the list of elpy modules, which can be done
 ;; through M-x customize-variable RET elpy-modules
+;;
 (use-package elpy
   :ensure t
   :config
   (elpy-enable)
+  (add-hook 'python-mode-hook
+	    (lambda () (auto-fill-mode t)))
+  (add-hook 'python-mode-hook
+	    (lambda () (linum-mode t)))
   )
 
 ;;
