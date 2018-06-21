@@ -125,6 +125,13 @@ Repeated invocations toggle between the two most recently open buffers."
     (kbd "<down>") 'comint-next-input)
   )
 
+; loading this allows counsel-M-x to show most recent commands first
+(use-package smex
+  :ensure t
+  :config
+  ;; More configuration goes here
+  )
+
 ; loads ivy and swiper too
 (use-package counsel
   :ensure t
@@ -133,6 +140,7 @@ Repeated invocations toggle between the two most recently open buffers."
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "(%d/%d) ")
+  (global-set-key (kbd "M-x") 'counsel-M-x)
   )
 
 ;;
