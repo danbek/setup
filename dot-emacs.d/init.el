@@ -84,12 +84,6 @@ Repeated invocations toggle between the two most recently open buffers."
      )
     )
 
-  (global-set-key "\C-cl" 'org-store-link)
-  (global-set-key "\C-ca" 'org-agenda)
-  (global-set-key "\C-cc" 'org-capture)
-  (global-set-key "\C-cb" 'org-switchb)
-  
-  ;;(define-key dired-mode-map (kbd "SPC") nil)
   (evil-mode 1)
   
   (use-package evil-surround
@@ -113,6 +107,15 @@ Repeated invocations toggle between the two most recently open buffers."
     :config
     (setq evil-magit-state 'motion)
     )
+  
+  ;; I like to use arrow keys for command line history, at least in
+  ;; insert mode
+  (evil-define-key 'insert shell-mode-map
+    (kbd "<up>")   'comint-previous-input
+    (kbd "<down>") 'comint-next-input)
+  (evil-define-key 'insert inferior-python-mode-map
+    (kbd "<up>")   'comint-previous-input
+    (kbd "<down>") 'comint-next-input)
   )
 
 ; loads ivy and swiper too
@@ -139,6 +142,9 @@ Repeated invocations toggle between the two most recently open buffers."
 	    (lambda () (auto-fill-mode t)))
   (add-hook 'python-mode-hook
 	    (lambda () (linum-mode t)))
+  (setq python-shell-interpreter "ipython"
+	python-shell-interpreter-args "-i --simple-prompt --matplotlib")
+
   )
 
 ;;
