@@ -33,6 +33,13 @@
 ;; Now various packages
 ;;
 
+;; "diminish" minor modes by not dislaying them in the mode-line
+(use-package diminish
+  :ensure t
+  :config
+  ;; More configuration goes here
+  )
+
 (use-package undo-tree
   :ensure t
   :config
@@ -121,6 +128,7 @@ Repeated invocations toggle between the two most recently open buffers."
 ; loads ivy and swiper too
 (use-package counsel
   :ensure t
+  :diminish (ivy-mode . "")
   :config
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t)
