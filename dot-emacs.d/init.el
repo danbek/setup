@@ -123,6 +123,10 @@ Repeated invocations toggle between the two most recently open buffers."
   (evil-define-key 'insert inferior-python-mode-map
     (kbd "<up>")   'comint-previous-input
     (kbd "<down>") 'comint-next-input)
+
+  ;; I prefer M-. to run xref-find-defintions in normal mode
+  (define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
+
   )
 
 ; loading this allows counsel-M-x to show most recent commands first
