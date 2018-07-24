@@ -4,7 +4,8 @@
 
 ;; Setup package.el
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+;(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 (package-initialize)
 ;;(setq package-enable-at-startup nil)
@@ -52,6 +53,20 @@
   ;; More configuration goes here
   )
 
+(use-package deft
+  :ensure t
+  :config
+  ;; More configuration goes here
+  (setq deft-default-extension "org")
+  (setq deft-directory "~/notes/notes")
+  (setq deft-org-mode-title-prefix t)
+  (setq deft-use-filter-string-for-filename t)
+  (setq deft-file-naming-rules
+	'((noslash . "-")
+	  (nospace . "-")
+	  (case-fn . downcase)))
+
+  )
 
 (defun dtb-switch-to-other-buffer ()
   "Switch to 'other' buffer.
@@ -85,6 +100,7 @@ Repeated invocations toggle between the two most recently open buffers."
 
      ;; other
      "b" 'counsel-ibuffer
+     "d" 'deft
      "g" 'magit-status
      "TAB" 'dtb-switch-to-other-buffer
      "r" 'counsel-rg
