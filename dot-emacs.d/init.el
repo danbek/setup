@@ -83,8 +83,11 @@ Repeated invocations toggle between the two most recently open buffers."
      "o c" 'org-capture
      "o b" 'org-switchb
 
+     ;; buffers
+     "b b" 'counsel-ibuffer
+     "b k" (lambda () (interactive) (kill-buffer (current-buffer)))
+
      ;; other
-     "b" 'counsel-ibuffer
      "g" 'magit-status
      "TAB" 'dtb-switch-to-other-buffer
      "r" 'counsel-rg
