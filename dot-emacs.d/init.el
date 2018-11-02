@@ -189,6 +189,17 @@ Repeated invocations toggle between the two most recently open buffers."
   (load-theme 'solarized-light)
   )
 
+;;
+;; Julia
+;;
+(add-to-list 'load-path "~/.emacs.d/site-lisp")
+
+(require 'julia-mode)
+
+;;
+;; Other stuff
+;;
+
 ;; don't need toolbar
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 
