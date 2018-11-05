@@ -10,19 +10,6 @@
 (package-initialize)
 ;;(setq package-enable-at-startup nil)
 
-;; I had hoped that this would install the latest version of org, but
-;; (1) it seems flakey - doesn't always work (2) when it does work, I
-;; can't get code execution in an org file working. So just use
-;; default org version for now.
-;; 
-;; If old older version of org is installed, force an upgrade. The
-;; version check is a hack, sorry.
-;(if (string< (substring (org-version) 0 1) "9")
-;    (progn
-;      (package-refresh-contents)
-;      (package-install 'org))
-;  )
-
 ;; Setup use-package (makes installing other packages much easier
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -201,6 +188,17 @@ Repeated invocations toggle between the two most recently open buffers."
   (setq x-underline-at-descent-line t)
   (load-theme 'solarized-light)
   )
+
+;;
+;; Julia
+;;
+(add-to-list 'load-path "~/.emacs.d/site-lisp")
+
+(require 'julia-mode)
+
+;;
+;; Other stuff
+;;
 
 ;; don't need toolbar
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
