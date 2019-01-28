@@ -197,6 +197,12 @@ Repeated invocations toggle between the two most recently open buffers."
 (require 'julia-mode)
 
 ;;
+;; C/C++
+;;
+(setq-default c-default-style "linux"
+	      c-basic-offset 4)
+
+;;
 ;; Other stuff
 ;;
 
