@@ -195,6 +195,13 @@ Repeated invocations toggle between the two most recently open buffers."
 (add-to-list 'load-path "~/.emacs.d/site-lisp")
 
 (require 'julia-mode)
+(require 'julia-repl)
+(add-hook 'julia-mode-hook 'julia-repl-mode)
+(setq julia-repl-executable-records
+      '((julia-1.1.0 "/home/dan/installs/julia-1.1.0/bin/julia")))
+;(setq julia-repl-executable-records
+;      '((default "julia")                  ; in the executable path
+;        (master "~/src/julia-git/julia"))) ; compiled from the repository
 
 ;;
 ;; C/C++
