@@ -195,6 +195,13 @@ Repeated invocations toggle between the two most recently open buffers."
 (add-to-list 'load-path "~/.emacs.d/site-lisp")
 
 (require 'julia-mode)
+(require 'julia-repl)
+(add-hook 'julia-mode-hook 'julia-repl-mode)
+(setq julia-repl-executable-records
+      '((julia-1.1.0 "/home/dan/installs/julia-1.1.0/bin/julia")))
+;(setq julia-repl-executable-records
+;      '((default "julia")                  ; in the executable path
+;        (master "~/src/julia-git/julia"))) ; compiled from the repository
 
 ;;
 ;; C/C++
@@ -225,31 +232,40 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (blink-cursor-mode 0)
 
+;;
 ;; Stuff specific to particular computers
+;;
+
 (global-font-lock-mode t)
+
+;; This is how to set a default font across *all* frames [1]
+;; [1]: https://superuser.com/questions/210555/emacs-font-settings-not-working-in-new-frame
+(defun dtb-set-default-font (font-name)
+  (add-to-list 'default-frame-alist
+             (cons 'font font-name)))
 (cond ((string-match "817thzdev" system-name)
-       (set-default-font "Inconsolata-12"))
+       (dtb-set-default-font "Inconsolata-12"))
       ((string-match "twiggy" system-name)
-       (set-default-font "Inconsolata-9"))
+       (dtb-set-default-font "Inconsolata-9"))
       ((string-match "686db1-linux" system-name)
-       (set-default-font "DejaVu Sans Mono-10"))
+       (dtb-set-default-font "DejaVu Sans Mono-10"))
       ((string-match "686DB1" system-name)
-       (set-default-font "Consolas-11"))
+       (dtb-set-default-font "Consolas-11"))
       ((string-match "dan-homePC" system-name)
-       (set-default-font "Consolas-10"))
+       (dtb-set-default-font "Consolas-10"))
       ((string-match "harold-xubuntu-" system-name)
-       (set-default-font "Inconsolata-10"))
+       (dtb-set-default-font "Inconsolata-10"))
       ((string-match "687db2vm1" system-name)
        (when window-system
 	 (set-frame-size (selected-frame) 130 67)
 	 (set-frame-position (selected-frame) 0 0))
-       (set-default-font "DejaVu Sans Mono-10"))
+       (dtb-set-default-font "DejaVu Sans Mono-10"))
       ((string-match "ovid-xubuntu5" system-name)
-       (set-default-font "DejaVu Sans Mono-10")
+       (dtb-set-default-font "DejaVu Sans Mono-10")
        (when window-system
 	 (set-frame-size (selected-frame) 94 44)
 	 (set-frame-position (selected-frame) 0 0)))
-       ;(set-default-font "Source Code Pro-9"))
+       ;(dtb-set-default-font "Source Code Pro-9"))
       )
 
 ;; I perfer to not scatter these files all over the place
