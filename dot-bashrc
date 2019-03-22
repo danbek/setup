@@ -134,6 +134,7 @@ alias vi='emacsclient -t --alternate-editor=vi'
 alias mce='ssh -Y 817thzdev.bqemd.nist.gov'
 alias grumpy='ssh -Y grumpy'
 
+export MPLCONFIGDIR=./matplotlib
 alias ipython='ipython --matplotlib'
 
 # deal with frogfly stuff
