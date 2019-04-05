@@ -156,6 +156,7 @@ alias cdd='cd /cygdrive/e/beckerd/Documents/thz/data/cooldown40'
 alias ctc='cd ~/projects/thz-data-analysis/'
 alias cth='cd ~/projects/thesis/'
 
+export PYTHONSTARTUP=.pythonrc
 alias ipython='ipython --matplotlib'
 
 #set date on BBB
