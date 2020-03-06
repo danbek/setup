@@ -135,7 +135,7 @@ alias mce='ssh -Y 817thzdev.bqemd.nist.gov'
 alias grumpy='ssh -Y grumpy'
 
 export MPLCONFIGDIR=./matplotlib
-alias ipython='ipython --matplotlib'
+alias ipython='QT_STYLE_OVERRIDE="" ipython --matplotlib'
 
 # deal with frogfly stuff
 alias frog='ssh -Y frogfly.org'
