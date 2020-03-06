@@ -170,8 +170,8 @@ Repeated invocations toggle between the two most recently open buffers."
   (add-hook 'python-mode-hook
 	    (lambda () (linum-mode t)))
   (setq python-shell-interpreter "ipython"
-	python-shell-interpreter-args "-i --simple-prompt --matplotlib")
-
+	python-shell-interpreter-args "-i --simple-prompt --matplotlib"
+	elpy-rpc-virtualenv-path 'current)
   )
 
 ;;
@@ -261,7 +261,7 @@ Repeated invocations toggle between the two most recently open buffers."
 	 (set-frame-size (selected-frame) 130 67)
 	 (set-frame-position (selected-frame) 0 0))
        (dtb-set-default-font "DejaVu Sans Mono-10"))
-      ((string-match "xubuntu-2" system-name)
+      ((string-match "xubuntu-1" system-name)
        (dtb-set-default-font "DejaVu Sans Mono-10")
        ;(dtb-set-default-font "Source Code Pro-10")
        (when window-system
