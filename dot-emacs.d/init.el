@@ -255,9 +255,9 @@ Repeated invocations toggle between the two most recently open buffers."
        (dtb-set-default-font "Consolas-10"))
       ((string-match "harold-xubuntu-" system-name)
        (dtb-set-default-font "Inconsolata-10"))
-      ((string-match "687db2vm1" system-name)
+      ((string-match "686db2" system-name)
        (when window-system
-	 (set-frame-size (selected-frame) 130 67)
+	 (set-frame-size (selected-frame) 112 56)
 	 (set-frame-position (selected-frame) 0 0))
        (dtb-set-default-font "DejaVu Sans Mono-10"))
       ((string-match "ovid-xubuntu5" system-name)
