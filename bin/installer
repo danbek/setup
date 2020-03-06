@@ -50,14 +50,14 @@ HERE
 
 make_all_links() {
     mkdir -p $ORIG_DIR # location to move old files (if they exist)
-    for link in bin .vim .emacs.d .vimrc .sbclrc .profile .bashrc .gitconfig .minttyrc .Xkbmap .aspell.en.pws
+    for link in bin .vim .emacs.d .vimrc .sbclrc .profile .bashrc .gitconfig .minttyrc .Xkbmap .aspell.en.pws .tmux.conf
     do
         make_dot_link $link
     done
 
-    make_link .config/awesome awesome
-    make_link .config/i3/config i3-config
-    make_link .config/i3status/config i3status-config
+    #make_link .config/awesome awesome
+    #make_link .config/i3/config i3-config
+    #make_link .config/i3status/config i3status-config
 }
 
 # 
