@@ -135,6 +135,7 @@ alias mce='ssh -Y 817thzdev.bqemd.nist.gov'
 alias grumpy='ssh -Y grumpy'
 
 export MPLCONFIGDIR=./matplotlib
+export PYTHONSTARTUP=.pythonrc
 alias ipython='QT_STYLE_OVERRIDE="" ipython --matplotlib'
 
 # deal with frogfly stuff
@@ -176,9 +177,20 @@ if [ `uname -n` == "817thzdev" ]; then
     source ~/.bashrc.817thzdev
 fi;
 
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/home/dan/installs/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/home/dan/installs/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/dan/installs/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/home/dan/installs/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
 # I need to set this explicitly on my work VM
 export TMOUT=0
-
-source $HOME/installs/anaconda3/etc/profile.d/conda.sh
-
-#conda activate sledge3

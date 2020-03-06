@@ -4,6 +4,7 @@
 
 ;; Setup package.el
 (require 'package)
+(setq package-check-signature nil)
 ;(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
@@ -104,8 +105,8 @@ Repeated invocations toggle between the two most recently open buffers."
     :config
     (global-evil-surround-mode))
 
-  (use-package evil-indent-textobject
-    :ensure t)
+  ;(use-package evil-indent-plus
+  ;  :ensure t)
 
   (evil-add-hjkl-bindings occur-mode-map 'emacs
     (kbd "/")       'evil-search-forward
@@ -169,8 +170,8 @@ Repeated invocations toggle between the two most recently open buffers."
   (add-hook 'python-mode-hook
 	    (lambda () (linum-mode t)))
   (setq python-shell-interpreter "ipython"
-	python-shell-interpreter-args "-i --simple-prompt --matplotlib")
-
+	python-shell-interpreter-args "-i --simple-prompt --matplotlib"
+	elpy-rpc-virtualenv-path 'current)
   )
 
 ;;
@@ -260,12 +261,11 @@ Repeated invocations toggle between the two most recently open buffers."
 	 (set-frame-size (selected-frame) 112 56)
 	 (set-frame-position (selected-frame) 0 0))
        (dtb-set-default-font "DejaVu Sans Mono-10"))
-      ((string-match "ovid-xubuntu5" system-name)
+      ((string-match "xubuntu-1" system-name)
        (dtb-set-default-font "DejaVu Sans Mono-10")
        (when window-system
-	 (set-frame-size (selected-frame) 94 44)
+	 (set-frame-size (selected-frame) 84 54)
 	 (set-frame-position (selected-frame) 0 0)))
-       ;(dtb-set-default-font "Source Code Pro-9"))
       )
 
 ;; I perfer to not scatter these files all over the place
