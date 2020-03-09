@@ -261,6 +261,8 @@ Repeated invocations toggle between the two most recently open buffers."
 	 (set-frame-size (selected-frame) 112 56)
 	 (set-frame-position (selected-frame) 0 0))
        (dtb-set-default-font "DejaVu Sans Mono-10"))
+      ((string-match "xubuntu-work-2" system-name)
+       (dtb-set-default-font "DejaVu Sans Mono-10"))
       ((string-match "xubuntu-1" system-name)
        (dtb-set-default-font "DejaVu Sans Mono-10")
        (when window-system
