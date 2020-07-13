@@ -30,6 +30,10 @@ so youI may need to use --system instead.  Then the following:
     git clone git@github.com:danbek/setup.git
     cd setup/bin && ./installer
 
+To install Adobe Source Code Pro and Hack fonts do this:
+
+   cd setup/bin && ./install_fonts.sh
+
 Login again to pick up all the changes.
 
 The installer has special options as well:
@@ -41,8 +45,6 @@ The installer has special options as well:
 
 To-do
 -----
-* automatically download emacs stuff?
-* git-completion apparently not where I thought it was on ubuntu 12.04. Need to fix this.
 * installer should probably create any required empty directory (i.e. emacs backups).
 
 Other Setup Notes
@@ -74,6 +76,10 @@ Make capslock a control under Xubuntu
     $ sudo /etc/default/keyboard
     $ # change XKBOPTIONS to "ctrl:nocaps"
     $ sudo dpkg-reconfigure keyboard-configuration
+
+Make Alt-Tab work correctly on Ubuntu 18.04
+-------------------------------------------
+Following instructions here: https://askubuntu.com/a/1154780/510762
 
 Zenburn for xfce terminal
 -------------------------
