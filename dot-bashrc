@@ -134,7 +134,7 @@ alias vi='emacsclient -t --alternate-editor=vi'
 alias mce='ssh -Y 817thzdev.bqemd.nist.gov'
 alias grumpy='ssh -Y grumpy'
 
-export MPLCONFIGDIR=./matplotlib
+# export MPLCONFIGDIR=./matplotlib
 export PYTHONSTARTUP=.pythonrc
 alias ipython='QT_STYLE_OVERRIDE="" ipython --matplotlib'
 
@@ -152,6 +152,14 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 
 alias cal='cd /cygdrive/e/beckerd/Documents/thz/board-design/ThzFullArray'
 alias csw='cd /cygdrive/h/from_lab_computer/THzFocalPlane'
+
+
+# get htop working properly under tmux
+# I don't know how to get ssh from windows to set DISPLAY, so do it this way
+if [ `uname -n` == "686db2" ]; then
+    # DISPLAY=localhost:xxx
+    alias htop='TERM=xterm-256color htop'
+fi;
 
 alias cdd='cd /cygdrive/e/beckerd/Documents/thz/data/cooldown40'
 alias ctc='cd ~/projects/thz-data-analysis/'
@@ -179,14 +187,14 @@ fi;
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/dan/installs/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+__conda_setup="$('/home/beckerd/installs/anaconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
 if [ $? -eq 0 ]; then
     eval "$__conda_setup"
 else
-    if [ -f "/home/dan/installs/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/dan/installs/anaconda3/etc/profile.d/conda.sh"
+    if [ -f "/home/beckerd/installs/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/home/beckerd/installs/anaconda3/etc/profile.d/conda.sh"
     else
-        export PATH="/home/dan/installs/anaconda3/bin:$PATH"
+        export PATH="/home/beckerd/installs/anaconda3/bin:$PATH"
     fi
 fi
 unset __conda_setup

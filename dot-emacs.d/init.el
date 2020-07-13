@@ -5,22 +5,95 @@
 ;; Setup package.el
 (require 'package)
 (setq package-check-signature nil)
-;(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 ;;(setq package-enable-at-startup nil)
 
-;; Setup use-package (makes installing other packages much easier
+;; Setup use-package (makes installing other packages much easier)
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
 (eval-when-compile
   (require 'use-package))
 
+(add-to-list 'load-path "~/.emacs.d/site-lisp")
+
 ;;
 ;; Now various packages
 ;;
+;; (use-package evil
+;;   :ensure t
+;;   :config
+
+;;   ; apparently evil-leader-mode should be enabled before enabling evil-mode
+;;   (use-package evil-leader
+;;     :ensure t
+;;     :config
+;;     (global-evil-leader-mode)
+;;     (evil-leader/set-leader "<SPC>")
+;;     (evil-leader/set-key
+;;       ;; files
+;;      "f e" (lambda () (interactive) (find-file user-init-file))
+;;      "f f" 'counsel-find-file
+;;      "f o" (lambda () (interactive) (find-file "~/notes/organizer.org"))
+;;      "f r" 'counsel-recentf
+;;      "f v" 'find-alternate-file
+
+;;      ;; org-mode
+;;      "o l" 'org-store-link
+;;      "o a" 'org-agenda
+;;      "o c" 'org-capture
+;;      "o b" 'org-switchb
+
+;;      ;; buffers
+;;      "b b" 'counsel-ibuffer
+;;      "b k" (lambda () (interactive) (kill-buffer (current-buffer)))
+
+;;      ;; other
+;;      "d" 'deft
+;;      "g" 'magit-status
+;;      "TAB" 'dtb-switch-to-other-buffer
+;;      "r" 'counsel-rg
+;;      )
+;;     )
+
+;;   (evil-mode 1)
+  
+;;   (use-package evil-surround
+;;     :ensure t
+;;     :config
+;;     (global-evil-surround-mode))
+
+;;   ;(use-package evil-indent-plus
+;;   ;  :ensure t)
+
+;;   (evil-add-hjkl-bindings occur-mode-map 'emacs
+;;     (kbd "/")       'evil-search-forward
+;;     (kbd "n")       'evil-search-next
+;;     (kbd "N")       'evil-search-previous
+;;     (kbd "C-d")     'evil-scroll-down
+;;     (kbd "C-u")     'evil-scroll-up
+;;     (kbd "C-w C-w") 'other-window)
+
+;;   (use-package evil-magit
+;;     :ensure t
+;;     :config
+;;     (setq evil-magit-state 'motion)
+;;     )
+  
+;;   ;; I like to use arrow keys for command line history, at least in
+;;   ;; insert mode
+;;   (evil-define-key 'insert shell-mode-map
+;;     (kbd "<up>")   'comint-previous-input
+;;     (kbd "<down>") 'comint-next-input)
+;;   (evil-define-key 'insert inferior-python-mode-map
+;;     (kbd "<up>")   'comint-previous-input
+;;     (kbd "<down>") 'comint-next-input)
+
+;;   ;; I prefer M-. to run xref-find-defintions in normal mode
+;;   (define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
+
+;;   )
 
 ;; "diminish" minor modes by not dislaying them in the mode-line
 (use-package diminish
@@ -29,11 +102,11 @@
   ;; More configuration goes here
   )
 
-(use-package undo-tree
-  :ensure t
-  :config
-  ;; More configuration goes here
-  )
+;; (use-package undo-tree
+;;   :ensure t
+;;   :config
+;;   ;; More configuration goes here
+;;   )
 
 (use-package magit
   :ensure t
@@ -56,85 +129,34 @@
 
   )
 
+(use-package org
+  :ensure t
+  :config
+  (setq org-hide-leading-starts t)
+  
+  (global-set-key (kbd "C-c a") 'org-agenda)
+  
+  ;; could not get this to work using use-package, so do it this way
+;  (add-to-list 'load-path "~/.emacs.d/site-lisp/evil-org-mode")
+;  (require 'evil-org)
+;  (add-hook 'org-mode-hook 'evil-org-mode)
+;  (evil-org-set-key-theme '(navigation insert textobjects additional calendar))
+;  (require 'evil-org-agenda)
+;  (evil-org-agenda-set-keys)
+
+  ;(use-package org-bullets
+  ;  :ensure t
+  ;  :config
+  ;  (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
+
+  )
+
+
 (defun dtb-switch-to-other-buffer ()
   "Switch to 'other' buffer.
 Repeated invocations toggle between the two most recently open buffers."
   (interactive)
   (switch-to-buffer (other-buffer)))
-
-(use-package evil
-  :ensure t
-  :config
-
-  ; apparently evil-lead-mode should be enabled before enabling evil-mode
-  (use-package evil-leader
-    :ensure t
-    :config
-    (global-evil-leader-mode)
-    (evil-leader/set-leader "<SPC>")
-    (evil-leader/set-key
-      ;; files
-     "f e" (lambda () (interactive) (find-file user-init-file))
-     "f f" 'counsel-find-file
-     "f o" (lambda () (interactive) (find-file "~/notes/organizer.org"))
-     "f r" 'counsel-recentf
-     "f v" 'find-alternate-file
-
-     ;; org-mode
-     "o l" 'org-store-link
-     "o a" 'org-agenda
-     "o c" 'org-capture
-     "o b" 'org-switchb
-
-     ;; buffers
-     "b b" 'counsel-ibuffer
-     "b k" (lambda () (interactive) (kill-buffer (current-buffer)))
-
-     ;; other
-     "d" 'deft
-     "g" 'magit-status
-     "TAB" 'dtb-switch-to-other-buffer
-     "r" 'counsel-rg
-     )
-    )
-
-  (evil-mode 1)
-  
-  (use-package evil-surround
-    :ensure t
-    :config
-    (global-evil-surround-mode))
-
-  ;(use-package evil-indent-plus
-  ;  :ensure t)
-
-  (evil-add-hjkl-bindings occur-mode-map 'emacs
-    (kbd "/")       'evil-search-forward
-    (kbd "n")       'evil-search-next
-    (kbd "N")       'evil-search-previous
-    (kbd "C-d")     'evil-scroll-down
-    (kbd "C-u")     'evil-scroll-up
-    (kbd "C-w C-w") 'other-window)
-
-  (use-package evil-magit
-    :ensure t
-    :config
-    (setq evil-magit-state 'motion)
-    )
-  
-  ;; I like to use arrow keys for command line history, at least in
-  ;; insert mode
-  (evil-define-key 'insert shell-mode-map
-    (kbd "<up>")   'comint-previous-input
-    (kbd "<down>") 'comint-next-input)
-  (evil-define-key 'insert inferior-python-mode-map
-    (kbd "<up>")   'comint-previous-input
-    (kbd "<down>") 'comint-next-input)
-
-  ;; I prefer M-. to run xref-find-defintions in normal mode
-  (define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
-
-  )
 
 ; loading this allows counsel-M-x to show most recent commands first
 (use-package smex
@@ -151,6 +173,7 @@ Repeated invocations toggle between the two most recently open buffers."
   (ivy-mode 1)
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "(%d/%d) ")
+  (setq ivy-initial-inputs-alist nil)
   (global-set-key (kbd "M-x") 'counsel-M-x)
   )
 
@@ -177,23 +200,15 @@ Repeated invocations toggle between the two most recently open buffers."
 ;;
 ;; Themes
 ;;
-(use-package color-theme-sanityinc-tomorrow
-  :ensure t
-  :config
-  )
 
-(use-package solarized-theme
-  :ensure t
-  :config
-  (setq solarized-high-contrast-mode-line nil)
-  (setq x-underline-at-descent-line t)
-  (load-theme 'solarized-light)
-  )
+;; Trying this from Prot Stavrous. There are many options to explore
+;; https://gitlab.com/protesilaos/modus-themes 
+(use-package modus-operandi-theme
+  :ensure t)
 
 ;;
 ;; Julia
 ;;
-(add-to-list 'load-path "~/.emacs.d/site-lisp")
 
 (require 'julia-mode)
 (require 'julia-repl)
@@ -239,11 +254,11 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (global-font-lock-mode t)
 
-;; This is how to set a default font across *all* frames [1]
-;; [1]: https://superuser.com/questions/210555/emacs-font-settings-not-working-in-new-frame
 (defun dtb-set-default-font (font-name)
-  (add-to-list 'default-frame-alist
-             (cons 'font font-name)))
+  (set-face-attribute 'fixed-pitch nil :font font-name)
+  (set-face-attribute 'default     nil :font font-name)
+  )
+
 (cond ((string-match "817thzdev" system-name)
        (dtb-set-default-font "Inconsolata-12"))
       ((string-match "twiggy" system-name)
@@ -257,17 +272,20 @@ Repeated invocations toggle between the two most recently open buffers."
       ((string-match "harold-xubuntu-" system-name)
        (dtb-set-default-font "Inconsolata-10"))
       ((string-match "686db2" system-name)
-       (when window-system
-	 (set-frame-size (selected-frame) 112 56)
-	 (set-frame-position (selected-frame) 0 0))
-       (dtb-set-default-font "DejaVu Sans Mono-10"))
+       (dtb-set-default-font "DejaVu Sans Mono-10")
+       (dtb-set-default-font "Hack-9")
+       (add-to-list 'default-frame-alist '(left . 0))
+       (add-to-list 'default-frame-alist '(top . 0))
+       (add-to-list 'default-frame-alist '(height . 58))
+       (add-to-list 'default-frame-alist '(width . 128)))
       ((string-match "xubuntu-work-2" system-name)
        (dtb-set-default-font "DejaVu Sans Mono-10"))
       ((string-match "xubuntu-1" system-name)
        (dtb-set-default-font "DejaVu Sans Mono-10")
-       (when window-system
-	 (set-frame-size (selected-frame) 84 54)
-	 (set-frame-position (selected-frame) 0 0)))
+       (add-to-list 'default-frame-alist '(left . 0))
+       (add-to-list 'default-frame-alist '(top . 0))
+       (add-to-list 'default-frame-alist '(height . 54))
+       (add-to-list 'default-frame-alist '(width . 84)))
       )
 
 ;; I perfer to not scatter these files all over the place
@@ -284,4 +302,46 @@ Repeated invocations toggle between the two most recently open buffers."
 (setq tramp-default-method "ssh")
 
 ;; start server for use of emacs from command line
-(server-start)
+;; (server-start)
+
+(require 'guru-mode)
+(guru-global-mode)
+
+(require 'jump-char)
+(global-set-key (kbd "M-m") 'jump-char-forward)
+(global-set-key (kbd "M-M") 'jump-char-backward)
+
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "C-x f") 'counsel-recentf)
+
+(defun dtb/ctrl-a ()
+  "Move point to indentation or beginning of line, toggling with repeated calls"
+  (interactive)
+  (let ((indent (save-excursion
+		  (back-to-indentation)
+		  (point)))
+	(beg (save-excursion
+	       (move-beginning-of-line nil)
+	       (point)))
+	(pt (point)))
+    (cond
+     ((eq pt indent) (move-beginning-of-line nil))
+     ((eq pt beg) (back-to-indentation))
+     ((> pt indent) (back-to-indentation))
+     (t (move-beginning-of-line nil)))))
+
+(global-set-key (kbd "C-a") 'dtb/ctrl-a)
+
+(defun dtb/pull-up-line ()
+  "Join the following line onto the current one aa in `C-u M-^' or `C-u M-x join-line'."
+  (interactive)
+  (join-line -1))
+
+(global-set-key (kbd "C-j") 'dtb/pull-up-line)
+  
+(defun dtb/copy-to-end-of-buffer ()
+ (interactive)
+ (copy-region-as-kill (point) (point-max))
+ )
+
+(global-set-key (kbd "C-c c b") 'dtb/copy-to-end-of-buffer)
