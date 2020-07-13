@@ -81,6 +81,19 @@ Make Alt-Tab work correctly on Ubuntu 18.04
 -------------------------------------------
 Following instructions here: https://askubuntu.com/a/1154780/510762
 
+Installing linux on Hyper-V
+----------------------------
+
+You can get this setup so that you access the linux GUI through an RDP session, which
+allows clipboard sharing to work. This is the best approach that I have found yet. I found instructions
+for doing this when you create an Ubuntu 18.04 VM [1], for after you have created an Ubuntu 18.04 VM [2],
+and for after creating an arch VM [3]. There are also instructions from microsoft [4].
+
+[1]: https://www.zdnet.com/article/windows-10-tip-run-ubuntu-linux-in-an-enhanced-hyper-v-session/
+[2]: https://oitibs.com/hyper-v-lis-on-ubuntu-18-04/
+[3]: https://forum.manjaro.org/t/installing-manjaro-in-hyper-v-with-enhanced-session-support/79394/1
+[4]: https://forum.manjaro.org/t/installing-manjaro-in-hyper-v-with-enhanced-session-support/79394/1
+
 Zenburn for xfce terminal
 -------------------------
 See https://pastebin.com/6xQhZd84
