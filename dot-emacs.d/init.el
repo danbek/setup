@@ -135,6 +135,7 @@
   (setq org-hide-leading-starts t)
   
   (global-set-key (kbd "C-c a") 'org-agenda)
+  (setq org-agenda-files '("~/notes"))
   
   ;; could not get this to work using use-package, so do it this way
 ;  (add-to-list 'load-path "~/.emacs.d/site-lisp/evil-org-mode")
@@ -248,6 +249,8 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (blink-cursor-mode 0)
 
+(window-divider-mode +1)
+
 ;;
 ;; Stuff specific to particular computers
 ;;
@@ -351,3 +354,8 @@ Repeated invocations toggle between the two most recently open buffers."
  )
 
 (global-set-key (kbd "C-c c b") 'dtb/copy-to-end-of-buffer)
+
+(global-set-key (kbd "C-.") 'other-window)
+(global-set-key (kbd "C-,") 'previous-window)
+
+
