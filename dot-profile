@@ -32,9 +32,11 @@ umask 022
 # OPAM configuration
 . $HOME/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
 
+TEX_HOME="$HOME/installs/texlive/2020"
+
 append_to_path "$HOME/bin"
 append_to_path "/usr/local/Trolltech/Qt-4.8.6/bin"
-append_to_path "/usr/local/texlive/2018/bin/x86_64-linux"
+append_to_path "$TEX_HOME/bin/x86_64-linux"
 append_to_path "$HOME/projects/algs4/bin"
 append_to_path "$HOME/installs/julia-9d11f62bcb/bin"
 #append_to_path "$HOME/installs/julia-1.1.0/bin"
@@ -50,9 +52,9 @@ if [ -d "$HOME/installs/go" ] ; then
 fi
 
 export MANPATH
-MANPATH=$MANPATH:/usr/local/texlive/2018/texmf-dist/doc/man
+MANPATH=$MANPATH:$TEX_HOME/texmf-dist/doc/man
 MANPATH=$MANPATH:$HOME/installs/julia-d55cadc350/share/man
-INFOPATH=$INFOPATH:/usr/local/texlive/2018/texmf-dist/doc/info
+INFOPATH=$INFOPATH:$TEX_HOME/texmf-dist/doc/info
 
 # Python virtual environment support in emacs
 export WORKON_HOME=$HOME/installs/anaconda3/envs
