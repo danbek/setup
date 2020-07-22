@@ -347,6 +347,8 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (global-set-key (kbd "C-a") 'dtb/ctrl-a)
 
+;; Consider trying a fancier version of this [1]
+;; [1]: https://github.com/kaushalmodi/.emacs.d/blob/abaab866411a45bc3bc8fd0c9a4d852ff4fe8e88/setup-files/setup-editing.el#L307-L326
 (defun dtb/pull-up-line ()
   "Join the following line onto the current one aa in `C-u M-^' or `C-u M-x join-line'."
   (interactive)
@@ -365,3 +367,20 @@ Repeated invocations toggle between the two most recently open buffers."
 (global-set-key (kbd "C-,") 'previous-window)
 
 
+;;
+;; TODO
+;;
+;; try zop-to-char https://github.com/thierryvolpiatto/zop-to-char
+;;
+;; consider God-mode https://github.com/emacsorphanage/god-mode
+;;
+;; read lab-notebook post https://www.sciencemag.org/careers/2019/09/how-keep-lab-notebook
+;;
+;; on learnig: https://superorganizers.substack.com/p/how-to-build-a-learning-machine
+;;
+;; continue with this series on videos: https://www.youtube.com/watch?v=u00pglDfgX4&list=PLVtKhBrRV_ZkPnBtt_TD1Cs9PJlU0IIdE&index=7
+;;
+;; maybe some good ideas on python in emacs in this video? https://www.youtube.com/watch?v=6BlTGPsjGJk&index=15&list=PL8tzorAO7s0he-pp7Y_JDl7-Kz2Qlr_Pj
+;;
+;; read this: https://daedtech.com/how-developers-stop-learning-rise-of-the-expert-beginner/
+ 
