@@ -79,7 +79,7 @@ Make capslock a control under Xubuntu
 
 Make Alt-Tab work correctly on Ubuntu 18.04
 -------------------------------------------
-Following instructions here: https://askubuntu.com/a/1154780/510762
+Follow instructions here: https://askubuntu.com/a/1154780/510762 and here: https://askubuntu.com/questions/464946/force-alt-tab-to-switch-only-on-current-workspace-in-gnome-shell
 
 Installing linux on Hyper-V
 ----------------------------
