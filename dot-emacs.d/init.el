@@ -21,51 +21,62 @@
 ;;
 ;; Now various packages
 ;;
-;; (use-package evil
-;;   :ensure t
-;;   :config
+(use-package evil
+  :ensure t
 
-;;   ; apparently evil-leader-mode should be enabled before enabling evil-mode
-;;   (use-package evil-leader
-;;     :ensure t
-;;     :config
-;;     (global-evil-leader-mode)
-;;     (evil-leader/set-leader "<SPC>")
-;;     (evil-leader/set-key
-;;       ;; files
-;;      "f e" (lambda () (interactive) (find-file user-init-file))
-;;      "f f" 'counsel-find-file
-;;      "f o" (lambda () (interactive) (find-file "~/notes/organizer.org"))
-;;      "f r" 'counsel-recentf
-;;      "f v" 'find-alternate-file
-
-;;      ;; org-mode
-;;      "o l" 'org-store-link
-;;      "o a" 'org-agenda
-;;      "o c" 'org-capture
-;;      "o b" 'org-switchb
-
-;;      ;; buffers
-;;      "b b" 'counsel-ibuffer
-;;      "b k" (lambda () (interactive) (kill-buffer (current-buffer)))
-
-;;      ;; other
-;;      "d" 'deft
-;;      "g" 'magit-status
-;;      "TAB" 'dtb-switch-to-other-buffer
-;;      "r" 'counsel-rg
-;;      )
-;;     )
-
-;;   (evil-mode 1)
+  :init
+  ;; Must do these before loading evil to get evil-collection working
+  (setq evil-want-keybinding nil)
+  (setq evil-want-integration t)
   
-;;   (use-package evil-surround
-;;     :ensure t
-;;     :config
-;;     (global-evil-surround-mode))
+  :config
+  ;; I prefer emacs binds for terminals
+  (evil-set-initial-state 'term-mode 'emacs)
+  (evil-set-initial-state 'eshell-mode 'emacs)
 
-;;   ;(use-package evil-indent-plus
-;;   ;  :ensure t)
+  ; apparently evil-leader-mode should be enabled before enabling evil-mode
+  (use-package evil-leader
+    :ensure t
+    :config
+    (global-evil-leader-mode)
+    (evil-leader/set-leader "<SPC>")
+    (evil-leader/set-key
+      ;; files
+     "f e" (lambda () (interactive) (find-file user-init-file))
+     "f f" 'counsel-find-file
+     "f o" (lambda () (interactive) (find-file "~/notes/organizer.org"))
+     "f r" 'counsel-recentf
+     "f v" 'find-alternate-file
+
+     ;; org-mode
+     "o l" 'org-store-link
+     "o a" 'org-agenda-list
+     "o t" 'org-todo-list
+     "o c" 'org-capture
+     "o b" 'org-switchb
+
+     ;; buffers
+     "b b" 'counsel-ibuffer
+     "b k" (lambda () (interactive) (kill-buffer (current-buffer)))
+
+     ;; other
+     "d" 'deft
+     "g" 'magit-status
+     "TAB" 'dtb-switch-to-other-buffer
+     "r" 'counsel-rg
+     )
+
+    )
+
+  (evil-mode 1)
+  
+  (use-package evil-surround
+    :ensure t
+    :config
+    (global-evil-surround-mode 1))
+
+  ;(use-package evil-indent-plus
+  ;  :ensure t)
 
 ;;   (evil-add-hjkl-bindings occur-mode-map 'emacs
 ;;     (kbd "/")       'evil-search-forward
@@ -75,25 +86,32 @@
 ;;     (kbd "C-u")     'evil-scroll-up
 ;;     (kbd "C-w C-w") 'other-window)
 
-;;   (use-package evil-magit
-;;     :ensure t
-;;     :config
-;;     (setq evil-magit-state 'motion)
-;;     )
+  (use-package evil-magit
+    :ensure t
+    :config
+    (setq evil-magit-state 'motion)
+    )
   
-;;   ;; I like to use arrow keys for command line history, at least in
-;;   ;; insert mode
-;;   (evil-define-key 'insert shell-mode-map
-;;     (kbd "<up>")   'comint-previous-input
-;;     (kbd "<down>") 'comint-next-input)
-;;   (evil-define-key 'insert inferior-python-mode-map
-;;     (kbd "<up>")   'comint-previous-input
-;;     (kbd "<down>") 'comint-next-input)
+  ;; I like to use arrow keys for command line history, at least in
+  ;; insert mode
+  (evil-define-key 'insert shell-mode-map
+    (kbd "<up>")   'comint-previous-input
+    (kbd "<down>") 'comint-next-input)
+  (evil-define-key 'insert inferior-python-mode-map
+    (kbd "<up>")   'comint-previous-input
+    (kbd "<down>") 'comint-next-input)
 
-;;   ;; I prefer M-. to run xref-find-defintions in normal mode
-;;   (define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
+  ;; I prefer M-. to run xref-find-defintions in normal mode
+  (define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
 
-;;   )
+  )
+
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (setq evil-collection-mode-list '(dired))
+  (evil-collection-init))
 
 ;; "diminish" minor modes by not dislaying them in the mode-line
 (use-package diminish
@@ -136,14 +154,6 @@
   
   (global-set-key (kbd "C-c a") 'org-agenda)
   (setq org-agenda-files '("~/notes"))
-  
-  ;; could not get this to work using use-package, so do it this way
-;  (add-to-list 'load-path "~/.emacs.d/site-lisp/evil-org-mode")
-;  (require 'evil-org)
-;  (add-hook 'org-mode-hook 'evil-org-mode)
-;  (evil-org-set-key-theme '(navigation insert textobjects additional calendar))
-;  (require 'evil-org-agenda)
-;  (evil-org-agenda-set-keys)
 
   ;(use-package org-bullets
   ;  :ensure t
@@ -152,6 +162,16 @@
 
   )
 
+(use-package evil-org
+  :ensure t
+  :after org
+  :config
+  (add-hook 'org-mode-hook 'evil-org-mode)
+  (add-hook 'evil-org-mode-hook
+            (lambda ()
+              (evil-org-set-key-theme '(navigation insert textobjects additional calendar))))
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
 
 (defun dtb-switch-to-other-buffer ()
   "Switch to 'other' buffer.
@@ -313,13 +333,6 @@ Repeated invocations toggle between the two most recently open buffers."
 ;; start server for use of emacs from command line
 ;; (server-start)
 
-(require 'guru-mode)
-(guru-global-mode)
-
-(require 'jump-char)
-(global-set-key (kbd "M-m") 'jump-char-forward)
-(global-set-key (kbd "M-M") 'jump-char-backward)
-
 (global-set-key (kbd "C-x C-f") 'counsel-find-file)
 (global-set-key (kbd "C-x f") 'counsel-recentf)
 
@@ -339,7 +352,7 @@ Repeated invocations toggle between the two most recently open buffers."
      ((> pt indent) (back-to-indentation))
      (t (move-beginning-of-line nil)))))
 
-(global-set-key (kbd "C-a") 'dtb/ctrl-a)
+; (global-set-key (kbd "C-a") 'dtb/ctrl-a)
 
 ;; Consider trying a fancier version of this [1]
 ;; [1]: https://github.com/kaushalmodi/.emacs.d/blob/abaab866411a45bc3bc8fd0c9a4d852ff4fe8e88/setup-files/setup-editing.el#L307-L326
@@ -348,7 +361,7 @@ Repeated invocations toggle between the two most recently open buffers."
   (interactive)
   (join-line -1))
 
-(global-set-key (kbd "C-j") 'dtb/pull-up-line)
+;(global-set-key (kbd "C-j") 'dtb/pull-up-line)
   
 (defun dtb/copy-to-end-of-buffer ()
  (interactive)
@@ -357,16 +370,8 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (global-set-key (kbd "C-c c b") 'dtb/copy-to-end-of-buffer)
 
-(global-set-key (kbd "C-.") 'other-window)
-(global-set-key (kbd "C-,") 'previous-window)
-
-
 ;;
 ;; TODO
-;;
-;; try zop-to-char https://github.com/thierryvolpiatto/zop-to-char
-;;
-;; consider God-mode https://github.com/emacsorphanage/god-mode
 ;;
 ;; read lab-notebook post https://www.sciencemag.org/careers/2019/09/how-keep-lab-notebook
 ;;
