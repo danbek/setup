@@ -92,14 +92,6 @@
   ;(use-package evil-indent-plus
   ;  :ensure t)
 
-;;   (evil-add-hjkl-bindings occur-mode-map 'emacs
-;;     (kbd "/")       'evil-search-forward
-;;     (kbd "n")       'evil-search-next
-;;     (kbd "N")       'evil-search-previous
-;;     (kbd "C-d")     'evil-scroll-down
-;;     (kbd "C-u")     'evil-scroll-up
-;;     (kbd "C-w C-w") 'other-window)
-
   (use-package evil-magit
     :ensure t
     :config
@@ -124,7 +116,7 @@
   :after evil
   :ensure t
   :config
-  (setq evil-collection-mode-list '(dired))
+  (setq evil-collection-mode-list '(dired ibuffer (occur replace)))
   (evil-collection-init))
 
 ;; "diminish" minor modes by not dislaying them in the mode-line
@@ -158,7 +150,6 @@
 	'((noslash . "-")
 	  (nospace . "-")
 	  (case-fn . downcase)))
-
   )
 
 (use-package org
@@ -173,7 +164,6 @@
   ;  :ensure t
   ;  :config
   ;  (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
-
   )
 
 (use-package evil-org
@@ -236,7 +226,28 @@ Repeated invocations toggle between the two most recently open buffers."
 (use-package dired-x
   :after dired
   :config
+  (setq dired-clean-up-buffers-too t)
+  (setq dired-clean-confirm-killing-deleted-buffers t)
   )
+
+;;
+;; ibuffer
+;;
+(use-package ibuffer
+  :config
+  (setq ibuffer-expert t)
+  (setq ibuffer-saved-filter-groups
+	(quote (("default"
+		 ("magit" (name . "^magit"))
+		 ("org" (mode . org-mode))
+		 ("dired" (mode . dired-mode))
+		 ("python" (mode . python-mode))
+		 ))))
+  :hook (ibuffer-mode-hook . (lambda ()
+			       (ibuffer-switch-to-saved-filter-groups "default")))
+  :bind (("C-x C-b" . ibuffer)))
+
+  ;(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 ;;
 ;; Python setup. Let's try elpy
