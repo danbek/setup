@@ -76,29 +76,13 @@
      ;; other
      "d" 'deft
      "g" 'magit-status
-     "TAB" 'dtb-switch-to-other-buffer
+     "TAB" 'dtb/switch-to-other-buffer
      "r" 'counsel-rg
      )
 
     )
 
   (evil-mode 1)
-  
-  (use-package evil-surround
-    :ensure t
-    :config
-    (global-evil-surround-mode 1))
-
-  (use-package evil-indent-plus
-    :ensure t
-    :config
-    (evil-indent-plus-default-bindings))
-
-  (use-package evil-magit
-    :ensure t
-    :config
-    (setq evil-magit-state 'motion)
-    )
   
   ;; I like to use arrow keys for command line history, at least in
   ;; insert mode
@@ -113,6 +97,18 @@
   (define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
 
   )
+
+(use-package evil-surround
+  :after evil
+  :ensure t
+  :config
+  (global-evil-surround-mode 1))
+
+(use-package evil-indent-plus
+  :after evil
+  :ensure t
+  :config
+  (evil-indent-plus-default-bindings))
 
 (use-package evil-collection
   :after evil
@@ -138,6 +134,13 @@
   :ensure t
   :config
   ;; More configuration goes here
+  )
+
+(use-package evil-magit
+  :after evil
+  :ensure t
+  :config
+  (setq evil-magit-state 'motion)
   )
 
 (use-package deft
@@ -170,7 +173,7 @@
 
 (use-package evil-org
   :ensure t
-  :after org
+  :after (evil org)
   :config
   (add-hook 'org-mode-hook 'evil-org-mode)
   (add-hook 'evil-org-mode-hook
@@ -178,12 +181,6 @@
               (evil-org-set-key-theme '(navigation insert textobjects additional calendar))))
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
-
-(defun dtb-switch-to-other-buffer ()
-  "Switch to 'other' buffer.
-Repeated invocations toggle between the two most recently open buffers."
-  (interactive)
-  (switch-to-buffer (other-buffer)))
 
 ; loading this allows counsel-M-x to show most recent commands first
 (use-package smex
@@ -324,11 +321,63 @@ Repeated invocations toggle between the two most recently open buffers."
 
 (window-divider-mode +1)
 
+;; I perfer to not scatter these files all over the place
+(make-directory "~/.emacs.d/autosaves/" t)
+(make-directory "~/.emacs.d/backups/" t)
+(setq backup-directory-alist `(("." . "~/.emacs.d/backups")))
+(setq auto-save-file-name-transforms '((".*" "~/.emacs.d/autosaves/\\1" t)))
+(setq delete-old-versions t
+  kept-new-versions 6
+  kept-old-versions 2
+  version-control t)
+
+;; TRAMP defaults
+(setq tramp-default-method "ssh")
+
+;; start server for use of emacs from command line
+;; (server-start)
+
+(global-set-key (kbd "C-x C-f") 'counsel-find-file)
+(global-set-key (kbd "C-x f") 'counsel-recentf)
+
+;;
+;; Personal function
+;;
+
+(defun dtb/ctrl-a ()
+  "Move point to indentation or beginning of line, toggling with repeated calls"
+  (interactive)
+  (let ((indent (save-excursion
+		  (back-to-indentation)
+		  (point)))
+	(beg (save-excursion
+	       (move-beginning-of-line nil)
+	       (point)))
+	(pt (point)))
+    (cond
+     ((eq pt indent) (move-beginning-of-line nil))
+     ((eq pt beg) (back-to-indentation))
+     ((> pt indent) (back-to-indentation))
+     (t (move-beginning-of-line nil)))))
+
+(defun dtb/switch-to-other-buffer ()
+  "Switch to 'other' buffer.
+Repeated invocations toggle between the two most recently open buffers."
+  (interactive)
+  (switch-to-buffer (other-buffer)))
+
+; (global-set-key (kbd "C-a") 'dtb/ctrl-a)
+
+(defun dtb/copy-to-end-of-buffer ()
+ (interactive)
+ (copy-region-as-kill (point) (point-max))
+ )
+
+(global-set-key (kbd "C-c c b") 'dtb/copy-to-end-of-buffer)
+
 ;;
 ;; Stuff specific to particular computers
 ;;
-
-(global-font-lock-mode t)
 
 (defun dtb-set-default-font (font-name)
   (set-face-attribute 'fixed-pitch nil :font font-name)
@@ -369,59 +418,6 @@ Repeated invocations toggle between the two most recently open buffers."
        (add-to-list 'default-frame-alist '(height . 54))
        (add-to-list 'default-frame-alist '(width . 84)))
       )
-
-;; I perfer to not scatter these files all over the place
-(make-directory "~/.emacs.d/autosaves/" t)
-(make-directory "~/.emacs.d/backups/" t)
-(setq backup-directory-alist `(("." . "~/.emacs.d/backups")))
-(setq auto-save-file-name-transforms '((".*" "~/.emacs.d/autosaves/\\1" t)))
-(setq delete-old-versions t
-  kept-new-versions 6
-  kept-old-versions 2
-  version-control t)
-
-;; TRAMP defaults
-(setq tramp-default-method "ssh")
-
-;; start server for use of emacs from command line
-;; (server-start)
-
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key (kbd "C-x f") 'counsel-recentf)
-
-(defun dtb/ctrl-a ()
-  "Move point to indentation or beginning of line, toggling with repeated calls"
-  (interactive)
-  (let ((indent (save-excursion
-		  (back-to-indentation)
-		  (point)))
-	(beg (save-excursion
-	       (move-beginning-of-line nil)
-	       (point)))
-	(pt (point)))
-    (cond
-     ((eq pt indent) (move-beginning-of-line nil))
-     ((eq pt beg) (back-to-indentation))
-     ((> pt indent) (back-to-indentation))
-     (t (move-beginning-of-line nil)))))
-
-; (global-set-key (kbd "C-a") 'dtb/ctrl-a)
-
-;; Consider trying a fancier version of this [1]
-;; [1]: https://github.com/kaushalmodi/.emacs.d/blob/abaab866411a45bc3bc8fd0c9a4d852ff4fe8e88/setup-files/setup-editing.el#L307-L326
-(defun dtb/pull-up-line ()
-  "Join the following line onto the current one aa in `C-u M-^' or `C-u M-x join-line'."
-  (interactive)
-  (join-line -1))
-
-;(global-set-key (kbd "C-j") 'dtb/pull-up-line)
-  
-(defun dtb/copy-to-end-of-buffer ()
- (interactive)
- (copy-region-as-kill (point) (point-max))
- )
-
-(global-set-key (kbd "C-c c b") 'dtb/copy-to-end-of-buffer)
 
 ;;
 ;; TODO
