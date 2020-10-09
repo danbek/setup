@@ -9,13 +9,27 @@
 (package-initialize)
 ;;(setq package-enable-at-startup nil)
 
+;;
 ;; Setup use-package (makes installing other packages much easier)
+;;
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
+
+(eval-and-compile
+  ;; Write hooks using their real name instead of a shorter version:
+  ;;    after-init ==> `after-init-hook'.
+  ;;
+  ;; This is to empower help commands with their contextual awareness,
+  ;; such as `describe-symbol'.
+  (setq use-package-hook-name-suffix nil))
+
 (eval-when-compile
   (require 'use-package))
 
+;;
+;; For local lisp
+;;
 (add-to-list 'load-path "~/.emacs.d/site-lisp")
 
 ;;
@@ -198,6 +212,32 @@ Repeated invocations toggle between the two most recently open buffers."
   (global-set-key (kbd "M-x") 'counsel-M-x)
   )
 
+;; dired
+;; much from protesilaos
+(use-package dired
+  :config
+  (setq dired-recursive-copies 'always)
+  (setq dired-recursive-deletes 'always)
+  (setq delete-by-moving-to-trash t)
+  (setq dired-listing-switches
+        "-AFhlv --group-directories-first --time-style=long-iso")
+  (setq dired-dwim-target t)
+  :hook ((dired-mode-hook . dired-hide-details-mode))
+  ;; (add-hook 'dired-mode-hook 'hl-line-mode);
+  )
+
+(use-package wdired
+  :after dired
+  :commands wdired-change-to-wdired-mode
+  :config
+  (setq wdired-allow-to-change-permissions t)
+  (setq wdired-create-parent-directories t))
+
+(use-package dired-x
+  :after dired
+  :config
+  )
+
 ;;
 ;; Python setup. Let's try elpy
 ;;
@@ -306,7 +346,7 @@ Repeated invocations toggle between the two most recently open buffers."
        (add-to-list 'default-frame-alist '(left . 0))
        (add-to-list 'default-frame-alist '(top . 0))
        (add-to-list 'default-frame-alist '(height . 65))
-       (add-to-list 'default-frame-alist '(width . 258)))
+       (add-to-list 'default-frame-alist '(width . 147)))
       ((string-match "xubuntu-work-2" system-name)
        (dtb-set-default-font "DejaVu Sans Mono-10"))
       ((string-match "xubuntu-1" system-name)
