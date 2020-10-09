@@ -89,8 +89,10 @@
     :config
     (global-evil-surround-mode 1))
 
-  ;(use-package evil-indent-plus
-  ;  :ensure t)
+  (use-package evil-indent-plus
+    :ensure t
+    :config
+    (evil-indent-plus-default-bindings))
 
   (use-package evil-magit
     :ensure t
