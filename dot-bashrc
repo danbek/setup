@@ -122,6 +122,7 @@ alias l='ls -FC'
 alias ll='ls -alF'
 alias lsd='ls -l | grep ^d'
 alias ldt='ls -al | grep " \."'
+alias dfg='df -h | grep "\/dev\/sd" --color=never'
 
 alias add-key='ssh-add ~/.ssh/id_rsa'
 
