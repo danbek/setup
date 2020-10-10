@@ -360,11 +360,21 @@
      ((> pt indent) (back-to-indentation))
      (t (move-beginning-of-line nil)))))
 
-(defun dtb/switch-to-other-buffer ()
+;; Ideas came from https://www.reddit.com/r/emacs/comments/6bu3yt/fast_buffer_switching/
+(defun dtb/switch-to-other-buffer (&optional aggr)
   "Switch to 'other' buffer.
-Repeated invocations toggle between the two most recently open buffers."
-  (interactive)
-  (switch-to-buffer (other-buffer)))
+Repeated invocations toggle between the two most recently open
+buffers. With C-u, bury current buffer. With C-u C-u, kill current
+buffer (unless it's modified)."
+  (interactive "P")
+  (cond
+   ((eq aggr nil)
+    (dolist (buf '("*Buffer List*" "*Ibuffer*"))
+      (when (get-buffer buf)
+	(bury-buffer buf)))
+    (switch-to-buffer (other-buffer)))
+   ((equal aggr '(4)) (bury-buffer))
+   ((equal aggr '(16)) (kill-buffer-if-not-modified (current-buffer)))))
 
 ; (global-set-key (kbd "C-a") 'dtb/ctrl-a)
 
