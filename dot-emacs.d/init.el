@@ -54,41 +54,36 @@
   (evil-set-initial-state 'term-mode 'emacs)
   (evil-set-initial-state 'eshell-mode 'emacs)
 
-  ; apparently evil-leader-mode should be enabled before enabling evil-mode
-  (use-package evil-leader
-    :ensure t
-    :config
-    (global-evil-leader-mode)
-    (evil-leader/set-leader "<SPC>")
-    (evil-leader/set-key
-      ;; files
-     "f e" (lambda () (interactive) (find-file user-init-file))
-     "f f" 'counsel-find-file
-     "f o" (lambda () (interactive) (find-file "~/notes/organizer.org"))
-     "f r" 'counsel-recentf
-     "f v" 'find-alternate-file
+  ;; leader key stuff
+  (evil-set-leader 'normal (kbd "SPC"))
+  (evil-define-key 'normal 'global
 
-     ;; org-mode
-     "o l" 'org-store-link
-     "o a" 'org-agenda-list
-     "o t" 'org-todo-list
-     "o c" 'org-capture
-     "o b" 'org-switchb
-
-     ;; buffers
-     "b b" 'counsel-ibuffer
-     "b k" (lambda () (interactive) (kill-buffer (current-buffer)))
-
-     ;; other
-     "d" 'deft
-     "g" 'magit-status
-     "TAB" 'dtb/switch-to-other-buffer
-     "r" 'counsel-rg
-     )
-
+    ;; loading files
+    (kbd "<leader>fe") (lambda () (interactive) (find-file user-init-file))
+    (kbd "<leader>ff") 'counsel-find-file
+    (kbd "<leader>fo") (lambda () (interactive) (find-file "~/notes/organizer.org"))
+    (kbd "<leader>fr") 'counsel-recentf
+    (kbd "<leader>fv") 'find-alternate-file
+  
+    ;; org-mode
+    (kbd "<leader>ol") 'org-store-line
+    (kbd "<leader>oa") 'org-agenda-list
+    (kbd "<leader>ot") 'org-todo-list
+    (kbd "<leader>oc") 'org-capture
+    (kbd "<leader>ob") 'org-switchb
+    
+    ;; buffers
+    (kbd "<leader>bb") 'counsel-switch-buffer
+    (kbd "<leader>bi") 'ibuffer
+    (kbd "<leader>bk") (lambda () (interactive) (kill-buffer (current-buffer)))
+    
+    ;; other
+    (kbd "<leader>d") 'deft
+    (kbd "<leader>g") 'magit-status
+    (kbd "<leader><tab>") 'dtb/switch-to-other-buffer
+    (kbd "<leader>r") 'counsel-rg
+    (kbd "<leader>O") 'occur
     )
-
-  (evil-mode 1)
   
   ;; I like to use arrow keys for command line history, at least in
   ;; insert mode
@@ -101,7 +96,9 @@
 
   ;; I prefer M-. to run xref-find-defintions in normal mode
   (define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
-
+  
+  (evil-mode 1)
+  
   :custom
   (evil-undo-system 'undo-tree) ; had to make this a custom to get it to work
   )
