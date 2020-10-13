@@ -103,8 +103,7 @@
   (define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
 
   :custom
-  (evil-undo-system 'undo-tree)
-
+  (evil-undo-system 'undo-tree) ; had to make this a custom to get it to work
   )
 
 (use-package evil-surround
@@ -192,8 +191,13 @@
   ;; More configuration goes here
   )
 
-; loads ivy and swiper too
-(use-package counsel
+(use-package hydra
+  :ensure t
+  :config
+  ;; More configuration goes here
+  )
+
+(use-package ivy
   :ensure t
   :diminish (ivy-mode . "")
   :config
@@ -201,7 +205,12 @@
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "(%d/%d) ")
   (setq ivy-initial-inputs-alist nil)
-  (global-set-key (kbd "M-x") 'counsel-M-x)
+  )
+
+(use-package counsel
+  :ensure t
+  :config
+  (counsel-mode 1)
   )
 
 ;; dired
@@ -340,11 +349,8 @@
 ;; start server for use of emacs from command line
 ;; (server-start)
 
-(global-set-key (kbd "C-x C-f") 'counsel-find-file)
-(global-set-key (kbd "C-x f") 'counsel-recentf)
-
 ;;
-;; Personal function
+;; Personal functions
 ;;
 
 (defun dtb/ctrl-a ()
