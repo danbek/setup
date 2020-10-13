@@ -35,9 +35,15 @@
 ;;
 ;; Now various packages
 ;;
+(use-package undo-tree
+  :ensure t
+  :config
+  (global-undo-tree-mode 1)
+  )
+
 (use-package evil
   :ensure t
-
+  :after undo-tree
   :init
   ;; Must do these before loading evil to get evil-collection working
   (setq evil-want-keybinding nil)
@@ -96,6 +102,9 @@
   ;; I prefer M-. to run xref-find-defintions in normal mode
   (define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
 
+  :custom
+  (evil-undo-system 'undo-tree)
+
   )
 
 (use-package evil-surround
@@ -123,12 +132,6 @@
   :config
   ;; More configuration goes here
   )
-
-;; (use-package undo-tree
-;;   :ensure t
-;;   :config
-;;   ;; More configuration goes here
-;;   )
 
 (use-package magit
   :ensure t
