@@ -220,7 +220,15 @@
   (setq dired-listing-switches
         "-AFhlv --group-directories-first --time-style=long-iso")
   (setq dired-dwim-target t)
-  :hook ((dired-mode-hook . dired-hide-details-mode))
+  :hook ((dired-mode-hook . dired-hide-details-mode)
+	 (dired-mode-hook . hl-line-mode)
+	 (dired-mode-hook .
+			  ;; evil-collection clobbers my leader key in dired
+			  ;; mode. Maybe there is a better way to do this,
+			  ;; but I don't know what it is. Seem to need to put
+			  ;; it in a hook
+			  (lambda ()
+			    (evil-define-key 'normal dired-mode-map (kbd "SPC") 'evil-send-leader))))
   ;; (add-hook 'dired-mode-hook 'hl-line-mode);
   )
 
