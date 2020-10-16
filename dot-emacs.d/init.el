@@ -316,37 +316,41 @@
 ;;
 ;; Other stuff
 ;;
+(use-package emacs
+  :config
+  ;; don't need toolbar
+  (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+  
+  ;; better scrolling http://etherplex.org/static/emacs.html
+  (setq scroll-conservatively 10)
+  (setq scroll-margin 7)
+  (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
+  (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+  (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+  (setq scroll-step 1) ;; keyboard scroll one line at a time
+  
+  ;; from http://xenon.stanford.edu/~manku/dotemacs.html
+  (setq inhibit-startup-screen t)
+					;(setq inhibit-startup-echo-area-message t)
+  (setq require-final-newline t)
+  (setq display-time-day-and-date t) (display-time)
+  
+  (blink-cursor-mode 0)
+  
+  (window-divider-mode +1)
+  
+  ;; I perfer to not scatter these files all over the place
+  (make-directory "~/.emacs.d/autosaves/" t)
+  (make-directory "~/.emacs.d/backups/" t)
+  (setq backup-directory-alist `(("." . "~/.emacs.d/backups")))
+  (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/autosaves/\\1" t)))
+  (setq delete-old-versions t
+	kept-new-versions 6
+	kept-old-versions 2
+	version-control t)
 
-;; don't need toolbar
-(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-
-;; better scrolling http://etherplex.org/static/emacs.html
-(setq scroll-conservatively 10)
-(setq scroll-margin 7)
-(setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
-(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
-(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
-(setq scroll-step 1) ;; keyboard scroll one line at a time
-
-;; from http://xenon.stanford.edu/~manku/dotemacs.html
-(setq inhibit-startup-screen t)
-;(setq inhibit-startup-echo-area-message t)
-(setq require-final-newline t)
-(setq display-time-day-and-date t) (display-time)
-
-(blink-cursor-mode 0)
-
-(window-divider-mode +1)
-
-;; I perfer to not scatter these files all over the place
-(make-directory "~/.emacs.d/autosaves/" t)
-(make-directory "~/.emacs.d/backups/" t)
-(setq backup-directory-alist `(("." . "~/.emacs.d/backups")))
-(setq auto-save-file-name-transforms '((".*" "~/.emacs.d/autosaves/\\1" t)))
-(setq delete-old-versions t
-  kept-new-versions 6
-  kept-old-versions 2
-  version-control t)
+  :hook (after-init-hook . column-number-mode)
+  )
 
 ;; TRAMP defaults
 (setq tramp-default-method "ssh")
