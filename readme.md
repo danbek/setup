@@ -24,17 +24,11 @@ and then put the public key on github. On windows I will want to do
     
 or else cygwin will be unhappy about line endings on the installer. The last
 time I did this I found that git complained about setting this in --global,
-so youI may need to use --system instead.  Then the following:
+so I may need to use --system instead.  Then the following:
 
     cd
     git clone git@github.com:danbek/setup.git
     cd setup/bin && ./installer
-
-To install Adobe Source Code Pro and Hack fonts do this:
-
-   cd setup/bin && ./install_fonts.sh
-
-Login again to pick up all the changes.
 
 The installer has special options as well:
 
@@ -42,6 +36,12 @@ The installer has special options as well:
     installer --vim-pandoc # download and install vim-pandoc, then exit
     installer --vim-netrw # download and install vim-netrw 142, which
                           # fixes an annoying bug
+
+To install Adobe Source Code Pro and Hack fonts do this:
+
+   cd setup/bin && ./install_fonts.sh
+
+Login again to pick up all the changes.
 
 To-do
 -----
@@ -84,10 +84,18 @@ Follow instructions here: https://askubuntu.com/a/1154780/510762 and here: https
 Installing linux on Hyper-V
 ----------------------------
 
-You can get this setup so that you access the linux GUI through an RDP session, which
-allows clipboard sharing to work. This is the best approach that I have found yet. I found instructions
-for doing this when you create an Ubuntu 18.04 VM [1], for after you have created an Ubuntu 18.04 VM [2],
-and for after creating an arch VM [3]. There are also instructions from microsoft [4].
+You can get this setup so that you access the linux GUI through an RDP
+session, which allows clipboard sharing to work. This is the best
+approach that I have found yet. I found instructions for doing this
+when you create an Ubuntu 18.04 VM [1], for after you have created an
+Ubuntu 18.04 VM [2], and for after creating an arch VM [3]. There are
+also instructions from microsoft [4].
+
+This apparently uses xrdp to start the session, and it was not sourcing
+.profile. To fix this I added this line right before the test and exec
+in `/etc/xrdp/startwm.sh`:
+
+    . $HOME/.profile
 
 [1]: https://www.zdnet.com/article/windows-10-tip-run-ubuntu-linux-in-an-enhanced-hyper-v-session/
 [2]: https://oitibs.com/hyper-v-lis-on-ubuntu-18-04/

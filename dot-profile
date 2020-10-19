@@ -29,8 +29,11 @@ fi
 
 umask 022
 
-# OPAM configuration
-. $HOME/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
+# dash doesn't like this when the file is missing ... if I ever
+# want to add this back, be sure to test for existence
+#
+## # OPAM configuration
+## . $HOME/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
 
 TEX_HOME="$HOME/installs/texlive/2020"
 
