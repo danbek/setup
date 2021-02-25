@@ -50,9 +50,9 @@
   (setq evil-want-integration t)
   
   :config
-  ;; I prefer emacs binds for terminals
-  (evil-set-initial-state 'term-mode 'emacs)
-  (evil-set-initial-state 'eshell-mode 'emacs)
+  ;; I'm now trying vi bindings in terms.
+  ; (evil-set-initial-state 'term-mode 'emacs)
+  ; (evil-set-initial-state 'eshell-mode 'emacs)
 
   ;; leader key stuff
   (evil-set-leader 'normal (kbd "SPC"))
@@ -73,7 +73,7 @@
     (kbd "<leader>ob") 'org-switchb
     
     ;; buffers
-    (kbd "<leader>bb") 'counsel-switch-buffer
+    (kbd "<leader>bb") 'counsel-ibuffer
     (kbd "<leader>bi") 'ibuffer
     (kbd "<leader>bk") (lambda () (interactive) (kill-buffer (current-buffer)))
     
@@ -119,8 +119,9 @@
   :after evil
   :ensure t
   :config
-  (setq evil-collection-mode-list '(dired ibuffer (occur replace)))
-  (evil-collection-init))
+  (setq evil-collection-mode-list '(dired ibuffer (occur replace) eshell term magit))
+  (evil-collection-init)
+  )
 
 ;; "diminish" minor modes by not dislaying them in the mode-line
 (use-package diminish
@@ -133,13 +134,6 @@
   :ensure t
   :config
   ;; More configuration goes here
-  )
-
-(use-package evil-magit
-  :after evil
-  :ensure t
-  :config
-  (setq evil-magit-state 'motion)
   )
 
 (use-package deft
@@ -272,18 +266,116 @@
 ;; to remove it from the list of elpy modules, which can be done
 ;; through M-x customize-variable RET elpy-modules
 ;;
-(use-package elpy
+
+;; (use-package elpy
+;;   :ensure t
+;;   :config
+;;   (elpy-enable)
+;;   (add-hook 'python-mode-hook
+;; 	    (lambda () (auto-fill-mode t)))
+;;   (add-hook 'python-mode-hook
+;; 	    (lambda () (linum-mode t)))
+;;   (setq python-shell-interpreter "ipython"
+;; 	python-shell-interpreter-args "-i --simple-prompt --matplotlib"
+;; 	elpy-rpc-virtualenv-path 'current)
+;;   )
+
+(use-package python
+  :config
+  :hook (
+	 (python-mode-hook . (lambda () (linum-mode t)))
+	 )
+  )
+
+(use-package pyvenv
+  :ensure t
+  :init
+  (setenv "WORKON_HOME" "/home/beckerd/installs/anaconda3/envs")
+  :config
+  (pyvenv-mode 1)
+  ;; Automatically use pyvenv-workon via dir-locals.
+  ;; Note: in the dir-locals file, use a *string* for the env name, not a symbol
+  (pyvenv-tracking-mode 1)
+  )
+
+;;
+;; What I've found so far
+;;
+;; - flycheck will display the actual errors, flymake won't
+;; - I need to run the lsp command when I visit a python file
+
+(use-package flycheck
+  :ensure t
+;;   :init (global-flycheck-mode)
+  )
+
+(use-package company
+  :ensure t
+  :init
+  (setq company-minimum-prefix-len 1
+	company-idle-delay 0)
+  )
+
+(use-package projectile
+  :ensure t
+  :init
+  (projectile-mode +1)
+  :bind (:map projectile-mode-map
+              ("s-p" . projectile-command-map)
+              ("C-c p" . projectile-command-map)))
+
+;;
+;; Let's try lsp-mode
+;;
+(use-package lsp-mode
   :ensure t
   :config
-  (elpy-enable)
-  (add-hook 'python-mode-hook
-	    (lambda () (auto-fill-mode t)))
-  (add-hook 'python-mode-hook
-	    (lambda () (linum-mode t)))
-  (setq python-shell-interpreter "ipython"
-	python-shell-interpreter-args "-i --simple-prompt --matplotlib"
-	elpy-rpc-virtualenv-path 'current)
-  )
+
+  (defun dtb/lsp-setup()
+    (setq lsp-idle-delay 0.5
+          lsp-enable-symbol-highlighting nil
+          lsp-enable-snippet nil  ;; Not supported by company capf, which is the recommended company backend
+          lsp-pyls-plugins-flake8-enabled t)
+    (lsp-register-custom-settings
+     '(
+;       ("pyls.plugins.pyls_mypy.enabled" t t)
+;       ("pyls.plugins.pyls_mypy.live_mode" nil t)
+;       ("pyls.plugins.pyls_black.enabled" t t)
+;       ("pyls.plugins.pyls_isort.enabled" t t)
+
+       ;; Disable these as they're duplicated by flake8
+       ("pyls.plugins.pycodestyle.enabled" nil t)
+       ("pyls.plugins.mccabe.enabled" nil t)
+       ("pyls.plugins.pyflakes.enabled" nil t))))
+  
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "C-c l")
+  (setq lsp-enable-snippet nil)
+  :hook (
+	 (lsp-before-initialize-hook . dtb/lsp-setup)
+;         ;; (python-mode-hook . lsp)
+;         ;; if you want which-key integration
+;         ;; (lsp-mode-hook . lsp-enable-which-key-integration)
+	 )
+  :commands lsp)
+
+;; optionally
+;(use-package lsp-ui :commands lsp-ui-mode)
+
+;; if you are ivy user
+;(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+
+;; (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
+
+;; optionally if you want to use debugger
+;; (use-package dap-mode)
+;; (use-package dap-LANGUAGE) to load the dap adapter for your language
+
+;; optional if you want which-key integration
+;; (use-package which-key
+;;     :config
+;;     (which-key-mode))
 
 ;;
 ;; Themes
@@ -291,8 +383,19 @@
 
 ;; Trying this from Prot Stavrous. There are many options to explore
 ;; https://gitlab.com/protesilaos/modus-themes 
-(use-package modus-operandi-theme
-  :ensure t)
+(use-package modus-themes
+  :ensure
+  :init
+  ;; Add all your customizations prior to loading the themes
+  (setq modus-themes-slanted-constructs t
+        modus-themes-bold-constructs nil)
+
+  ;; Load the theme files before enabling a theme
+  (modus-themes-load-themes)
+  :config
+  ;; Load the theme of your choice:
+  (modus-themes-load-operandi) ;; OR (modus-themes-load-vivendi)
+  )
 
 ;;
 ;; Julia
