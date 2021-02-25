@@ -260,6 +260,42 @@
   ;(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 ;;
+;; company ... allows completion via lsp-mode
+;;
+(use-package company
+  :ensure t
+  :init
+  (setq company-minimum-prefix-len 1
+	company-idle-delay 0)
+  :config
+  (bind-key "C-n" 'company-select-next company-active-map)
+  (bind-key "C-p" 'company-select-previous company-active-map)
+  (bind-key "C-n" 'company-complete evil-insert-state-map)
+  (global-company-mode 1)
+  )
+
+;;
+;; projectile
+;;
+(use-package projectile
+  :ensure t
+  :init
+  (projectile-mode +1)
+  :bind (:map projectile-mode-map
+              ("s-p" . projectile-command-map)
+              ("C-c p" . projectile-command-map)))
+
+
+;;
+;; flycheck
+;; lsp-mode turns this on automatically when active. Not yet sure I want it on everywhere
+;;
+(use-package flycheck
+  :ensure t
+  ;;   :init (global-flycheck-mode)
+  )
+
+;;
 ;; Python setup. Let's try elpy
 ;;
 ;; Apparently the only way to turn off highlight-indentation-mode is
@@ -280,6 +316,39 @@
 ;; 	elpy-rpc-virtualenv-path 'current)
 ;;   )
 
+;;
+;; Python setup.
+;;
+;; Here is what I've found works for getting lsp-mode working with
+;; mutliple virtual environments.
+;;
+;; Each project that wants to run in it's own virtual environment
+;; needs a .dir-locals.el file. This contains code like the following:
+;;
+;;  ((python-mode
+;;    (pyvenv-workon . "sledge9")))
+;;
+;; If a bunch of "projects" or "repos" all live in the same directory
+;; (e.g. ~/gitrepo), and all use the same virtual env, then you put
+;; the .dir-locals.el file in that same directory.
+;;
+;; Then if you turn on pyvenv-tracking-mode, then whenever you switch
+;; to a buffer with a python file, it will change the global "active"
+;; virtual env appropriately.
+;;
+;; For lsp-mode, you need to install the pyls LSP server in *each* of
+;; these virtual environments:
+;;
+;; conda install python-language-server
+;;
+;; or
+;;
+;; pip install python-language-server
+;; 
+;; If you start lsp from within a python buffer, it will start (and
+;; connect to) the pyls for the current environment.
+;;
+ 
 (use-package python
   :config
   :hook (
@@ -298,35 +367,6 @@
   (pyvenv-tracking-mode 1)
   )
 
-;;
-;; What I've found so far
-;;
-;; - flycheck will display the actual errors, flymake won't
-;; - I need to run the lsp command when I visit a python file
-
-(use-package flycheck
-  :ensure t
-;;   :init (global-flycheck-mode)
-  )
-
-(use-package company
-  :ensure t
-  :init
-  (setq company-minimum-prefix-len 1
-	company-idle-delay 0)
-  )
-
-(use-package projectile
-  :ensure t
-  :init
-  (projectile-mode +1)
-  :bind (:map projectile-mode-map
-              ("s-p" . projectile-command-map)
-              ("C-c p" . projectile-command-map)))
-
-;;
-;; Let's try lsp-mode
-;;
 (use-package lsp-mode
   :ensure t
   :config
@@ -351,20 +391,36 @@
   :init
   ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
   (setq lsp-keymap-prefix "C-c l")
-  (setq lsp-enable-snippet nil)
   :hook (
 	 (lsp-before-initialize-hook . dtb/lsp-setup)
-;         ;; (python-mode-hook . lsp)
+	 ;; It appears that python-mode-hook will run *before* the
+	 ;; directory-local variables are loaded and the correct
+	 ;; virtual env is activated. So in order to automatically
+	 ;; start the LSP server we need to force a load of
+	 ;; .dir-local.el and then force pyvenv to track the correct
+	 ;; virtual env.
+	 (python-mode-hook . (lambda ()
+			       (hack-dir-local-variables-non-file-buffer)
+			       (pyvenv-track-virtualenv)
+			       (lsp)))
 ;         ;; if you want which-key integration
 ;         ;; (lsp-mode-hook . lsp-enable-which-key-integration)
 	 )
   :commands lsp)
 
 ;; optionally
-;(use-package lsp-ui :commands lsp-ui-mode)
+(use-package lsp-ui
+  :requires lsp-mode
+  :ensure t
+  )
+  
 
-;; if you are ivy user
-;(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+;; Provides access to workspace symbols, but unfortunately pyls
+;; doesn't appear to support them.
+(use-package lsp-ivy
+  :requires lsp-mode
+  :ensure
+  )
 
 ;; (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 
@@ -388,7 +444,7 @@
   :init
   ;; Add all your customizations prior to loading the themes
   (setq modus-themes-slanted-constructs t
-        modus-themes-bold-constructs nil)
+        modus-themes-bold-constructs t)
 
   ;; Load the theme files before enabling a theme
   (modus-themes-load-themes)
