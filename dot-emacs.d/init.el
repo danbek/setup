@@ -240,6 +240,14 @@
   (setq dired-clean-confirm-killing-deleted-buffers t)
   )
 
+(use-package dired-subtree
+  :after dired
+  :config
+  :bind (:map dired-mode-map
+              ("<tab>" . dired-subtree-toggle)
+              ("<C-tab>" . dired-subtree-cycle)
+              ("<S-iso-lefttab>" . dired-subtree-remove)))
+
 ;;
 ;; ibuffer
 ;;
