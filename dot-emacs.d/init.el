@@ -35,19 +35,19 @@
 ;;
 ;; Now various packages
 ;;
-(use-package undo-tree
+(use-package undo-fu
   :ensure t
   :config
-  (global-undo-tree-mode 1)
   )
 
 (use-package evil
   :ensure t
-  :after undo-tree
+  :after undo-fu
   :init
   ;; Must do these before loading evil to get evil-collection working
   (setq evil-want-keybinding nil)
   (setq evil-want-integration t)
+  (setq evil-undo-system 'undo-fu)
   
   :config
   ;; I'm now trying vi bindings in terms.
