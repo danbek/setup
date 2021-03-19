@@ -2,6 +2,8 @@
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (load custom-file 'noerror)
 
+(setq gc-cons-threshold (* 10 1024 1024))
+
 ;; Setup package.el
 (require 'package)
 (setq package-check-signature nil)
@@ -210,7 +212,7 @@
   :config
   (setq dired-recursive-copies 'always)
   (setq dired-recursive-deletes 'always)
-  (setq delete-by-moving-to-trash t)
+  (setq delete-by-moving-to-trash nil)
   (setq dired-listing-switches
         "-AFhlv --group-directories-first --time-style=long-iso")
   (setq dired-dwim-target t)
@@ -260,6 +262,7 @@
 		 ("org" (mode . org-mode))
 		 ("dired" (mode . dired-mode))
 		 ("python" (mode . python-mode))
+		 ("special" (name . "*"))
 		 ))))
   :hook (ibuffer-mode-hook . (lambda ()
 			       (ibuffer-switch-to-saved-filter-groups "default")))
@@ -367,7 +370,7 @@
 (use-package pyvenv
   :ensure t
   :init
-  (setenv "WORKON_HOME" "/home/beckerd/installs/anaconda3/envs")
+  (setenv "WORKON_HOME" (expand-file-name "~/installs/anaconda3/envs"))
   :config
   (pyvenv-mode 1)
   ;; Automatically use pyvenv-workon via dir-locals.
@@ -379,6 +382,9 @@
   :ensure t
   :config
 
+  ;; Recommended by lsp-mode documentation
+  (setq read-process-output-max (* 1024 1024)) ;; 1mb
+  
   (defun dtb/lsp-setup()
     (setq lsp-idle-delay 0.5
           lsp-enable-symbol-highlighting nil
