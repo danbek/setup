@@ -97,10 +97,13 @@ in `/etc/xrdp/startwm.sh`:
 
     . $HOME/.profile
 
+The above allows you acces via RDP through the hyper-v GUI. If you want to access it through the usual window Remote Desktop application (or I assume through some other RDP client), then you need to make an additional configuration change [5].
+
 [1]: https://www.zdnet.com/article/windows-10-tip-run-ubuntu-linux-in-an-enhanced-hyper-v-session/
 [2]: https://oitibs.com/hyper-v-lis-on-ubuntu-18-04/
 [3]: https://forum.manjaro.org/t/installing-manjaro-in-hyper-v-with-enhanced-session-support/79394/1
 [4]: https://forum.manjaro.org/t/installing-manjaro-in-hyper-v-with-enhanced-session-support/79394/1
+[5]: https://stackoverflow.com/questions/57236407/cannot-rdp-to-ubuntu18-hyper-v-quick-start
 
 Zenburn for xfce terminal
 -------------------------

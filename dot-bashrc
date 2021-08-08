@@ -123,6 +123,7 @@ alias ll='ls -alF'
 alias lsd='ls -l | grep ^d'
 alias ldt='ls -al | grep " \."'
 alias dfg='df -h | grep "\/dev\/sd" --color=never'
+alias dfg='df -h | head -1 && df -h | grep "\/dev\/sd" --color=never && df -h | grep "tank\/data"'
 
 alias add-key='ssh-add ~/.ssh/id_rsa'
 
@@ -203,3 +204,6 @@ unset __conda_setup
 
 # I need to set this explicitly on my work VM
 export TMOUT=0
+
+#### added by Anaconda2 2.5.0 installer
+###export PATH="/home/beckerd/installs/anaconda2/bin:$PATH"

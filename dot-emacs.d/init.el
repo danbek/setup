@@ -250,6 +250,21 @@
               ("<C-tab>" . dired-subtree-cycle)
               ("<S-iso-lefttab>" . dired-subtree-remove)))
 
+
+(use-package eshell
+  :config
+  ;; I think that the regexp only needs to match the *second* line [1]
+  ;; [1]: https://emacs.stackexchange.com/questions/7370/eshell-prompt-regex
+  (setq eshell-prompt-regexp "^[#$] "
+	eshell-prompt-function
+	(lambda ()
+	  (concat "[" (user-login-name) "@" (system-name) ":"
+		  (if (string= (eshell/pwd) (getenv "HOME"))
+		      "~"
+		    (eshell/pwd))
+		  "]\n$ ")))
+  )
+
 ;;
 ;; ibuffer
 ;;
@@ -575,6 +590,17 @@ buffer (unless it's modified)."
  )
 
 (global-set-key (kbd "C-c c b") 'dtb/copy-to-end-of-buffer)
+
+;; For fixing file permissions after unzipping certain data sets
+(defun dtb/correct-data-file-permissions (dir)
+  (let ((file-and-directory-names (directory-files-recursively dir "" t)))
+    (mapcar (lambda (fname)
+	      (cond ((file-directory-p fname)
+		     (set-file-modes fname #o775))
+		    (t
+		     (set-file-modes fname #o664))))
+	    file-and-directory-names))
+  (set-file-modes dir #o775))
 
 ;;
 ;; Stuff specific to particular computers
