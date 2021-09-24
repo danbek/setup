@@ -79,6 +79,7 @@ Make capslock a control under Xubuntu
 
 Make Alt-Tab work correctly on Ubuntu 18.04
 -------------------------------------------
+
 Follow instructions here: https://askubuntu.com/a/1154780/510762 and here: https://askubuntu.com/questions/464946/force-alt-tab-to-switch-only-on-current-workspace-in-gnome-shell
 
 Installing linux on Hyper-V
@@ -86,24 +87,28 @@ Installing linux on Hyper-V
 
 You can get this setup so that you access the linux GUI through an RDP
 session, which allows clipboard sharing to work. This is the best
-approach that I have found yet. I found instructions for doing this
-when you create an Ubuntu 18.04 VM [1], for after you have created an
-Ubuntu 18.04 VM [2], and for after creating an arch VM [3]. There are
-also instructions from microsoft [4].
+approach that I have found yet.
 
-This apparently uses xrdp to start the session, and it was not sourcing
+Here are instructions for doing this for Ubuntu 20.04:
+
+https://www.nakivo.com/blog/install-ubuntu-20-04-on-hyper-v-with-enhanced-session/
+
+This allows you to connect from the hyper-v GUI, but not from the
+windows Remote Desktop application itself. To do that, follow these
+instructions:
+
+https://stackoverflow.com/questions/57236407/cannot-rdp-to-ubuntu18-hyper-v-quick-start
+
+
+Keeping this link in case it ever prooves useful:
+
+https://www.nakivo.com/blog/how-to-use-remote-desktop-connection-ubuntu-linux-walkthrough/
+
+This setup apparently uses xrdp to start the session, and it was not sourcing
 .profile. To fix this I added this line right before the test and exec
 in `/etc/xrdp/startwm.sh`:
 
     . $HOME/.profile
-
-The above allows you acces via RDP through the hyper-v GUI. If you want to access it through the usual window Remote Desktop application (or I assume through some other RDP client), then you need to make an additional configuration change [5].
-
-[1]: https://www.zdnet.com/article/windows-10-tip-run-ubuntu-linux-in-an-enhanced-hyper-v-session/
-[2]: https://oitibs.com/hyper-v-lis-on-ubuntu-18-04/
-[3]: https://forum.manjaro.org/t/installing-manjaro-in-hyper-v-with-enhanced-session-support/79394/1
-[4]: https://forum.manjaro.org/t/installing-manjaro-in-hyper-v-with-enhanced-session-support/79394/1
-[5]: https://stackoverflow.com/questions/57236407/cannot-rdp-to-ubuntu18-hyper-v-quick-start
 
 Zenburn for xfce terminal
 -------------------------

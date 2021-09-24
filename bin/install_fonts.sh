@@ -7,7 +7,6 @@ FONT_HOME=~/.local/share/fonts
 
 echo "installing fonts to $FONT_HOME"
 mkdir -p "$FONT_HOME/adobe-fonts/source-code-pro"
-mkdir -p "$FONT_HOME/hack"
 
 git clone \
    --branch release \
