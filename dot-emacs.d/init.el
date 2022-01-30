@@ -1,22 +1,15 @@
-;; Better to put custom settings in their own file
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(load custom-file 'noerror)
-
-(setq gc-cons-threshold (* 10 1024 1024))
-
-;; Setup package.el
-(require 'package)
-(setq package-check-signature nil)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize)
-;;(setq package-enable-at-startup nil)
-
-;;
-;; Setup use-package (makes installing other packages much easier)
-;;
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
 
 (eval-and-compile
   ;; Write hooks using their real name instead of a shorter version:
@@ -26,8 +19,17 @@
   ;; such as `describe-symbol'.
   (setq use-package-hook-name-suffix nil))
 
-(eval-when-compile
-  (require 'use-package))
+(straight-use-package 'use-package)
+		     
+(use-package straight
+	     :custom
+	     (straight-use-package-by-default t))
+
+;; Better to put custom settings in their own file
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file 'noerror)
+
+(setq gc-cons-threshold (* 10 1024 1024))
 
 ;;
 ;; For local lisp
@@ -38,12 +40,10 @@
 ;; Now various packages
 ;;
 (use-package undo-fu
-  :ensure t
   :config
   )
 
 (use-package evil
-  :ensure t
   :after undo-fu
   :init
   ;; Must do these before loading evil to get evil-collection working
@@ -107,19 +107,16 @@
 
 (use-package evil-surround
   :after evil
-  :ensure t
   :config
   (global-evil-surround-mode 1))
 
 (use-package evil-indent-plus
   :after evil
-  :ensure t
   :config
   (evil-indent-plus-default-bindings))
 
 (use-package evil-collection
   :after evil
-  :ensure t
   :config
   (setq evil-collection-mode-list '(dired ibuffer (occur replace) eshell term magit))
   (evil-collection-init)
@@ -127,13 +124,11 @@
 
 ;; "diminish" minor modes by not dislaying them in the mode-line
 (use-package diminish
-  :ensure t
   :config
   ;; More configuration goes here
   )
 
 (use-package magit
-  :ensure t
   :config
   ;; More configuration goes here
   )
@@ -152,8 +147,8 @@
 ;; 	  (case-fn . downcase)))
 ;;   )
 
+
 (use-package org
-  :ensure t
   :config
   (setq org-hide-leading-starts t)
   
@@ -161,7 +156,6 @@
   (setq org-agenda-files '("~/notes"))
 
   ;(use-package org-bullets
-  ;  :ensure t
   ;  :config
   ;  (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
   )
@@ -169,7 +163,6 @@
 ;;; to install prerequisites: sudo apt-get install libpng-dev zlib1g-dev libpoppler-glib-dev libpoppler-private-dev imagemagick
 ;; (use-package pdf-tools
 ;;   ;; :pin manual ;; manually update
-;;   :ensure t
 ;;   :config
 ;;   ;; initialise
 ;;   (pdf-tools-install)
@@ -181,7 +174,6 @@
 ;;   (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
 
 (use-package evil-org
-  :ensure t
   :after (evil org)
   :config
   (add-hook 'org-mode-hook 'evil-org-mode)
@@ -193,19 +185,16 @@
 
 ; loading this allows counsel-M-x to show most recent commands first
 (use-package smex
-  :ensure t
   :config
   ;; More configuration goes here
   )
 
 (use-package hydra
-  :ensure t
   :config
   ;; More configuration goes here
   )
 
 (use-package ivy
-  :ensure t
   :diminish (ivy-mode . "")
   :config
   (ivy-mode 1)
@@ -215,7 +204,6 @@
   )
 
 (use-package counsel
-  :ensure t
   :config
   (counsel-mode 1)
   )
@@ -223,6 +211,7 @@
 ;; dired
 ;; much from protesilaos
 (use-package dired
+  :straight nil
   :config
   (setq dired-recursive-copies 'always)
   (setq dired-recursive-deletes 'always)
@@ -243,6 +232,7 @@
   )
 
 (use-package wdired
+  ;:straight nil
   :after dired
   :commands wdired-change-to-wdired-mode
   :config
@@ -250,6 +240,7 @@
   (setq wdired-create-parent-directories t))
 
 (use-package dired-x
+  :straight nil
   :after dired
   :config
   (setq dired-clean-up-buffers-too t)
@@ -263,7 +254,6 @@
               ("<tab>" . dired-subtree-toggle)
               ("<C-tab>" . dired-subtree-cycle)
               ("<S-iso-lefttab>" . dired-subtree-remove)))
-
 
 (use-package eshell
   :config
@@ -303,7 +293,6 @@
 ;; company ... allows completion via lsp-mode
 ;;
 (use-package company
-  :ensure t
   :init
   (setq company-minimum-prefix-len 1
 	company-idle-delay 0)
@@ -318,7 +307,6 @@
 ;; projectile
 ;;
 (use-package projectile
-  :ensure t
   :init
   (projectile-mode +1)
   :bind (:map projectile-mode-map
@@ -331,7 +319,6 @@
 ;; lsp-mode turns this on automatically when active. Not yet sure I want it on everywhere
 ;;
 (use-package flycheck
-  :ensure t
   ;;   :init (global-flycheck-mode)
   )
 
@@ -344,7 +331,6 @@
 ;;
 
 ;; (use-package elpy
-;;   :ensure t
 ;;   :config
 ;;   (elpy-enable)
 ;;   (add-hook 'python-mode-hook
@@ -397,7 +383,6 @@
   )
 
 (use-package pyvenv
-  :ensure t
   :init
   (setenv "WORKON_HOME" (expand-file-name "~/installs/anaconda3/envs"))
   :config
@@ -408,7 +393,6 @@
   )
 
 (use-package lsp-mode
-  :ensure t
   :config
 
   ;; Recommended by lsp-mode documentation
@@ -454,7 +438,6 @@
 ;; optionally
 (use-package lsp-ui
   :requires lsp-mode
-  :ensure t
   )
   
 
@@ -462,7 +445,6 @@
 ;; doesn't appear to support them.
 (use-package lsp-ivy
   :requires lsp-mode
-  :ensure
   )
 
 ;; (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
@@ -483,7 +465,6 @@
 ;; Trying this from Prot Stavrous. There are many options to explore
 ;; https://gitlab.com/protesilaos/modus-themes 
 (use-package modus-themes
-  :ensure
   :init
   ;; Add all your customizations prior to loading the themes
   (setq modus-themes-slanted-constructs t
@@ -497,9 +478,8 @@
   )
 
 ;;
-;; Julia
+;; Julia stuff
 ;;
-
 (require 'julia-mode)
 (require 'julia-repl)
 (add-hook 'julia-mode-hook 'julia-repl-mode)
@@ -508,6 +488,7 @@
 ;(setq julia-repl-executable-records
 ;      '((default "julia")                  ; in the executable path
 ;        (master "~/src/julia-git/julia"))) ; compiled from the repository
+
 
 ;;
 ;; C/C++
