@@ -138,19 +138,19 @@
   ;; More configuration goes here
   )
 
-(use-package deft
-  :ensure t
-  :config
-  ;; More configuration goes here
-  (setq deft-default-extension "org")
-  (setq deft-directory "~/notes/notes")
-  (setq deft-org-mode-title-prefix t)
-  (setq deft-use-filter-string-for-filename t)
-  (setq deft-file-naming-rules
-	'((noslash . "-")
-	  (nospace . "-")
-	  (case-fn . downcase)))
-  )
+;; (use-package deft
+;;   :ensure t
+;;   :config
+;;   ;; More configuration goes here
+;;   (setq deft-default-extension "org")
+;;   (setq deft-directory "~/notes/notes")
+;;   (setq deft-org-mode-title-prefix t)
+;;   (setq deft-use-filter-string-for-filename t)
+;;   (setq deft-file-naming-rules
+;; 	'((noslash . "-")
+;; 	  (nospace . "-")
+;; 	  (case-fn . downcase)))
+;;   )
 
 (use-package org
   :ensure t
@@ -165,6 +165,20 @@
   ;  :config
   ;  (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
   )
+
+;;; to install prerequisites: sudo apt-get install libpng-dev zlib1g-dev libpoppler-glib-dev libpoppler-private-dev imagemagick
+;; (use-package pdf-tools
+;;   ;; :pin manual ;; manually update
+;;   :ensure t
+;;   :config
+;;   ;; initialise
+;;   (pdf-tools-install)
+;;   ;; open pdfs scaled to fit page
+;;   (setq-default pdf-view-display-size 'fit-page)
+;;   ;; automatically annotate highlights
+;;   (setq pdf-annot-activate-created-annotations t)
+;;   ;; use normal isearch
+;;   (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
 
 (use-package evil-org
   :ensure t
