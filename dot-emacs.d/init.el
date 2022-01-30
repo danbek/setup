@@ -160,18 +160,16 @@
   ;  (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
   )
 
-;;; to install prerequisites: sudo apt-get install libpng-dev zlib1g-dev libpoppler-glib-dev libpoppler-private-dev imagemagick
-;; (use-package pdf-tools
-;;   ;; :pin manual ;; manually update
-;;   :config
-;;   ;; initialise
-;;   (pdf-tools-install)
-;;   ;; open pdfs scaled to fit page
-;;   (setq-default pdf-view-display-size 'fit-page)
-;;   ;; automatically annotate highlights
-;;   (setq pdf-annot-activate-created-annotations t)
-;;   ;; use normal isearch
-;;   (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
+;; to install prerequisites: sudo apt-get install libpng-dev zlib1g-dev libpoppler-glib-dev libpoppler-private-dev imagemagick
+(use-package pdf-tools
+  :config
+  (pdf-tools-install)
+  ;; open pdfs scaled to fit page
+  (setq-default pdf-view-display-size 'fit-page)
+  ;; automatically annotate highlights
+  (setq pdf-annot-activate-created-annotations t)
+  ;; use normal isearch
+  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
 
 (use-package evil-org
   :after (evil org)
