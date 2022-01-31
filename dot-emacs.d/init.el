@@ -1,3 +1,18 @@
+;;
+;; Stuff that I think needs to happen immediately
+;;
+
+;; Better to put custom settings in their own file
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(load custom-file 'noerror)
+
+(setq gc-cons-threshold (* 10 1024 1024))
+
+;;
+;; Setup straight.el and use-package
+;;
+
+;; straight.el bootstrapping
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -11,6 +26,9 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
+;; I'm not sure whether this really needs to be wrapped in
+;; eval-and-compare, but that's how it was done in the init.el that I
+;; got this idea from, so ...
 (eval-and-compile
   ;; Write hooks using their real name instead of a shorter version:
   ;;    after-init ==> `after-init-hook'.
@@ -19,17 +37,9 @@
   ;; such as `describe-symbol'.
   (setq use-package-hook-name-suffix nil))
 
+
+; setup use-package
 (straight-use-package 'use-package)
-		     
-(use-package straight
-	     :custom
-	     (straight-use-package-by-default t))
-
-;; Better to put custom settings in their own file
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(load custom-file 'noerror)
-
-(setq gc-cons-threshold (* 10 1024 1024))
 
 ;;
 ;; For local lisp
@@ -37,13 +47,57 @@
 (add-to-list 'load-path "~/.emacs.d/site-lisp")
 
 ;;
+;; General emacs stuff
+;;
+(use-package emacs
+  :config
+  ;; don't need toolbar
+  (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+  
+  ;; better scrolling http://etherplex.org/static/emacs.html
+  (setq scroll-conservatively 10)
+  (setq scroll-margin 7)
+  (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
+  (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+  (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+  (setq scroll-step 1) ;; keyboard scroll one line at a time
+  
+  ;; from http://xenon.stanford.edu/~manku/dotemacs.html
+  (setq inhibit-startup-screen t)
+					;(setq inhibit-startup-echo-area-message t)
+  (setq require-final-newline t)
+  (setq display-time-day-and-date t) (display-time)
+
+  (setq tramp-default-method "ssh")
+  
+  (blink-cursor-mode 0)
+  
+  (window-divider-mode +1)
+  
+  ;; I perfer to not scatter these files all over the place
+  (make-directory "~/.emacs.d/autosaves/" t)
+  (make-directory "~/.emacs.d/backups/" t)
+  (setq backup-directory-alist `(("." . "~/.emacs.d/backups")))
+  (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/autosaves/\\1" t)))
+  (setq delete-old-versions t
+	kept-new-versions 6
+	kept-old-versions 2
+	version-control t)
+
+  :hook (after-init-hook . column-number-mode)
+  )
+
+;;
 ;; Now various packages
 ;;
+
 (use-package undo-fu
+  :straight t
   :config
   )
 
 (use-package evil
+  :straight t
   :after undo-fu
   :init
   ;; Must do these before loading evil to get evil-collection working
@@ -106,16 +160,19 @@
   )
 
 (use-package evil-surround
+  :straight t
   :after evil
   :config
   (global-evil-surround-mode 1))
 
 (use-package evil-indent-plus
+  :straight t
   :after evil
   :config
   (evil-indent-plus-default-bindings))
 
 (use-package evil-collection
+  :straight t
   :after evil
   :config
   (setq evil-collection-mode-list '(dired ibuffer (occur replace) eshell term magit))
@@ -124,11 +181,13 @@
 
 ;; "diminish" minor modes by not dislaying them in the mode-line
 (use-package diminish
+  :straight t
   :config
   ;; More configuration goes here
   )
 
 (use-package magit
+  :straight t
   :config
   ;; More configuration goes here
   )
@@ -149,6 +208,7 @@
 
 
 (use-package org
+  :straight t
   :config
   (setq org-hide-leading-starts t)
   
@@ -160,18 +220,8 @@
   ;  (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
   )
 
-;; to install prerequisites: sudo apt-get install libpng-dev zlib1g-dev libpoppler-glib-dev libpoppler-private-dev imagemagick
-(use-package pdf-tools
-  :config
-  (pdf-tools-install)
-  ;; open pdfs scaled to fit page
-  (setq-default pdf-view-display-size 'fit-page)
-  ;; automatically annotate highlights
-  (setq pdf-annot-activate-created-annotations t)
-  ;; use normal isearch
-  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
-
 (use-package evil-org
+  :straight t
   :after (evil org)
   :config
   (add-hook 'org-mode-hook 'evil-org-mode)
@@ -181,18 +231,46 @@
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
 
+;; to install prerequisites: sudo apt-get install libpng-dev zlib1g-dev libpoppler-glib-dev libpoppler-private-dev imagemagick
+(use-package pdf-tools
+  :straight t
+  :config
+  (pdf-tools-install)
+  ;; open pdfs scaled to fit page
+  (setq-default pdf-view-display-size 'fit-page)
+  ;; automatically annotate highlights
+  (setq pdf-annot-activate-created-annotations t)
+  ;; use normal isearch
+  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
+
+;; to install prerequisites: sudo apt-get install libpng-dev zlib1g-dev libpoppler-glib-dev libpoppler-private-dev imagemagick
+(use-package pdf-tools
+  :straight t
+  :config
+  (pdf-tools-install)
+  ;; open pdfs scaled to fit page
+  (setq-default pdf-view-display-size 'fit-page)
+  ;; automatically annotate highlights
+  (setq pdf-annot-activate-created-annotations t)
+  ;; use normal isearch
+  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
+
+
 ; loading this allows counsel-M-x to show most recent commands first
 (use-package smex
+  :straight t
   :config
   ;; More configuration goes here
   )
 
 (use-package hydra
+  :straight t
   :config
   ;; More configuration goes here
   )
 
 (use-package ivy
+  :straight t
   :diminish (ivy-mode . "")
   :config
   (ivy-mode 1)
@@ -202,14 +280,17 @@
   )
 
 (use-package counsel
+  :straight t
   :config
   (counsel-mode 1)
   )
 
+;;
 ;; dired
 ;; much from protesilaos
+;;
+
 (use-package dired
-  :straight nil
   :config
   (setq dired-recursive-copies 'always)
   (setq dired-recursive-deletes 'always)
@@ -230,7 +311,6 @@
   )
 
 (use-package wdired
-  ;:straight nil
   :after dired
   :commands wdired-change-to-wdired-mode
   :config
@@ -238,7 +318,6 @@
   (setq wdired-create-parent-directories t))
 
 (use-package dired-x
-  :straight nil
   :after dired
   :config
   (setq dired-clean-up-buffers-too t)
@@ -246,12 +325,17 @@
   )
 
 (use-package dired-subtree
+  :straight t
   :after dired
   :config
   :bind (:map dired-mode-map
               ("<tab>" . dired-subtree-toggle)
               ("<C-tab>" . dired-subtree-cycle)
               ("<S-iso-lefttab>" . dired-subtree-remove)))
+
+;;
+;; 
+;;
 
 (use-package eshell
   :config
@@ -291,6 +375,7 @@
 ;; company ... allows completion via lsp-mode
 ;;
 (use-package company
+  :straight t
   :init
   (setq company-minimum-prefix-len 1
 	company-idle-delay 0)
@@ -305,6 +390,7 @@
 ;; projectile
 ;;
 (use-package projectile
+  :straight t
   :init
   (projectile-mode +1)
   :bind (:map projectile-mode-map
@@ -317,31 +403,12 @@
 ;; lsp-mode turns this on automatically when active. Not yet sure I want it on everywhere
 ;;
 (use-package flycheck
+  :straight t
   ;;   :init (global-flycheck-mode)
   )
 
 ;;
-;; Python setup. Let's try elpy
-;;
-;; Apparently the only way to turn off highlight-indentation-mode is
-;; to remove it from the list of elpy modules, which can be done
-;; through M-x customize-variable RET elpy-modules
-;;
-
-;; (use-package elpy
-;;   :config
-;;   (elpy-enable)
-;;   (add-hook 'python-mode-hook
-;; 	    (lambda () (auto-fill-mode t)))
-;;   (add-hook 'python-mode-hook
-;; 	    (lambda () (linum-mode t)))
-;;   (setq python-shell-interpreter "ipython"
-;; 	python-shell-interpreter-args "-i --simple-prompt --matplotlib"
-;; 	elpy-rpc-virtualenv-path 'current)
-;;   )
-
-;;
-;; Python setup.
+;; Python setup using lsp
 ;;
 ;; Here is what I've found works for getting lsp-mode working with
 ;; mutliple virtual environments.
@@ -381,6 +448,7 @@
   )
 
 (use-package pyvenv
+  :straight t
   :init
   (setenv "WORKON_HOME" (expand-file-name "~/installs/anaconda3/envs"))
   :config
@@ -391,6 +459,7 @@
   )
 
 (use-package lsp-mode
+  :straight t
   :config
 
   ;; Recommended by lsp-mode documentation
@@ -435,6 +504,7 @@
 
 ;; optionally
 (use-package lsp-ui
+  :straight t
   :requires lsp-mode
   )
   
@@ -442,6 +512,7 @@
 ;; Provides access to workspace symbols, but unfortunately pyls
 ;; doesn't appear to support them.
 (use-package lsp-ivy
+  :straight t
   :requires lsp-mode
   )
 
@@ -463,6 +534,7 @@
 ;; Trying this from Prot Stavrous. There are many options to explore
 ;; https://gitlab.com/protesilaos/modus-themes 
 (use-package modus-themes
+  :straight t
   :init
   ;; Add all your customizations prior to loading the themes
   (setq modus-themes-slanted-constructs t
@@ -497,44 +569,6 @@
 ;;
 ;; Other stuff
 ;;
-(use-package emacs
-  :config
-  ;; don't need toolbar
-  (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-  
-  ;; better scrolling http://etherplex.org/static/emacs.html
-  (setq scroll-conservatively 10)
-  (setq scroll-margin 7)
-  (setq mouse-wheel-scroll-amount '(1 ((shift) . 1))) ;; one line at a time
-  (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
-  (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
-  (setq scroll-step 1) ;; keyboard scroll one line at a time
-  
-  ;; from http://xenon.stanford.edu/~manku/dotemacs.html
-  (setq inhibit-startup-screen t)
-					;(setq inhibit-startup-echo-area-message t)
-  (setq require-final-newline t)
-  (setq display-time-day-and-date t) (display-time)
-  
-  (blink-cursor-mode 0)
-  
-  (window-divider-mode +1)
-  
-  ;; I perfer to not scatter these files all over the place
-  (make-directory "~/.emacs.d/autosaves/" t)
-  (make-directory "~/.emacs.d/backups/" t)
-  (setq backup-directory-alist `(("." . "~/.emacs.d/backups")))
-  (setq auto-save-file-name-transforms '((".*" "~/.emacs.d/autosaves/\\1" t)))
-  (setq delete-old-versions t
-	kept-new-versions 6
-	kept-old-versions 2
-	version-control t)
-
-  :hook (after-init-hook . column-number-mode)
-  )
-
-;; TRAMP defaults
-(setq tramp-default-method "ssh")
 
 ;; start server for use of emacs from command line
 ;; (server-start)
@@ -657,4 +691,3 @@ buffer (unless it's modified)."
 ;; maybe some good ideas on python in emacs in this video? https://www.youtube.com/watch?v=6BlTGPsjGJk&index=15&list=PL8tzorAO7s0he-pp7Y_JDl7-Kz2Qlr_Pj
 ;;
 ;; read this: https://daedtech.com/how-developers-stop-learning-rise-of-the-expert-beginner/
- 
