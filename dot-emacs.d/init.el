@@ -238,23 +238,15 @@
   (pdf-tools-install)
   ;; open pdfs scaled to fit page
   (setq-default pdf-view-display-size 'fit-page)
+  (setq pdf-view-resize-factor 1.1)
+
   ;; automatically annotate highlights
   (setq pdf-annot-activate-created-annotations t)
+  
   ;; use normal isearch
-  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
-
-;; to install prerequisites: sudo apt-get install libpng-dev zlib1g-dev libpoppler-glib-dev libpoppler-private-dev imagemagick
-(use-package pdf-tools
-  :straight t
-  :config
-  (pdf-tools-install)
-  ;; open pdfs scaled to fit page
-  (setq-default pdf-view-display-size 'fit-page)
-  ;; automatically annotate highlights
-  (setq pdf-annot-activate-created-annotations t)
-  ;; use normal isearch
-  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward))
-
+  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
+  ;; (define-key pdf-view-mode-map (kbd "SPC") 'evil-send-leader)
+  )
 
 ; loading this allows counsel-M-x to show most recent commands first
 (use-package smex
