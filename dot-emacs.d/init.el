@@ -120,6 +120,7 @@
     (kbd "<leader>fo") (lambda () (interactive) (find-file "~/notes/organizer.org"))
     (kbd "<leader>fr") 'counsel-recentf
     (kbd "<leader>fv") 'find-alternate-file
+    (kbd "<leader>fb") 'ivy-bibtex
   
     ;; org-mode
     (kbd "<leader>ol") 'org-store-line
@@ -128,10 +129,12 @@
     (kbd "<leader>oc") 'org-capture
     (kbd "<leader>ob") 'org-switchb
     
-    ;; buffers
+    ;; buffers & bibliography
     (kbd "<leader>bb") 'counsel-ibuffer
     (kbd "<leader>bi") 'ibuffer
     (kbd "<leader>bk") (lambda () (interactive) (kill-buffer (current-buffer)))
+    (kbd "<leader>bp") 'doi-utils-get-bibtex-entry-pdf
+    (kbd "<leader>be") 'doi-insert-bibtex
     
     ;; other
     (kbd "<leader>d") 'deft
@@ -227,6 +230,82 @@
               (evil-org-set-key-theme '(navigation insert textobjects additional calendar))))
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
+
+;;
+;; Dealing with bibliography stuff
+;;
+;; Three parts here. First, ivy-bibtex gives a way to search through a
+;; bibtex file (or set of bibtex files), via ivy-bibtex M-o on a
+;; selection gives you options to do various things with that
+;; selection.
+;;
+;; ivy-bibtex associates a pdf and "notes" file with each entry.
+;;
+;; Second, org-ref allows you to insert org-mode-style references,
+;; leaning on ivy-bibtex for the choice of item.
+;;
+;; Finally, doi-utils (which is part of org-ref) provides functions to
+;; insert a bibtex enetry gievn a doi, and to download a pdf for an
+;; entry. Thse are bound to keys in the evil setup
+;;
+(use-package ivy-bibtex
+  :straight t
+  :config
+  (setq bibtex-completion-bibliography '("/home/beckerd/notes/report.bib"))
+  (setq bibtex-completion-library-path "/home/beckerd/notes/pdf/")
+  (setq bibtex-completion-notes-path "/home/beckerd/notes/notes/")
+
+  ;; from John Kitchin's org-ref configuration instructions
+  (setq bibtex-completion-display-formats
+	'((article       . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${journal:40}")
+	  (inbook        . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} Chapter ${chapter:32}")
+	  (incollection  . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
+	  (inproceedings . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
+	  (t             . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*}")))
+
+  ;; Per the README.org, the following should allow the little icons
+  ;; to appear without reloading the bib file. But it doesn't work,
+  ;; because bibtex-completion-candidates only reloads if the .bib
+  ;; file's hash has changed. So commented out for now
+  ;;
+  ;; (setq dtb/pdf-watch
+  ;; 	(file-notify-add-watch bibtex-completion-library-path
+  ;;                              '(change)
+  ;;                              (lambda (event) (bibtex-completion-candidates))))
+  ;; (setq dtb/notes-watch
+  ;; 	(file-notify-add-watch bibtex-completion-notes-path
+  ;;                              '(change)
+  ;;                              (lambda (event) (bibtex-completion-candidates))))
+  )
+
+;;
+;; An issue with doi-utils is that it doesn't use journal name
+;; abbreviations ... I guess makes sense, probably just uses whatever
+;; it find on relevant website. In principle seems like the LTWA [1] could
+;; be used a source for abbreviations, but it doesn't include the word
+;; "Physical" which is really odd.
+;;
+;; [1]: https://www.issn.org/services/online-services/access-to-the-ltwa/
+;;
+(use-package org-ref
+  :straight t
+  :config
+  (require 'org-ref-ivy)
+  (setq
+   org-ref-insert-link-function 'org-ref-insert-link-hydra/body
+   org-ref-insert-cite-function 'org-ref-cite-insert-ivy
+   org-ref-insert-label-function 'org-ref-insert-label-link
+   org-ref-insert-ref-function 'org-ref-insert-ref-link
+   org-ref-cite-onclick-function (lambda (_) (org-ref-citation-hydra/body))
+   
+   ;;org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
+   ;;org-ref-default-bibliography (list "/home/haozeke/GDrive/zotLib.bib")
+   ;;org-ref-bibliography-notes "/home/haozeke/Git/Gitlab/Mine/Notes/bibnotes.org"
+   ;;org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
+   ;;org-ref-notes-directory "/home/haozeke/Git/Gitlab/Mine/Notes/"
+   ;;org-ref-notes-function 'orb-edit-notes
+   )
+  )
 
 ;; to install prerequisites: sudo apt-get install libpng-dev zlib1g-dev libpoppler-glib-dev libpoppler-private-dev imagemagick
 (use-package pdf-tools
