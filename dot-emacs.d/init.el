@@ -123,10 +123,8 @@
     (kbd "<leader>fb") 'ivy-bibtex
   
     ;; org-mode
-    (kbd "<leader>ol") 'org-store-line
     (kbd "<leader>oa") 'org-agenda-list
     (kbd "<leader>ot") 'org-todo-list
-    (kbd "<leader>oc") 'org-capture
     (kbd "<leader>ob") 'org-switchb
     
     ;; buffers & bibliography
@@ -210,10 +208,57 @@
 (use-package org
   :straight t
   :config
-  (setq org-hide-leading-starts t)
-  
+  (setq org-startup-folded t)
+  (setq org-hide-leading-stars t)
+  (setq org-refile-targets (quote ((nil :maxlevel . 9)
+                                   (org-agenda-files :maxlevel . 9))))
+  (setq org-refile-use-outline-path t)
+  (setq org-outline-path-complete-in-steps nil)
+
+  (defun gs-org-disable-evil-auto-indent nil
+    "Disables evil's auto-indent for org."
+    (setq evil-auto-indent nil)
+    )
+  (add-hook 'org-mode-hook #'gs-org-disable-evil-auto-indent)
+
+  ; task stuff
+  (setq org-todo-keywords
+	'((sequence "TODO(t)" "PROJ(p)" "WAITING(w)" "|" "DONE(d)")
+	  (sequence "|" "DEFERRED(f)" "SOMEDAY(s)" "CANCELLED(c)")))
+
+  (setq org-todo-state-tags-triggers
+	'(("PROJ" ("PROJ" . t))
+	  ("TODO" ("PROJ" . nil))
+	  ("WAITING" ("PROJ" . nil))
+	  ("" ("PROJ" . nil))
+	  ))
+
+  ;; For best use, need to do two things:
+  ;;  1. Add a "PROJ" tag to each PROJ todo (C-c C-q) (trying to
+  ;;     handle this automatically via org-todo-state-triggers)
+  ;;  2. Add a property CATEGORY to each PROJ todo (keep name short)
+  (setq org-agenda-custom-commands
+	'(("o" "Open Tasks"
+	   (
+	    (tags-todo "PROJ/TODO|NEXT" ((org-agenda-overriding-header "Projects")))
+	    (tags-todo "-PROJ/!TODO" ((org-agenda-overriding-header "Standalone")))
+	    (todo "WAITING" ((org-agenda-overriding-header "WAITING Tasks")))
+	    )
+	   ((org-agenda-compact-blocks t)))
+	  ("w" "WAITING Tasks"
+	   todo "WAITING" ((org-agenda-overriding-header "WAITING Tasks")))
+	  ("p" "Active Projects"
+	   todo "PROJ" ((org-agenda-overriding-header "Active Projects")))))
+
+  (add-hook 'org-agenda-finalize-hook #'hl-line-mode)
+
+  (global-set-key (kbd "C-c l") 'org-store-link)
   (global-set-key (kbd "C-c a") 'org-agenda)
+  (global-set-key (kbd "C-c c") 'org-capture)
+
   (setq org-agenda-files '("~/notes"))
+
+  (add-hook 'org-mode-hook 'turn-on-auto-fill)
 
   ;(use-package org-bullets
   ;  :config
@@ -697,6 +742,12 @@ buffer (unless it's modified)."
 	    file-and-directory-names))
   (set-file-modes dir #o775))
 
+(defun dtb/org-timestamp-up-week (&optional num-weeks)
+  (interactive "p")
+  (if (eq num-weeks nil)
+      (setq num-weeks 1))
+  (org-timestamp-up-day (* num-weeks 7)))
+
 ;;
 ;; Stuff specific to particular computers
 ;;
@@ -730,7 +781,7 @@ buffer (unless it's modified)."
        (add-to-list 'default-frame-alist '(left . 0))
        (add-to-list 'default-frame-alist '(top . 0))
        (add-to-list 'default-frame-alist '(height . 65))
-       (add-to-list 'default-frame-alist '(width . 147)))
+       (add-to-list 'default-frame-alist '(width . 140)))
       ((string-match "182loane7240-vm1" system-name)
        (dtb-set-default-font "Hack-10:autohint=true:hintstyle=hintfull:embeddedbitmap=false")
        (add-to-list 'default-frame-alist '(left . 0))
