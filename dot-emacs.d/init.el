@@ -154,9 +154,6 @@
   (define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
   
   (evil-mode 1)
-  
-  :custom
-  (evil-undo-system 'undo-tree) ; had to make this a custom to get it to work
   )
 
 (use-package evil-surround
@@ -177,7 +174,7 @@
   :config
   (setq evil-collection-mode-list '(dired ibuffer (occur replace) eshell term magit))
   (evil-collection-init)
-  )
+)
 
 ;; "diminish" minor modes by not dislaying them in the mode-line
 (use-package diminish
