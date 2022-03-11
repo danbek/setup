@@ -35,7 +35,7 @@ umask 022
 ## # OPAM configuration
 ## . $HOME/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true
 
-TEX_HOME="$HOME/installs/texlive/2020"
+TEX_HOME="$HOME/installs/texlive/2021"
 
 append_to_path "$HOME/bin"
 append_to_path "/usr/local/Trolltech/Qt-4.8.6/bin"
