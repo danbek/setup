@@ -663,15 +663,31 @@
 ;;
 ;; Julia stuff
 ;;
-(require 'julia-mode)
-(require 'julia-repl)
-(add-hook 'julia-mode-hook 'julia-repl-mode)
-(setq julia-repl-executable-records
-      '((julia-1.1.0 "/home/dan/installs/julia-1.1.0/bin/julia")))
-;(setq julia-repl-executable-records
-;      '((default "julia")                  ; in the executable path
-;        (master "~/src/julia-git/julia"))) ; compiled from the repository
 
+(use-package julia-mode
+  :straight t
+  :init
+  )
+
+(use-package julia-repl
+  :straight t
+  :after julia-mode
+  :init
+  )
+
+
+;;
+;; Old approach
+;;
+
+;;(require 'julia-mode)
+;;(require 'julia-repl)
+;;(add-hook 'julia-mode-hook 'julia-repl-mode)
+;;(setq julia-repl-executable-records
+;;      '((julia-1.1.0 "/home/dan/installs/julia-1.1.0/bin/julia")))
+;;;(setq julia-repl-executable-records
+;;;      '((default "julia")                  ; in the executable path
+;;;        (master "~/src/julia-git/julia"))) ; compiled from the repository
 
 ;;
 ;; C/C++
