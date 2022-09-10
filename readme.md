@@ -99,7 +99,6 @@ instructions:
 
 https://stackoverflow.com/questions/57236407/cannot-rdp-to-ubuntu18-hyper-v-quick-start
 
-
 Keeping this link in case it ever prooves useful:
 
 https://www.nakivo.com/blog/how-to-use-remote-desktop-connection-ubuntu-linux-walkthrough/
@@ -109,6 +108,16 @@ This setup apparently uses xrdp to start the session, and it was not sourcing
 in `/etc/xrdp/startwm.sh`:
 
     . $HOME/.profile
+
+Placing matplotlib windows on second monitor
+--------------------------------------------
+
+Trying to do this using devilspie2. The installer places the config file in the right place. But you need to 
+run devilspie2 from the command line in a terminal:
+
+$ devilspie2 # just run it somewhere
+
+Should really make this run on startup or something.
 
 Zenburn for xfce terminal
 -------------------------

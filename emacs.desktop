@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=Emacs-29
+Comment=Emacs, the Extensible Text Editor
+Exec=/home/beckerd/installs/local/bin/emacs
+Icon=/home/beckerd/installs/local/share/icons/hicolor/128x128/apps/emacs.png
+Terminal=false

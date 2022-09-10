@@ -55,6 +55,9 @@ make_all_links() {
         make_dot_link $link
     done
 
+    make_link .config/devilspie2/devilspie2.lua devilspie2.lua
+    make_link .local/share/applications/emacs.desktop emacs.desktop
+
     # make_link .config/awesome awesome
     # make_link .config/i3/config i3-config
     # make_link .config/i3status/config i3status-config
