@@ -112,6 +112,7 @@
 
   ;; leader key stuff
   (evil-set-leader 'normal (kbd "SPC"))
+  (evil-set-leader 'motion (kbd "SPC"))
   (evil-define-key 'normal 'global
 
     ;; loading files
@@ -120,7 +121,7 @@
     (kbd "<leader>fo") (lambda () (interactive) (find-file "~/notes/organizer.org"))
     (kbd "<leader>fr") 'counsel-recentf
     (kbd "<leader>fv") 'find-alternate-file
-    (kbd "<leader>fb") 'ivy-bibtex
+    (kbd "<leader>fb") (lambda () (interactive) (ivy-bibtex t))
   
     ;; org-mode
     (kbd "<leader>oa") 'org-agenda-list
@@ -131,6 +132,8 @@
     (kbd "<leader>bb") 'counsel-ibuffer
     (kbd "<leader>bi") 'ibuffer
     (kbd "<leader>bk") (lambda () (interactive) (kill-buffer (current-buffer)))
+    (kbd "<leader>br") (lambda () (interactive) (revert-buffer t (not (buffer-modified-p)) t))
+    
     (kbd "<leader>bp") 'doi-utils-get-bibtex-entry-pdf
     (kbd "<leader>be") 'doi-insert-bibtex
     
@@ -171,9 +174,9 @@
 
 (use-package evil-collection
   :straight t
-  :after evil
+  :after (evil magit)
   :config
-  (setq evil-collection-mode-list '(dired ibuffer (occur replace) eshell term magit))
+  (setq evil-collection-mode-list '(dired ibuffer (occur replace) eshell term magit info help))
   (evil-collection-init)
 )
 
@@ -296,7 +299,7 @@
 (use-package ivy-bibtex
   :straight t
   :config
-  (setq bibtex-completion-bibliography '("/home/beckerd/notes/report.bib"))
+  (setq bibtex-completion-bibliography '("/home/beckerd/notes/report.bib" "/home/beckerd/notes/becker.bib"))
   (setq bibtex-completion-library-path "/home/beckerd/notes/pdf/")
   (setq bibtex-completion-notes-path "/home/beckerd/notes/notes/")
 
@@ -423,6 +426,14 @@
   ;; (add-hook 'dired-mode-hook 'hl-line-mode);
   )
 
+(use-package bibtex
+  :config
+  (setq bibtex-entry-format
+      '(opts-or-alts required-fields whitespace realign delimiters unify-case sort-fields)
+      bibtex-align-at-equal-sign 't)
+  :hook ((bibtex-mode-hook . (lambda () (setq fill-column 120))))
+  )
+
 (use-package wdired
   :after dired
   :commands wdired-change-to-wdired-mode
@@ -507,7 +518,6 @@
   :init
   (projectile-mode +1)
   :bind (:map projectile-mode-map
-              ("s-p" . projectile-command-map)
               ("C-c p" . projectile-command-map)))
 
 
@@ -555,6 +565,17 @@
  
 (use-package python
   :config
+  ;; This makes ipython the default for python-shell [1]. It seems to work.
+  ;; [1]: https://stackoverflow.com/a/25687205
+  (setq
+   python-shell-interpreter "ipython"
+   python-shell-interpreter-args "--colors=Linux --profile=default --simple-prompt"
+   python-shell-prompt-regexp "In \\[[0-9]+\\]: "
+   python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
+   python-shell-completion-setup-code "from IPython.core.completerlib import module_completion"
+   python-shell-completion-module-string-code "';'.join(module_completion('''%s'''))\n"
+   python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
+
   :hook (
 	 (python-mode-hook . (lambda () (linum-mode t)))
 	 )
@@ -563,7 +584,7 @@
 (use-package pyvenv
   :straight t
   :init
-  (setenv "WORKON_HOME" (expand-file-name "~/installs/anaconda3/envs"))
+  (setenv "WORKON_HOME" (expand-file-name "~/installs/miniconda3/envs"))
   :config
   (pyvenv-mode 1)
   ;; Automatically use pyvenv-workon via dir-locals.
@@ -582,7 +603,9 @@
     (setq lsp-idle-delay 0.5
           lsp-enable-symbol-highlighting nil
           lsp-enable-snippet nil  ;; Not supported by company capf, which is the recommended company backend
-          lsp-pyls-plugins-flake8-enabled t)
+          lsp-pyls-plugins-flake8-enabled t
+	  lsp-ui-doc-enable nil
+	  )
     (lsp-register-custom-settings
      '(
 ;       ("pyls.plugins.pyls_mypy.enabled" t t)
@@ -615,7 +638,10 @@
 	 )
   :commands lsp)
 
-;; optionally
+;; To turn off the documentation part of this, I had to set
+;; lsp-ui-doc-enable to nil in my dtb/lsp-setup function. It didn't
+;; get set to nil when I tried to do it here under either :config or
+;; :init
 (use-package lsp-ui
   :straight t
   :requires lsp-mode
@@ -745,7 +771,8 @@ buffer (unless it's modified)."
  (copy-region-as-kill (point) (point-max))
  )
 
-(global-set-key (kbd "C-c c b") 'dtb/copy-to-end-of-buffer)
+;; TODO need a better shorcut for this
+;;(global-set-key (kbd "C-c c b") 'dtb/copy-to-end-of-buffer)
 
 ;; For fixing file permissions after unzipping certain data sets
 (defun dtb/correct-data-file-permissions (dir)
