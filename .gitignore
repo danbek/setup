@@ -6,6 +6,8 @@ dot-vim/.VimballRecord
 dot-vim/autoload/netrw.vim
 dot-vim/autoload/netrwFileHandlers.vim
 dot-vim/autoload/netrwSettings.vim
+dot-emacs.d/.lsp-session*
+dot-emacs.d/.tutor
 dot-emacs.d/tramp
 dot-emacs.d/elpa
 dot-emacs.d/eshell/history
@@ -16,3 +18,5 @@ dot-emacs.d/session.*
 dot-emacs.d/straight
 dot-emacs.d/smex-items
 dot-emacs.d/transient
+dot-emacs.d/projects
+dot-emacs.d/eln-cache

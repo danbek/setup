@@ -38,6 +38,7 @@ umask 022
 TEX_HOME="$HOME/installs/texlive/2021"
 
 append_to_path "$HOME/bin"
+append_to_path "$HOME/installs/local/bin"
 append_to_path "/usr/local/Trolltech/Qt-4.8.6/bin"
 append_to_path "$TEX_HOME/bin/x86_64-linux"
 append_to_path "$HOME/projects/algs4/bin"
@@ -57,10 +58,10 @@ fi
 export MANPATH
 MANPATH=$MANPATH:$TEX_HOME/texmf-dist/doc/man
 MANPATH=$MANPATH:$HOME/installs/julia-d55cadc350/share/man
+MANPATH=$MANPATH:$HOME/installs/local/share/man
+export INFOPATH
 INFOPATH=$INFOPATH:$TEX_HOME/texmf-dist/doc/info
-
-# Python virtual environment support in emacs
-export WORKON_HOME=$HOME/installs/anaconda3/envs
+INFOPATH=$INFOPATH:$HOME/installs/local/share/info
 
 # Fix this issue [1], which I ran into installing a julia
 # package.

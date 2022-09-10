@@ -176,7 +176,7 @@
   :straight t
   :after (evil magit)
   :config
-  (setq evil-collection-mode-list '(dired ibuffer (occur replace) eshell term magit info help))
+  (setq evil-collection-mode-list '(dired ibuffer replace eshell term magit info help))
   (evil-collection-init)
 )
 
@@ -513,12 +513,12 @@
 ;;
 ;; projectile
 ;;
-(use-package projectile
-  :straight t
-  :init
-  (projectile-mode +1)
-  :bind (:map projectile-mode-map
-              ("C-c p" . projectile-command-map)))
+;;;(use-package projectile
+;;;  :straight t
+;;;  :init
+;;;  (projectile-mode +1)
+;;;  :bind (:map projectile-mode-map
+;;;              ("C-c p" . projectile-command-map)))
 
 
 ;;

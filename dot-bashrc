@@ -131,10 +131,12 @@ alias gdb='gdb -quiet'
 
 alias e='emacsclient -n'
 alias ec='emacsclient -n -c'
-alias vi='emacsclient -t --alternate-editor=vi'
-
 alias mce='ssh -Y 817thzdev.bqemd.nist.gov'
 alias grumpy='ssh -Y grumpy'
+
+vi () {
+    type -P emacsclient && emacsclient -t --alternate-editor=vi $@ || /bin/vi $@
+}
 
 # export MPLCONFIGDIR=./matplotlib
 export PYTHONSTARTUP=.pythonrc
