@@ -70,6 +70,12 @@
 
   (setq tramp-default-method "ssh")
   
+  ;; Follow symlinks without prompting. If this isn't done, then you will
+  ;; get a prompt every time you edit, e.g., .profile
+  ;; that ~/.profile is a symlink, which is how my setup script
+  ;; sets it up.
+  (setq vc-follow-symlinks t)
+
   (blink-cursor-mode 0)
   
   (window-divider-mode +1)
@@ -83,6 +89,11 @@
 	kept-new-versions 6
 	kept-old-versions 2
 	version-control t)
+
+  ;; modus themes are packed with emacs starting with 28.1!
+  (setq modus-themes-slanted-constructs t
+        modus-themes-bold-constructs t)
+  (load-theme 'modus-operandi)
 
   :hook (after-init-hook . column-number-mode)
   )
@@ -401,6 +412,14 @@
   (counsel-mode 1)
   )
 
+(use-package bibtex
+  :config
+  (setq bibtex-entry-format
+      '(opts-or-alts required-fields whitespace realign delimiters unify-case sort-fields)
+      bibtex-align-at-equal-sign 't)
+  :hook ((bibtex-mode-hook . (lambda () (setq fill-column 120))))
+  )
+
 ;;
 ;; dired
 ;; much from protesilaos
@@ -424,14 +443,6 @@
 			  (lambda ()
 			    (evil-define-key 'normal dired-mode-map (kbd "SPC") 'evil-send-leader))))
   ;; (add-hook 'dired-mode-hook 'hl-line-mode);
-  )
-
-(use-package bibtex
-  :config
-  (setq bibtex-entry-format
-      '(opts-or-alts required-fields whitespace realign delimiters unify-case sort-fields)
-      bibtex-align-at-equal-sign 't)
-  :hook ((bibtex-mode-hook . (lambda () (setq fill-column 120))))
   )
 
 (use-package wdired
@@ -458,7 +469,7 @@
               ("<S-iso-lefttab>" . dired-subtree-remove)))
 
 ;;
-;; 
+;; eshell 
 ;;
 
 (use-package eshell
@@ -483,11 +494,13 @@
   (setq ibuffer-expert t)
   (setq ibuffer-saved-filter-groups
 	(quote (("default"
-		 ("magit" (name . "^magit"))
+		 ("magit" (name . "^magit:"))
 		 ("org" (mode . org-mode))
 		 ("dired" (mode . dired-mode))
+		 ("python-shells" (mode . inferior-python-mode))
 		 ("python" (mode . python-mode))
-		 ("special" (name . "*"))
+		 ("special" (or (name . "*")
+				(name . "^magit-process:")))
 		 ))))
   :hook (ibuffer-mode-hook . (lambda ()
 			       (ibuffer-switch-to-saved-filter-groups "default")))
@@ -509,17 +522,6 @@
   (bind-key "C-n" 'company-complete evil-insert-state-map)
   (global-company-mode 1)
   )
-
-;;
-;; projectile
-;;
-;;;(use-package projectile
-;;;  :straight t
-;;;  :init
-;;;  (projectile-mode +1)
-;;;  :bind (:map projectile-mode-map
-;;;              ("C-c p" . projectile-command-map)))
-
 
 ;;
 ;; flycheck
@@ -575,6 +577,10 @@
    python-shell-completion-setup-code "from IPython.core.completerlib import module_completion"
    python-shell-completion-module-string-code "';'.join(module_completion('''%s'''))\n"
    python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
+
+  ;; one python shell (via C-c C-p) per project. 'buffer and nil
+  ;; (i.e., one global shell) are also options
+  (setq python-shell-dedicated 'project)
 
   :hook (
 	 (python-mode-hook . (lambda () (linum-mode t)))
@@ -667,26 +673,6 @@
 ;;     (which-key-mode))
 
 ;;
-;; Themes
-;;
-
-;; Trying this from Prot Stavrous. There are many options to explore
-;; https://gitlab.com/protesilaos/modus-themes 
-(use-package modus-themes
-  :straight t
-  :init
-  ;; Add all your customizations prior to loading the themes
-  (setq modus-themes-slanted-constructs t
-        modus-themes-bold-constructs t)
-
-  ;; Load the theme files before enabling a theme
-  (modus-themes-load-themes)
-  :config
-  ;; Load the theme of your choice:
-  (modus-themes-load-operandi) ;; OR (modus-themes-load-vivendi)
-  )
-
-;;
 ;; Julia stuff
 ;;
 
@@ -726,7 +712,7 @@
 ;;
 
 ;; start server for use of emacs from command line
-;; (server-start)
+(server-start)
 
 ;;
 ;; Personal functions
@@ -846,7 +832,7 @@ buffer (unless it's modified)."
 ;;
 ;; read lab-notebook post https://www.sciencemag.org/careers/2019/09/how-keep-lab-notebook
 ;;
-;; on learnig: https://superorganizers.substack.com/p/how-to-build-a-learning-machine
+;; on learning: https://superorganizers.substack.com/p/how-to-build-a-learning-machine
 ;;
 ;; continue with this series on videos: https://www.youtube.com/watch?v=u00pglDfgX4&list=PLVtKhBrRV_ZkPnBtt_TD1Cs9PJlU0IIdE&index=7
 ;;
