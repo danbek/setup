@@ -222,20 +222,41 @@
 (use-package org
   :straight t
   :config
+
+  ;; general
   (setq org-startup-folded t)
   (setq org-hide-leading-stars t)
-  (setq org-refile-targets (quote ((nil :maxlevel . 9)
-                                   (org-agenda-files :maxlevel . 9))))
-  (setq org-refile-use-outline-path t)
-  (setq org-outline-path-complete-in-steps nil)
 
-  (defun gs-org-disable-evil-auto-indent nil
+  (global-set-key (kbd "C-c l") 'org-store-link)
+  (global-set-key (kbd "C-c a") 'org-agenda)
+  (global-set-key (kbd "C-c c") 'org-capture)
+
+  (defun gs-org-disable-evil-auto-indent ()
     "Disables evil's auto-indent for org."
     (setq evil-auto-indent nil)
     )
   (add-hook 'org-mode-hook #'gs-org-disable-evil-auto-indent)
 
-  ; task stuff
+  (add-hook 'org-mode-hook 'turn-on-auto-fill)
+
+  ;; org-refile stuff
+  (setq org-refile-targets (quote ((nil :maxlevel . 4)
+                                   (org-agenda-files :maxlevel . 4))))
+  (setq org-refile-use-outline-path 't)
+  (setq org-outline-path-complete-in-steps nil)
+
+  ;; org-capture stuff
+  (setq org-default-notes-file "~/notes/inbox.org")
+  (setq org-capture-templates
+        '(("t" "Todo [inbox]" entry
+           (file+headline "~/notes/inbox.org" "Tasks")
+           "* TODO %i%?\n%a")
+          ("n" "Todo [inbox, no link]" entry
+           (file+headline "~/notes/inbox.org" "Tasks")
+           "* TODO %i%?\n")
+          ))
+
+  ;; task stuff
   (setq org-todo-keywords
 	'((sequence "TODO(t)" "PROJ(p)" "WAITING(w)" "|" "DONE(d)")
 	  (sequence "|" "DEFERRED(f)" "SOMEDAY(s)" "CANCELLED(c)")))
@@ -246,6 +267,9 @@
 	  ("WAITING" ("PROJ" . nil))
 	  ("" ("PROJ" . nil))
 	  ))
+
+  ;; agenda stuff
+  (setq org-agenda-files '("~/notes"))
 
   ;; For best use, need to do two things:
   ;;  1. Add a "PROJ" tag to each PROJ todo (C-c C-q) (trying to
@@ -266,17 +290,9 @@
 
   (add-hook 'org-agenda-finalize-hook #'hl-line-mode)
 
-  (global-set-key (kbd "C-c l") 'org-store-link)
-  (global-set-key (kbd "C-c a") 'org-agenda)
-  (global-set-key (kbd "C-c c") 'org-capture)
-
-  (setq org-agenda-files '("~/notes"))
-
-  (add-hook 'org-mode-hook 'turn-on-auto-fill)
-
-  ;(use-package org-bullets
-  ;  :config
-  ;  (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
+  ;;(use-package org-bullets
+  ;;  :config
+  ;;  (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
   )
 
 (use-package evil-org
@@ -307,6 +323,10 @@
 ;; insert a bibtex enetry gievn a doi, and to download a pdf for an
 ;; entry. Thse are bound to keys in the evil setup
 ;;
+;; Integrate someday?
+;;
+;; https://github.com/mpedramfar/zotra - integrate with an instance of zotero translation service
+;; 
 (use-package ivy-bibtex
   :straight t
   :config
