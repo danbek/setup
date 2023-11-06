@@ -577,14 +577,20 @@
    python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
 
   :hook (
-	 (python-mode-hook . (lambda () (linum-mode t)))
+	 (python-mode-hook . (lambda ()
+			       (if (>= emacs-major-version 29)
+				   (display-line-numbers-mode)
+				 (linum-mode t))))
 	 )
   )
 
 (use-package pyvenv
   :straight t
   :init
-  (setenv "WORKON_HOME" (expand-file-name "~/installs/miniconda3/envs"))
+  (cond ((string-match "68708DBLAP" system-name)
+	 (setenv "WORKON_HOME" (expand-file-name "~/installs/anaconda3/envs")))
+	(t
+	 (setenv "WORKON_HOME" (expand-file-name "~/installs/miniconda3/envs"))))
   :config
   (pyvenv-mode 1)
   ;; Automatically use pyvenv-workon via dir-locals.
