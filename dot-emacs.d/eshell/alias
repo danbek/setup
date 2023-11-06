@@ -1,1 +1,4 @@
+alias fd find-dired $PWD ""
+alias d dired $1
+alias ff find-file $1
 alias ll ls -alF $*

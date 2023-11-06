@@ -70,6 +70,12 @@
 
   (setq tramp-default-method "ssh")
   
+  ;; Follow symlinks without prompting. If this isn't done, then you will
+  ;; get a prompt every time you edit, e.g., .profile
+  ;; that ~/.profile is a symlink, which is how my setup script
+  ;; sets it up.
+  (setq vc-follow-symlinks t)
+
   (blink-cursor-mode 0)
   
   (window-divider-mode +1)
@@ -83,6 +89,11 @@
 	kept-new-versions 6
 	kept-old-versions 2
 	version-control t)
+
+  ;; modus themes are packed with emacs starting with 28.1!
+  (setq modus-themes-slanted-constructs t
+        modus-themes-bold-constructs t)
+  (load-theme 'modus-operandi)
 
   :hook (after-init-hook . column-number-mode)
   )
@@ -211,20 +222,41 @@
 (use-package org
   :straight t
   :config
+
+  ;; general
   (setq org-startup-folded t)
   (setq org-hide-leading-stars t)
-  (setq org-refile-targets (quote ((nil :maxlevel . 9)
-                                   (org-agenda-files :maxlevel . 9))))
-  (setq org-refile-use-outline-path t)
-  (setq org-outline-path-complete-in-steps nil)
 
-  (defun gs-org-disable-evil-auto-indent nil
+  (global-set-key (kbd "C-c l") 'org-store-link)
+  (global-set-key (kbd "C-c a") 'org-agenda)
+  (global-set-key (kbd "C-c c") 'org-capture)
+
+  (defun gs-org-disable-evil-auto-indent ()
     "Disables evil's auto-indent for org."
     (setq evil-auto-indent nil)
     )
   (add-hook 'org-mode-hook #'gs-org-disable-evil-auto-indent)
 
-  ; task stuff
+  (add-hook 'org-mode-hook 'turn-on-auto-fill)
+
+  ;; org-refile stuff
+  (setq org-refile-targets (quote ((nil :maxlevel . 4)
+                                   (org-agenda-files :maxlevel . 4))))
+  (setq org-refile-use-outline-path 't)
+  (setq org-outline-path-complete-in-steps nil)
+
+  ;; org-capture stuff
+  (setq org-default-notes-file "~/notes/inbox.org")
+  (setq org-capture-templates
+        '(("t" "Todo [inbox]" entry
+           (file+headline "~/notes/inbox.org" "Tasks")
+           "* TODO %i%?\n%a")
+          ("n" "Todo [inbox, no link]" entry
+           (file+headline "~/notes/inbox.org" "Tasks")
+           "* TODO %i%?\n")
+          ))
+
+  ;; task stuff
   (setq org-todo-keywords
 	'((sequence "TODO(t)" "PROJ(p)" "WAITING(w)" "|" "DONE(d)")
 	  (sequence "|" "DEFERRED(f)" "SOMEDAY(s)" "CANCELLED(c)")))
@@ -235,6 +267,9 @@
 	  ("WAITING" ("PROJ" . nil))
 	  ("" ("PROJ" . nil))
 	  ))
+
+  ;; agenda stuff
+  (setq org-agenda-files '("~/notes"))
 
   ;; For best use, need to do two things:
   ;;  1. Add a "PROJ" tag to each PROJ todo (C-c C-q) (trying to
@@ -255,17 +290,9 @@
 
   (add-hook 'org-agenda-finalize-hook #'hl-line-mode)
 
-  (global-set-key (kbd "C-c l") 'org-store-link)
-  (global-set-key (kbd "C-c a") 'org-agenda)
-  (global-set-key (kbd "C-c c") 'org-capture)
-
-  (setq org-agenda-files '("~/notes"))
-
-  (add-hook 'org-mode-hook 'turn-on-auto-fill)
-
-  ;(use-package org-bullets
-  ;  :config
-  ;  (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
+  ;;(use-package org-bullets
+  ;;  :config
+  ;;  (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
   )
 
 (use-package evil-org
@@ -296,6 +323,10 @@
 ;; insert a bibtex enetry gievn a doi, and to download a pdf for an
 ;; entry. Thse are bound to keys in the evil setup
 ;;
+;; Integrate someday?
+;;
+;; https://github.com/mpedramfar/zotra - integrate with an instance of zotero translation service
+;; 
 (use-package ivy-bibtex
   :straight t
   :config
@@ -401,6 +432,14 @@
   (counsel-mode 1)
   )
 
+(use-package bibtex
+  :config
+  (setq bibtex-entry-format
+      '(opts-or-alts required-fields whitespace realign delimiters unify-case sort-fields)
+      bibtex-align-at-equal-sign 't)
+  :hook ((bibtex-mode-hook . (lambda () (setq fill-column 120))))
+  )
+
 ;;
 ;; dired
 ;; much from protesilaos
@@ -424,14 +463,6 @@
 			  (lambda ()
 			    (evil-define-key 'normal dired-mode-map (kbd "SPC") 'evil-send-leader))))
   ;; (add-hook 'dired-mode-hook 'hl-line-mode);
-  )
-
-(use-package bibtex
-  :config
-  (setq bibtex-entry-format
-      '(opts-or-alts required-fields whitespace realign delimiters unify-case sort-fields)
-      bibtex-align-at-equal-sign 't)
-  :hook ((bibtex-mode-hook . (lambda () (setq fill-column 120))))
   )
 
 (use-package wdired
@@ -458,7 +489,7 @@
               ("<S-iso-lefttab>" . dired-subtree-remove)))
 
 ;;
-;; 
+;; eshell 
 ;;
 
 (use-package eshell
@@ -483,11 +514,13 @@
   (setq ibuffer-expert t)
   (setq ibuffer-saved-filter-groups
 	(quote (("default"
-		 ("magit" (name . "^magit"))
+		 ("magit" (name . "^magit:"))
 		 ("org" (mode . org-mode))
 		 ("dired" (mode . dired-mode))
+		 ("python-shells" (mode . inferior-python-mode))
 		 ("python" (mode . python-mode))
-		 ("special" (name . "*"))
+		 ("special" (or (name . "*")
+				(name . "^magit-process:")))
 		 ))))
   :hook (ibuffer-mode-hook . (lambda ()
 			       (ibuffer-switch-to-saved-filter-groups "default")))
@@ -509,17 +542,6 @@
   (bind-key "C-n" 'company-complete evil-insert-state-map)
   (global-company-mode 1)
   )
-
-;;
-;; projectile
-;;
-;;;(use-package projectile
-;;;  :straight t
-;;;  :init
-;;;  (projectile-mode +1)
-;;;  :bind (:map projectile-mode-map
-;;;              ("C-c p" . projectile-command-map)))
-
 
 ;;
 ;; flycheck
@@ -575,6 +597,10 @@
    python-shell-completion-setup-code "from IPython.core.completerlib import module_completion"
    python-shell-completion-module-string-code "';'.join(module_completion('''%s'''))\n"
    python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
+
+  ;; one python shell (via C-c C-p) per project. 'buffer and nil
+  ;; (i.e., one global shell) are also options
+  (setq python-shell-dedicated 'project)
 
   :hook (
 	 (python-mode-hook . (lambda ()
@@ -673,26 +699,6 @@
 ;;     (which-key-mode))
 
 ;;
-;; Themes
-;;
-
-;; Trying this from Prot Stavrous. There are many options to explore
-;; https://gitlab.com/protesilaos/modus-themes 
-(use-package modus-themes
-  :straight t
-  :init
-  ;; Add all your customizations prior to loading the themes
-  (setq modus-themes-slanted-constructs t
-        modus-themes-bold-constructs t)
-
-  ;; Load the theme files before enabling a theme
-  (modus-themes-load-themes)
-  :config
-  ;; Load the theme of your choice:
-  (modus-themes-load-operandi) ;; OR (modus-themes-load-vivendi)
-  )
-
-;;
 ;; Julia stuff
 ;;
 
@@ -732,7 +738,7 @@
 ;;
 
 ;; start server for use of emacs from command line
-;; (server-start)
+(server-start)
 
 ;;
 ;; Personal functions
@@ -808,43 +814,12 @@ buffer (unless it's modified)."
 
 (cond ((string-match "817thzdev" system-name)
        (dtb-set-default-font "Inconsolata-12"))
-      ((string-match "twiggy" system-name)
-       (dtb-set-default-font "Inconsolata-9"))
-      ((string-match "686db1-linux" system-name)
-       (dtb-set-default-font "DejaVu Sans Mono-10"))
-      ((string-match "686DB1" system-name)
-       (dtb-set-default-font "Consolas-11"))
-      ((string-match "dan-homePC" system-name)
-       (dtb-set-default-font "Consolas-10"))
-      ((string-match "harold-xubuntu-" system-name)
-       (dtb-set-default-font "Inconsolata-10"))
-      ((string-match "686db2" system-name)
-       (dtb-set-default-font "DejaVu Sans Mono-10")
-       (dtb-set-default-font "Hack-9")
-       (add-to-list 'default-frame-alist '(left . 0))
-       (add-to-list 'default-frame-alist '(top . 0))
-       (add-to-list 'default-frame-alist '(height . 58))
-       (add-to-list 'default-frame-alist '(width . 128)))
       ((string-match "687db2-vm5" system-name)
-       (dtb-set-default-font "Hack-9:autohint=true:hintstyle=hintfull:embeddedbitmap=false")
+       (dtb-set-default-font "Hack-10:autohint=true:hintstyle=hintfull:embeddedbitmap=false")
        (add-to-list 'default-frame-alist '(left . 0))
        (add-to-list 'default-frame-alist '(top . 0))
        (add-to-list 'default-frame-alist '(height . 65))
        (add-to-list 'default-frame-alist '(width . 140)))
-      ((string-match "182loane7240-vm1" system-name)
-       (dtb-set-default-font "Hack-10:autohint=true:hintstyle=hintfull:embeddedbitmap=false")
-       (add-to-list 'default-frame-alist '(left . 0))
-       (add-to-list 'default-frame-alist '(top . 0))
-       (add-to-list 'default-frame-alist '(height . 40))
-       (add-to-list 'default-frame-alist '(width . 86)))
-      ((string-match "xubuntu-work-2" system-name)
-       (dtb-set-default-font "DejaVu Sans Mono-10"))
-      ((string-match "xubuntu-1" system-name)
-       (dtb-set-default-font "DejaVu Sans Mono-10")
-       (add-to-list 'default-frame-alist '(left . 0))
-       (add-to-list 'default-frame-alist '(top . 0))
-       (add-to-list 'default-frame-alist '(height . 54))
-       (add-to-list 'default-frame-alist '(width . 84)))
       )
 
 ;;
@@ -852,7 +827,7 @@ buffer (unless it's modified)."
 ;;
 ;; read lab-notebook post https://www.sciencemag.org/careers/2019/09/how-keep-lab-notebook
 ;;
-;; on learnig: https://superorganizers.substack.com/p/how-to-build-a-learning-machine
+;; on learning: https://superorganizers.substack.com/p/how-to-build-a-learning-machine
 ;;
 ;; continue with this series on videos: https://www.youtube.com/watch?v=u00pglDfgX4&list=PLVtKhBrRV_ZkPnBtt_TD1Cs9PJlU0IIdE&index=7
 ;;

@@ -2,6 +2,7 @@
 -- https://fransdejonge.com/2012/12/vlc-control-clone-window-with-devilspie2/
 -- https://softsolder.com/2013/04/27/dual-monitors-devilspie2-ftw/
 -- https://www.justingedge.com/linux/devilspie2-automatic-window-placement/
+-- https://www.linux-magazine.com/Issues/2017/205/Tutorial-Devilspie2
 --
 -- try to get matplotlib windows to appear on second monitor in some reasonable fashion
 --
@@ -13,7 +14,8 @@ debug_print("Window Name: " .. get_window_name());
 if (get_window_name():find("^Figure ") ~= nil) then
     debug_print("Application name: " .. get_application_name())
     x, y, width, height = get_window_geometry()
-    set_window_geometry(1920 + figure_next_x, figure_next_y, width, height)
+    -- set_window_geometry(1920 + figure_next_x, figure_next_y, width, height)
+    set_window_geometry(2560 + figure_next_x, figure_next_y, width, height)
     figure_next_x = (figure_next_x + 35) % 500
     figure_next_y = (figure_next_y + 35) % 500
     debug_print("x " .. figure_next_x .. " " .. figure_next_y)
