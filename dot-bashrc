@@ -207,3 +207,6 @@ fi
 unset __conda_setup
 # <<< conda initialize <<<
 
+
+# Lets try fzf
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

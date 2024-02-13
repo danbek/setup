@@ -68,3 +68,21 @@ INFOPATH=$INFOPATH:$HOME/installs/local/share/info
 #
 # [1]: http://stackoverflow.com/questions/3160909/how-do-i-deal-with-certificates-using-curl-while-trying-to-access-an-https-url
 export CURL_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+
+#
+# Save commands to bash history in realtime [1]. Note that this does
+# NOT screw up the independent command history in different shells. It
+# just ensure that you never lose history.
+# 
+# [1]: https://web.archive.org/web/20090815205011/http://www.cuberick.com/2008/11/update-bash-history-in-realtime.html
+#
+shopt -s histappend
+PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
+
+
+#
+# Run keychain to make ssh passwords easier
+#
+# https://www.funtoo.org/Funtoo:Keychain
+#
+eval `keychain --eval --agents ssh id_rsa`

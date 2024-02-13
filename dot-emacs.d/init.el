@@ -90,7 +90,7 @@
 	kept-old-versions 2
 	version-control t)
 
-  ;; modus themes are packed with emacs starting with 28.1!
+  ;; modus themes are packaged with emacs starting with 28.1!
   (setq modus-themes-slanted-constructs t
         modus-themes-bold-constructs t)
   (load-theme 'modus-operandi)
@@ -424,6 +424,7 @@
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "(%d/%d) ")
   (setq ivy-initial-inputs-alist nil)
+  (global-set-key (kbd "M-j") 'avy-goto-char-timer)  ; better place for this?
   )
 
 (use-package counsel
@@ -572,14 +573,14 @@
 ;; to a buffer with a python file, it will change the global "active"
 ;; virtual env appropriately.
 ;;
-;; For lsp-mode, you need to install the pyls LSP server in *each* of
+;; For lsp-mode, you need to install an LSP server in *each* of
 ;; these virtual environments:
 ;;
-;; conda install python-language-server
+;; conda install -c python-lsp-server python-lsp-server
 ;;
 ;; or
 ;;
-;; pip install python-language-server
+;; pip install python-lsp-server
 ;; 
 ;; If you start lsp from within a python buffer, it will start (and
 ;; connect to) the pyls for the current environment.
@@ -807,15 +808,17 @@ buffer (unless it's modified)."
 ;; Stuff specific to particular computers
 ;;
 
-(defun dtb-set-default-font (font-name)
+(defun dtb/set-default-font (font-name)
   (set-face-attribute 'fixed-pitch nil :font font-name)
   (set-face-attribute 'default     nil :font font-name)
   )
 
 (cond ((string-match "817thzdev" system-name)
-       (dtb-set-default-font "Inconsolata-12"))
+       (dtb/set-default-font "Inconsolata-12"))
+      ((string-match "68708DBLAP" system-name)
+       (dtb/set-default-font "Hack-10:autohint=true:hintstyle=hintfull:embeddedbitmap=false"))
       ((string-match "687db2-vm5" system-name)
-       (dtb-set-default-font "Hack-10:autohint=true:hintstyle=hintfull:embeddedbitmap=false")
+       (dtb/set-default-font "Hack-10:autohint=true:hintstyle=hintfull:embeddedbitmap=false")
        (add-to-list 'default-frame-alist '(left . 0))
        (add-to-list 'default-frame-alist '(top . 0))
        (add-to-list 'default-frame-alist '(height . 65))
