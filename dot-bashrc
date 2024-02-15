@@ -41,6 +41,10 @@ fi
 # turn off stupid bell?
 set term -blength 0
 
+# higher limit on number of files open. Needed for off-file analysis
+# on linux.
+ulimit -n 8192
+
 # my prompt
 
 if [ "x$GIT_COMPLETION" == "xtrue" ]; then
@@ -123,7 +127,7 @@ alias ll='ls -alF'
 alias lsd='ls -l | grep ^d'
 alias ldt='ls -al | grep " \."'
 alias dfg='df -h | grep "\/dev\/sd" --color=never'
-alias dfg='df -h | head -1 && df -h | grep "\/dev\/sd" --color=never && df -h | grep "tank\/data"'
+alias dfg='df -h | head -1 && df -h | grep "\/dev\/sd" --color=never && df -h | grep "tank"'
 
 alias add-key='ssh-add ~/.ssh/id_rsa'
 
@@ -188,6 +192,9 @@ function bdiff() {
 if [ `uname -n` == "817thzdev" ]; then
     source ~/.bashrc.817thzdev
 fi;
+
+# I need to set this explicitly on my work VM
+export TMOUT=0
 
 #### added by Anaconda2 2.5.0 installer
 ###export PATH="/home/beckerd/installs/anaconda2/bin:$PATH"

@@ -95,6 +95,10 @@
         modus-themes-bold-constructs t)
   (load-theme 'modus-operandi)
 
+  ;; From [1]; allows a python coding declaration in MASS to not lead to a warning in emacs
+  ;; [1]: https://stackoverflow.com/questions/14031724/how-to-make-emacs-accept-utf-8-uppercase-encoding
+  (define-coding-system-alias 'UTF-8 'utf-8)
+
   :hook (after-init-hook . column-number-mode)
   )
 
