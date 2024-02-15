@@ -101,6 +101,12 @@
 ;;
 ;; Now various packages
 ;;
+(use-package avy
+  :straight t
+  :config
+  (setq avy-timeout-seconds 0.2)
+  (global-set-key (kbd "M-j") 'avy-goto-char-timer)
+  )
 
 (use-package undo-fu
   :straight t
@@ -128,9 +134,11 @@
 
     ;; loading files
     (kbd "<leader>fe") (lambda () (interactive) (find-file user-init-file))
-    (kbd "<leader>ff") 'counsel-find-file
+;;     (kbd "<leader>ff") 'counsel-find-file
+    (kbd "<leader>ff") 'find-file
     (kbd "<leader>fo") (lambda () (interactive) (find-file "~/notes/organizer.org"))
-    (kbd "<leader>fr") 'counsel-recentf
+;;    (kbd "<leader>fr") 'counsel-recentf
+    (kbd "<leader>fr") 'recentf
     (kbd "<leader>fv") 'find-alternate-file
     (kbd "<leader>fb") (lambda () (interactive) (ivy-bibtex t))
   
@@ -140,7 +148,8 @@
     (kbd "<leader>ob") 'org-switchb
     
     ;; buffers & bibliography
-    (kbd "<leader>bb") 'counsel-ibuffer
+;;     (kbd "<leader>bb") 'counsel-ibuffer
+    (kbd "<leader>bb") 'consult-buffer
     (kbd "<leader>bi") 'ibuffer
     (kbd "<leader>bk") (lambda () (interactive) (kill-buffer (current-buffer)))
     (kbd "<leader>br") (lambda () (interactive) (revert-buffer t (not (buffer-modified-p)) t))
@@ -152,7 +161,8 @@
     (kbd "<leader>d") 'deft
     (kbd "<leader>g") 'magit-status
     (kbd "<leader><tab>") 'dtb/switch-to-other-buffer
-    (kbd "<leader>r") 'counsel-rg
+;;     (kbd "<leader>r") 'counsel-rg
+    (kbd "<leader>r") 'consult-ripgrep
     (kbd "<leader>O") 'occur
     )
   
@@ -307,131 +317,187 @@
   (evil-org-agenda-set-keys))
 
 ;;
-;; Dealing with bibliography stuff
+;; Lets try the vertico / consult / embark / orderless / marginalia stuff
 ;;
-;; Three parts here. First, ivy-bibtex gives a way to search through a
-;; bibtex file (or set of bibtex files), via ivy-bibtex M-o on a
-;; selection gives you options to do various things with that
-;; selection.
-;;
-;; ivy-bibtex associates a pdf and "notes" file with each entry.
-;;
-;; Second, org-ref allows you to insert org-mode-style references,
-;; leaning on ivy-bibtex for the choice of item.
-;;
-;; Finally, doi-utils (which is part of org-ref) provides functions to
-;; insert a bibtex enetry gievn a doi, and to download a pdf for an
-;; entry. Thse are bound to keys in the evil setup
-;;
-;; Integrate someday?
-;;
-;; https://github.com/mpedramfar/zotra - integrate with an instance of zotero translation service
-;; 
-(use-package ivy-bibtex
+
+(use-package vertico
   :straight t
   :config
-  (setq bibtex-completion-bibliography '("/home/beckerd/notes/report.bib" "/home/beckerd/notes/becker.bib"))
-  (setq bibtex-completion-library-path "/home/beckerd/notes/pdf/")
-  (setq bibtex-completion-notes-path "/home/beckerd/notes/notes/")
+  (vertico-mode))
 
-  ;; from John Kitchin's org-ref configuration instructions
-  (setq bibtex-completion-display-formats
-	'((article       . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${journal:40}")
-	  (inbook        . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} Chapter ${chapter:32}")
-	  (incollection  . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
-	  (inproceedings . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
-	  (t             . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*}")))
+(use-package consult
+  :straight t
+  :bind
+  (("C-c r" . consult-ripgrep)
+   ("C-x b" . consult-buffer)))
 
-  ;; Per the README.org, the following should allow the little icons
-  ;; to appear without reloading the bib file. But it doesn't work,
-  ;; because bibtex-completion-candidates only reloads if the .bib
-  ;; file's hash has changed. So commented out for now
-  ;;
-  ;; (setq dtb/pdf-watch
-  ;; 	(file-notify-add-watch bibtex-completion-library-path
-  ;;                              '(change)
-  ;;                              (lambda (event) (bibtex-completion-candidates))))
-  ;; (setq dtb/notes-watch
-  ;; 	(file-notify-add-watch bibtex-completion-notes-path
-  ;;                              '(change)
-  ;;                              (lambda (event) (bibtex-completion-candidates))))
+(use-package embark
+  :straight t
+  :bind
+  (("C-c a" . embark-act)))
+
+(use-package embark-consult
+  ;; comes bundled with Embark; no `:ensure t' necessary
+  :after (embark consult))
+
+;(use-package wgrep
+;  :ensure t)
+
+(use-package orderless
+  :straight t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
+(use-package marginalia
+  :straight t
+  ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
+  ;; available in the *Completions* buffer, add it to the
+  ;; `completion-list-mode-map'.
+  :bind (:map minibuffer-local-map
+         ("M-A" . marginalia-cycle))
+
+  ;; The :init section is always executed.
+  :init
+
+  ;; Marginalia must be activated in the :init section of use-package such that
+  ;; the mode gets enabled right away. Note that this forces loading the
+  ;; package.
+  (marginalia-mode)
   )
 
-;;
-;; An issue with doi-utils is that it doesn't use journal name
-;; abbreviations ... I guess makes sense, probably just uses whatever
-;; it find on relevant website. In principle seems like the LTWA [1] could
-;; be used a source for abbreviations, but it doesn't include the word
-;; "Physical" which is really odd.
-;;
-;; [1]: https://www.issn.org/services/online-services/access-to-the-ltwa/
-;;
-(use-package org-ref
+;; https://github.com/abo-abo/ace-window
+(use-package ace-window
   :straight t
-  :config
-  (require 'org-ref-ivy)
-  (setq
-   org-ref-insert-link-function 'org-ref-insert-link-hydra/body
-   org-ref-insert-cite-function 'org-ref-cite-insert-ivy
-   org-ref-insert-label-function 'org-ref-insert-label-link
-   org-ref-insert-ref-function 'org-ref-insert-ref-link
-   org-ref-cite-onclick-function (lambda (_) (org-ref-citation-hydra/body))
+  :bind
+  (("M-o" . ace-window)))
+
+;; ;;
+;; ;; Dealing with bibliography stuff
+;; ;;
+;; ;; Three parts here. First, ivy-bibtex gives a way to search through a
+;; ;; bibtex file (or set of bibtex files), via ivy-bibtex M-o on a
+;; ;; selection gives you options to do various things with that
+;; ;; selection.
+;; ;;
+;; ;; ivy-bibtex associates a pdf and "notes" file with each entry.
+;; ;;
+;; ;; Second, org-ref allows you to insert org-mode-style references,
+;; ;; leaning on ivy-bibtex for the choice of item.
+;; ;;
+;; ;; Finally, doi-utils (which is part of org-ref) provides functions to
+;; ;; insert a bibtex enetry gievn a doi, and to download a pdf for an
+;; ;; entry. Thse are bound to keys in the evil setup
+;; ;;
+;; ;; Integrate someday?
+;; ;;
+;; ;; https://github.com/mpedramfar/zotra - integrate with an instance of zotero translation service
+;; ;; 
+;; (use-package ivy-bibtex
+;;   :straight t
+;;   :config
+;;   (setq bibtex-completion-bibliography '("/home/beckerd/notes/report.bib" "/home/beckerd/notes/becker.bib"))
+;;   (setq bibtex-completion-library-path "/home/beckerd/notes/pdf/")
+;;   (setq bibtex-completion-notes-path "/home/beckerd/notes/notes/")
+
+;;   ;; from John Kitchin's org-ref configuration instructions
+;;   (setq bibtex-completion-display-formats
+;; 	'((article       . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${journal:40}")
+;; 	  (inbook        . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} Chapter ${chapter:32}")
+;; 	  (incollection  . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
+;; 	  (inproceedings . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
+;; 	  (t             . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*}")))
+
+;;   ;; Per the README.org, the following should allow the little icons
+;;   ;; to appear without reloading the bib file. But it doesn't work,
+;;   ;; because bibtex-completion-candidates only reloads if the .bib
+;;   ;; file's hash has changed. So commented out for now
+;;   ;;
+;;   ;; (setq dtb/pdf-watch
+;;   ;; 	(file-notify-add-watch bibtex-completion-library-path
+;;   ;;                              '(change)
+;;   ;;                              (lambda (event) (bibtex-completion-candidates))))
+;;   ;; (setq dtb/notes-watch
+;;   ;; 	(file-notify-add-watch bibtex-completion-notes-path
+;;   ;;                              '(change)
+;;   ;;                              (lambda (event) (bibtex-completion-candidates))))
+;;   )
+
+;; ;;
+;; ;; An issue with doi-utils is that it doesn't use journal name
+;; ;; abbreviations ... I guess makes sense, probably just uses whatever
+;; ;; it find on relevant website. In principle seems like the LTWA [1] could
+;; ;; be used a source for abbreviations, but it doesn't include the word
+;; ;; "Physical" which is really odd.
+;; ;;
+;; ;; [1]: https://www.issn.org/services/online-services/access-to-the-ltwa/
+;; ;;
+;; (use-package org-ref
+;;   :straight t
+;;   :config
+;;   (require 'org-ref-ivy)
+;;   (setq
+;;    org-ref-insert-link-function 'org-ref-insert-link-hydra/body
+;;    org-ref-insert-cite-function 'org-ref-cite-insert-ivy
+;;    org-ref-insert-label-function 'org-ref-insert-label-link
+;;    org-ref-insert-ref-function 'org-ref-insert-ref-link
+;;    org-ref-cite-onclick-function (lambda (_) (org-ref-citation-hydra/body))
    
-   ;;org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
-   ;;org-ref-default-bibliography (list "/home/haozeke/GDrive/zotLib.bib")
-   ;;org-ref-bibliography-notes "/home/haozeke/Git/Gitlab/Mine/Notes/bibnotes.org"
-   ;;org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
-   ;;org-ref-notes-directory "/home/haozeke/Git/Gitlab/Mine/Notes/"
-   ;;org-ref-notes-function 'orb-edit-notes
-   )
-  )
+;;    ;;org-ref-get-pdf-filename-function 'org-ref-get-pdf-filename-helm-bibtex
+;;    ;;org-ref-default-bibliography (list "/home/haozeke/GDrive/zotLib.bib")
+;;    ;;org-ref-bibliography-notes "/home/haozeke/Git/Gitlab/Mine/Notes/bibnotes.org"
+;;    ;;org-ref-note-title-format "* TODO %y - %t\n :PROPERTIES:\n  :Custom_ID: %k\n  :NOTER_DOCUMENT: %F\n :ROAM_KEY: cite:%k\n  :AUTHOR: %9a\n  :JOURNAL: %j\n  :YEAR: %y\n  :VOLUME: %v\n  :PAGES: %p\n  :DOI: %D\n  :URL: %U\n :END:\n\n"
+;;    ;;org-ref-notes-directory "/home/haozeke/Git/Gitlab/Mine/Notes/"
+;;    ;;org-ref-notes-function 'orb-edit-notes
+;;    )
+;;   )
 
-;; to install prerequisites: sudo apt-get install libpng-dev zlib1g-dev libpoppler-glib-dev libpoppler-private-dev imagemagick
-(use-package pdf-tools
-  :straight t
-  :config
-  (pdf-tools-install)
-  ;; open pdfs scaled to fit page
-  (setq-default pdf-view-display-size 'fit-page)
-  (setq pdf-view-resize-factor 1.1)
+;; ;; to install prerequisites: sudo apt-get install libpng-dev zlib1g-dev libpoppler-glib-dev libpoppler-private-dev imagemagick
+;; (use-package pdf-tools
+;;   :straight t
+;;   :config
+;;   (pdf-tools-install)
+;;   ;; open pdfs scaled to fit page
+;;   (setq-default pdf-view-display-size 'fit-page)
+;;   (setq pdf-view-resize-factor 1.1)
 
-  ;; automatically annotate highlights
-  (setq pdf-annot-activate-created-annotations t)
+;;   ;; automatically annotate highlights
+;;   (setq pdf-annot-activate-created-annotations t)
   
-  ;; use normal isearch
-  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
-  ;; (define-key pdf-view-mode-map (kbd "SPC") 'evil-send-leader)
-  )
+;;   ;; use normal isearch
+;;   (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
+;;   ;; (define-key pdf-view-mode-map (kbd "SPC") 'evil-send-leader)
+;;   )
 
-; loading this allows counsel-M-x to show most recent commands first
-(use-package smex
-  :straight t
-  :config
-  ;; More configuration goes here
-  )
+;; ; loading this allows counsel-M-x to show most recent commands first
+;; (use-package smex
+;;   :straight t
+;;   :config
+;;   ;; More configuration goes here
+;;   )
 
-(use-package hydra
-  :straight t
-  :config
-  ;; More configuration goes here
-  )
+;; (use-package hydra
+;;   :straight t
+;;   :config
+;;   ;; More configuration goes here
+;;   )
 
-(use-package ivy
-  :straight t
-  :diminish (ivy-mode . "")
-  :config
-  (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t)
-  (setq ivy-count-format "(%d/%d) ")
-  (setq ivy-initial-inputs-alist nil)
-  (global-set-key (kbd "M-j") 'avy-goto-char-timer)  ; better place for this?
-  )
+;; (use-package ivy
+;;   :straight t
+;;   :diminish (ivy-mode . "")
+;;   :config
+;;   (ivy-mode 1)
+;;   (setq ivy-use-virtual-buffers t)
+;;   (setq ivy-count-format "(%d/%d) ")
+;;   (setq ivy-initial-inputs-alist nil)
+;;   (global-set-key (kbd "M-j") 'avy-goto-char-timer)  ; better place for this?
+;;   )
 
-(use-package counsel
-  :straight t
-  :config
-  (counsel-mode 1)
-  )
+;; (use-package counsel
+;;   :straight t
+;;   :config
+;;   (counsel-mode 1)
+;;   )
 
 (use-package bibtex
   :config
@@ -681,12 +747,12 @@
   )
   
 
-;; Provides access to workspace symbols, but unfortunately pyls
-;; doesn't appear to support them.
-(use-package lsp-ivy
-  :straight t
-  :requires lsp-mode
-  )
+;; ;; Provides access to workspace symbols, but unfortunately pyls
+;; ;; doesn't appear to support them.
+;; (use-package lsp-ivy
+;;   :straight t
+;;   :requires lsp-mode
+;;   )
 
 ;; (use-package lsp-treemacs :commands lsp-treemacs-errors-list)
 
@@ -837,3 +903,4 @@ buffer (unless it's modified)."
 ;; maybe some good ideas on python in emacs in this video? https://www.youtube.com/watch?v=6BlTGPsjGJk&index=15&list=PL8tzorAO7s0he-pp7Y_JDl7-Kz2Qlr_Pj
 ;;
 ;; read this: https://daedtech.com/how-developers-stop-learning-rise-of-the-expert-beginner/
+
