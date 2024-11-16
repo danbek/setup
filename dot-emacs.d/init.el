@@ -765,6 +765,35 @@
 ;;     :config
 ;;     (which-key-mode))
 
+;; Latex
+(use-package auctex
+  :straight t
+  ;;; :defer t
+  :config
+  (setq
+   TeX-auto-save t
+   TeX-parse-self t
+   TeX-error-overview-open-after-TeX-run t
+   ;; TeX-source-correlate-method 'synctex
+   ;;TeX-source-correlate-mode t
+   ;;TeX-source-correlate-start-server t
+   )
+  (setq-default TeX-master nil)
+  ; TeX-PDF-mode t
+  ; TeX-source-correlate-start-server t)
+  )
+
+;; spellchecking
+(use-package flyspell
+  :ensure t
+  :hook ((LaTeX-mode-hook . flyspell-mode)          ; Enable Flyspell for LaTeX
+	 (latex-mode-hook . flyspell-mode)
+         (LaTeX-mode-hook . flyspell-buffer)       ; Optionally spellcheck the entire buffer
+         (latex-mode-hook . flyspell-buffer))
+  :config
+  (setq ispell-program-name "hunspell"
+	ispell-personal-dictionary "/home/becker/.hunspell_default"))
+
 ;;
 ;; Julia stuff
 ;;
@@ -904,3 +933,12 @@ buffer (unless it's modified)."
 ;;
 ;; read this: https://daedtech.com/how-developers-stop-learning-rise-of-the-expert-beginner/
 
+;; might be useful at some point?
+;;
+;; ;; WSL-specific setup
+;; (when (and (eq system-type 'gnu/linux)
+;;            (getenv "WSLENV"))
+;;  ; stuff here
+;; )
+
+(put 'narrow-to-region 'disabled nil)
