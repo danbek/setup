@@ -235,7 +235,8 @@
 
   ;; general
   (setq org-startup-folded t)
-  (setq org-hide-leading-stars t)
+  ;;(setq org-hide-leading-stars t)
+  (setq org-startup-indented t)
 
   (global-set-key (kbd "C-c l") 'org-store-link)
   (global-set-key (kbd "C-c a") 'org-agenda)
@@ -247,7 +248,7 @@
     )
   (add-hook 'org-mode-hook #'gs-org-disable-evil-auto-indent)
 
-  (add-hook 'org-mode-hook 'turn-on-auto-fill)
+  (add-hook 'org-mode-hook 'visual-line-mode)
 
   ;; org-refile stuff
   (setq org-refile-targets (quote ((nil :maxlevel . 4)
@@ -256,7 +257,7 @@
   (setq org-outline-path-complete-in-steps nil)
 
   ;; org-capture stuff
-  (setq org-default-notes-file "~/notes/inbox.org")
+  (setq org-default-notes-file "~/notes/working.org")
   (setq org-capture-templates
         '(("t" "Todo [inbox]" entry
            (file+headline "~/notes/inbox.org" "Tasks")
@@ -264,39 +265,62 @@
           ("n" "Todo [inbox, no link]" entry
            (file+headline "~/notes/inbox.org" "Tasks")
            "* TODO %i%?\n")
-          ))
+	  ("m" "Meeting Note"
+           entry (file "~/notes/meetings.org")
+           "* %U %^{Meeting Name}
+:PROPERTIES:
+:END:
+
+** Notes
+- 
+
+** Action Items
+-
+
+")))
+
+  (setq org-agenda-files '("~/notes"))
 
   ;; task stuff
   (setq org-todo-keywords
-	'((sequence "TODO(t)" "PROJ(p)" "WAITING(w)" "|" "DONE(d)")
-	  (sequence "|" "DEFERRED(f)" "SOMEDAY(s)" "CANCELLED(c)")))
-
-  (setq org-todo-state-tags-triggers
-	'(("PROJ" ("PROJ" . t))
-	  ("TODO" ("PROJ" . nil))
-	  ("WAITING" ("PROJ" . nil))
-	  ("" ("PROJ" . nil))
-	  ))
+	'((sequence
+           "READY(r)" 
+           "WAIT(w)" 
+           "CLARIFY(c)" 
+           "DISCUSS(d)" 
+           "BACKBURNER(b)" 
+           "SCHEDULED(s)" 
+           "|" 
+           "DONE(x)" 
+           "CANCELLED(k)")))
+  (setq org-todo-keyword-faces
+	'(("READY"      . "red")
+          ("WAIT"       . "orange")
+          ("CLARIFY"    . "goldenrod")
+          ("DISCUSS"    . "deep sky blue")
+          ("BACKBURNER" . "gray")
+          ("SCHEDULED"  . "medium purple")
+          ("DONE"       . "forest green")
+          ("CANCELLED"  . "dim gray")))
+  ;;(setq org-agenda-prefix-format
+   ;; '((agenda . "%20c : %15T ")    ;; For calendar views
+    ;;      (todo . "%20c : %15T ")      ;; For custom TODO searches
+    ;;      (tags . "%20c : %15T ")))    ;; For tag-based views
+  (setq org-agenda-prefix-format
+	'((agenda . "%20c ")    ;; For calendar views
+          (todo . "%20c ")      ;; For custom TODO searches
+          (tags . "%20c ")))    ;; For tag-based views
+  (setq org-agenda-custom-commands
+	'(("d" "Status Dashboard"
+           ((todo "READY"      ((org-agenda-overriding-header "🟢 Ready to Work On")))
+            (todo "DISCUSS"    ((org-agenda-overriding-header "🗣️ Need to Discuss")))
+            (todo "WAIT"       ((org-agenda-overriding-header "🕒 Waiting on Someone Else")))
+            (todo "SCHEDULED"  ((org-agenda-overriding-header "📆 Scheduled Work")))
+            (todo "CLARIFY"    ((org-agenda-overriding-header "❓ Needs Clarification")))
+	    (todo "BACKBURNER" ((org-agenda-overriding-header "🧊 Backburner / Later")))
+            (todo "DONE"       ((org-agenda-overriding-header "✅ Completed / Archived")))))))
 
   ;; agenda stuff
-  (setq org-agenda-files '("~/notes"))
-
-  ;; For best use, need to do two things:
-  ;;  1. Add a "PROJ" tag to each PROJ todo (C-c C-q) (trying to
-  ;;     handle this automatically via org-todo-state-triggers)
-  ;;  2. Add a property CATEGORY to each PROJ todo (keep name short)
-  (setq org-agenda-custom-commands
-	'(("o" "Open Tasks"
-	   (
-	    (tags-todo "PROJ/TODO|NEXT" ((org-agenda-overriding-header "Projects")))
-	    (tags-todo "-PROJ/!TODO" ((org-agenda-overriding-header "Standalone")))
-	    (todo "WAITING" ((org-agenda-overriding-header "WAITING Tasks")))
-	    )
-	   ((org-agenda-compact-blocks t)))
-	  ("w" "WAITING Tasks"
-	   todo "WAITING" ((org-agenda-overriding-header "WAITING Tasks")))
-	  ("p" "Active Projects"
-	   todo "PROJ" ((org-agenda-overriding-header "Active Projects")))))
 
   (add-hook 'org-agenda-finalize-hook #'hl-line-mode)
 
@@ -316,6 +340,27 @@
   (require 'evil-org-agenda)
   (evil-org-agenda-set-keys))
 
+(use-package org-download
+  :straight t
+  :after org
+  :hook (org-mode-hook . org-download-enable)
+
+  :bind (:map org-mode-map
+              ("C-c s" . org-download-screenshot))
+  :custom
+  ;; from https://www.fredgruber.org/post/wsl_emacs_screenshot
+  (org-download-screenshot-method "powershell.exe -Command \"(Get-Clipboard -Format image).Save('$(wslpath -w %s)')\"")
+
+  :config
+  (setq org-download-image-dir "images"
+        org-download-heading-lvl nil
+	org-image-actual-width nil)
+  )
+
+  
+
+;;  :hook (org-mode-hook . org-download-enable)
+
 ;;
 ;; Lets try the vertico / consult / embark / orderless / marginalia stuff
 ;;
@@ -334,11 +379,18 @@
 (use-package embark
   :straight t
   :bind
-  (("C-c a" . embark-act)))
+  ;; need a shortcut for embark-act, since C-c a is overridden by my org config
+  ;;(("C-c a" . embark-act))
+  )
 
 (use-package embark-consult
-  ;; comes bundled with Embark; no `:ensure t' necessary
-  :after (embark consult))
+  :straight t
+  ;; need a shortcut for embark-act, since C-c a is overridden by my org config
+  ;;:bind
+  ;;(("C-." . embark-act)         ;; pick some comfortable binding
+  ;; ("C-;" . embark-dwim)        ;; good alternative: M-.
+  ;; ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+  )
 
 ;(use-package wgrep
 ;  :ensure t)
@@ -774,13 +826,28 @@
    TeX-auto-save t
    TeX-parse-self t
    TeX-error-overview-open-after-TeX-run t
+   TeX-command-default "LatexMk"
+   TeX-show-compilation t
+   TeX-scroll-to-output t
    ;; TeX-source-correlate-method 'synctex
    ;;TeX-source-correlate-mode t
    ;;TeX-source-correlate-start-server t
    )
   (setq-default TeX-master nil)
-  ; TeX-PDF-mode t
-  ; TeX-source-correlate-start-server t)
+					; TeX-PDF-mode t
+					; TeX-source-correlate-start-server t)
+
+  :hook ((LaTeX-mode-hook .
+			  (lambda ()
+			    (unless (assoc "LatexMk" TeX-command-list)
+			      
+			      (push '("LatexMk" "latexmk -pdf %s"
+				      TeX-run-TeX nil t
+				      :help "Run latexmk on file")
+				    TeX-command-list))))
+	 ('TeX-after-compilation-finished-functions . #'TeX-recenter-output-buffer)
+	 )
+  
   )
 
 ;; spellchecking
@@ -791,8 +858,8 @@
          (LaTeX-mode-hook . flyspell-buffer)       ; Optionally spellcheck the entire buffer
          (latex-mode-hook . flyspell-buffer))
   :config
-  (setq ispell-program-name "hunspell"
-	ispell-personal-dictionary "/home/becker/.hunspell_default"))
+  (setq ispell-program-name "hunspell")
+  )
 
 ;;
 ;; Julia stuff
@@ -942,3 +1009,21 @@ buffer (unless it's modified)."
 ;; )
 
 (put 'narrow-to-region 'disabled nil)
+
+;; org play
+
+
+;; (setq org-tags-match-list-sublevels t) ;; search subheadings too
+;; (setq org-agenda-prefix-format '((tags . "%-20c"))) ;; just show category
+;; (setq org-agenda-custom-commands
+;;      '(("d" "Dashboard"
+;;         ((tags "ready"
+;;                ((org-agenda-overriding-header "🟢 Ready to Work On")))
+;;          (tags "waiting"
+;;                ((org-agenda-overriding-header "🕒 Waiting on Someone Else")))
+;;          (tags "clarify"
+;;                ((org-agenda-overriding-header "❓ Needs Clarification")))
+;;          (tags "needs_discussion"
+;;                ((org-agenda-overriding-header "🗣️ Need to Discuss")))
+;;          (tags "done"
+;;                ((org-agenda-overriding-header "✅ Completed / Archived")))))))
