@@ -732,9 +732,20 @@
 	 ;; start the LSP server we need to force a load of
 	 ;; .dir-local.el and then force pyvenv to track the correct
 	 ;; virtual env.
+	 ;;
+	 ;; the idea here is that if the project has a .venv, we use
+	 ;; that. Otherwise we use .dir-locals.el
 	 (python-mode-hook . (lambda ()
-			       (hack-dir-local-variables-non-file-buffer)
-			       (pyvenv-track-virtualenv)
+			       ;; Prefer .venv in project root if it exists
+			       (let ((venv-path (expand-file-name ".venv" (project-root (project-current)))))
+				 (if (file-exists-p venv-path)
+				     (progn
+				      (pyvenv-activate venv-path)
+				      (message "Using .venv at: %s" venv-path))
+				   (progn
+				    (hack-dir-local-variables-non-file-buffer)
+				    (pyvenv-track-virtualenv)
+				    (message "Using .dir-locals.el at"))))
 			       (lsp)))
 ;         ;; if you want which-key integration
 ;         ;; (lsp-mode-hook . lsp-enable-which-key-integration)
