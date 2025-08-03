@@ -177,8 +177,22 @@
 
   ;; I prefer M-. to run xref-find-defintions in normal mode
   (define-key evil-normal-state-map (kbd "M-.") 'xref-find-definitions)
-  
+
   (evil-mode 1)
+
+  (unless (display-graphic-p)
+    (defun set-cursor-shape (shape)
+      (send-string-to-terminal (format "\e[%d q" shape)))
+    
+    (defun update-cursor-shape-based-on-evil-mode ()
+      (cond
+       ((evil-insert-state-p) (set-cursor-shape 6)) ; bar
+       ((evil-normal-state-p) (set-cursor-shape 2)) ; block
+       ((evil-replace-state-p) (set-cursor-shape 4)) ; underscore
+       (t (set-cursor-shape 2))))
+    
+    (add-hook 'post-command-hook #'update-cursor-shape-based-on-evil-mode))
+  
   )
 
 (use-package evil-surround
@@ -977,6 +991,8 @@ buffer (unless it's modified)."
 
 (cond ((string-match "817thzdev" system-name)
        (dtb/set-default-font "Inconsolata-12"))
+      ((string-match "68700JJONESLAP" system-name)
+       (dtb/set-default-font "Hack-11:autohint=true:hintstyle=hintfull:embeddedbitmap=false"))
       ((string-match "68708DBLAP" system-name)
        (dtb/set-default-font "Hack-10:autohint=true:hintstyle=hintfull:embeddedbitmap=false"))
       ((string-match "687db2-vm5" system-name)
