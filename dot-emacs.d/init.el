@@ -95,6 +95,10 @@
         modus-themes-bold-constructs t)
   (load-theme 'modus-operandi)
 
+  ;; From [1]; allows a python coding declaration in MASS to not lead to a warning in emacs
+  ;; [1]: https://stackoverflow.com/questions/14031724/how-to-make-emacs-accept-utf-8-uppercase-encoding
+  (define-coding-system-alias 'UTF-8 'utf-8)
+
   :hook (after-init-hook . column-number-mode)
   )
 
@@ -794,9 +798,20 @@
 	 ;; start the LSP server we need to force a load of
 	 ;; .dir-local.el and then force pyvenv to track the correct
 	 ;; virtual env.
+	 ;;
+	 ;; the idea here is that if the project has a .venv, we use
+	 ;; that. Otherwise we use .dir-locals.el
 	 (python-mode-hook . (lambda ()
-			       (hack-dir-local-variables-non-file-buffer)
-			       (pyvenv-track-virtualenv)
+			       ;; Prefer .venv in project root if it exists
+			       (let ((venv-path (expand-file-name ".venv" (project-root (project-current)))))
+				 (if (file-exists-p venv-path)
+				     (progn
+				      (pyvenv-activate venv-path)
+				      (message "Using .venv at: %s" venv-path))
+				   (progn
+				    (hack-dir-local-variables-non-file-buffer)
+				    (pyvenv-track-virtualenv)
+				    (message "Using .dir-locals.el at"))))
 			       (lsp)))
 ;         ;; if you want which-key integration
 ;         ;; (lsp-mode-hook . lsp-enable-which-key-integration)
