@@ -41,6 +41,9 @@ fi
 # turn off stupid bell?
 set term -blength 0
 
+# no blinking cursor for Windows Terminal
+echo -e '\e[2 q'
+
 # my prompt
 
 if [ "x$GIT_COMPLETION" == "xtrue" ]; then
@@ -139,8 +142,10 @@ vi () {
 }
 
 # export MPLCONFIGDIR=./matplotlib
-export PYTHONSTARTUP=.pythonrc
-alias ipython='QT_STYLE_OVERRIDE="" ipython --matplotlib'
+#export PYTHONSTARTUP=.pythonrc
+#alias ipython='QT_STYLE_OVERRIDE="" ipython --matplotlib'
+alias ipython='ipython --matplotlib'
+export QT_QPA_PLATFORM=xcb
 
 # deal with frogfly stuff
 alias frog='ssh -Y frogfly.org'
@@ -189,24 +194,37 @@ if [ `uname -n` == "817thzdev" ]; then
     source ~/.bashrc.817thzdev
 fi;
 
-#### added by Anaconda2 2.5.0 installer
-###export PATH="/home/beckerd/installs/anaconda2/bin:$PATH"
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/home/beckerd/installs/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/home/beckerd/installs/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/home/beckerd/installs/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/home/beckerd/installs/miniconda3/bin:$PATH"
-    fi
+# Enable fzf key bindings
+if [ -f /usr/share/doc/fzf/examples/key-bindings.bash ]; then
+  source /usr/share/doc/fzf/examples/key-bindings.bash
 fi
-unset __conda_setup
-# <<< conda initialize <<<
 
+# Enable fzf auto-completion
+if [ -f /usr/share/doc/fzf/examples/completion.bash ]; then
+  source /usr/share/doc/fzf/examples/completion.bash
+fi
 
-# Lets try fzf
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+# alias for easier ssh tunneling
+alias sl_minotaur='ssh -fN -L127.0.0.1:5901:127.0.0.1:5903 687minotaur'
+alias sl_pegasus='ssh -fN -L127.0.0.1:5902:127.0.0.1:5903 687pegasus'
+alias sl_kill="pkill -f 'ssh.*5901'"
+alias vnc_minotaur='xtightvncviewer :1'
+alias vnc_pegasus='xtightvncviewer :2'
+
+. "$HOME/.local/bin/env"
+
+### # >>> conda initialize >>>
+### # !! Contents within this block are managed by 'conda init' !!
+### __conda_setup="$('/home/beckerd/installs/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+### if [ $? -eq 0 ]; then
+###     eval "$__conda_setup"
+### 
+### else
+###     if [ -f "/home/beckerd/installs/miniconda3/etc/profile.d/conda.sh" ]; then
+###         . "/home/beckerd/installs/miniconda3/etc/profile.d/conda.sh"
+###     else
+###         export PATH="/home/beckerd/installs/miniconda3/bin:$PATH"
+###     fi
+### fi
+### unset __conda_setup
+### # <<< conda initialize <<<

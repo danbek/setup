@@ -86,3 +86,6 @@ PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 # https://www.funtoo.org/Funtoo:Keychain
 #
 eval `keychain --eval --agents ssh id_rsa`
+
+# For setting up uv
+. "$HOME/.local/bin/env"
