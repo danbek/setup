@@ -146,9 +146,7 @@ vi () {
 }
 
 # export MPLCONFIGDIR=./matplotlib
-#export PYTHONSTARTUP=.pythonrc
 #alias ipython='QT_STYLE_OVERRIDE="" ipython --matplotlib'
-alias ipython='ipython --matplotlib'
 export QT_QPA_PLATFORM=xcb
 
 # deal with frogfly stuff
@@ -177,9 +175,6 @@ fi;
 alias cdd='cd /cygdrive/e/beckerd/Documents/thz/data/cooldown40'
 alias ctc='cd ~/projects/thz-data-analysis/'
 alias cth='cd ~/projects/thesis/'
-
-export PYTHONSTARTUP=.pythonrc
-alias ipython='ipython --matplotlib'
 
 #set date on BBB
 alias bdate='ssh root@192.168.7.2 date -s "\"$(date)\""'

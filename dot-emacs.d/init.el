@@ -693,10 +693,12 @@
 ;; Python setup using lsp
 ;;
 ;; Here is what I've found works for getting lsp-mode working with
-;; mutliple virtual environments.
+;; mutliple virtual environments, using /both/ conda and uv. This
+;; works as-of Aug 205 in emacs 29.
 ;;
 ;; Each project that wants to run in it's own virtual environment
-;; needs a .dir-locals.el file. This contains code like the following:
+;; needs either a .venv, or a .dir-locals.el file. This file should
+;; contain code like:
 ;;
 ;;  ((python-mode
 ;;    (pyvenv-workon . "sledge9")))
@@ -717,23 +719,25 @@
 ;; or
 ;;
 ;; pip install python-lsp-server
+;;
+;;
+;; or add python-lsp-server, python-lsp-ruff, and ruff to the pyproject.toml file
 ;; 
 ;; If you start lsp from within a python buffer, it will start (and
 ;; connect to) the pyls for the current environment.
 ;;
+;; Once I'm ready to drop support for conda, I think this can be made simpler:
+;; - no WORKON_HOME hack
+;; - no code looking for appropriate .venv
+;;
  
 (use-package python
   :config
-  ;; This makes ipython the default for python-shell [1]. It seems to work.
-  ;; [1]: https://stackoverflow.com/a/25687205
+
   (setq
    python-shell-interpreter "ipython"
-   python-shell-interpreter-args "--colors=Linux --profile=default --simple-prompt"
-   python-shell-prompt-regexp "In \\[[0-9]+\\]: "
-   python-shell-prompt-output-regexp "Out\\[[0-9]+\\]: "
-   python-shell-completion-setup-code "from IPython.core.completerlib import module_completion"
-   python-shell-completion-module-string-code "';'.join(module_completion('''%s'''))\n"
-   python-shell-completion-string-code "';'.join(get_ipython().Completer.all_completions('''%s'''))\n")
+   python-shell-interpreter-args "-i --simple-prompt --matplotlib=qt"
+   )
 
   ;; one python shell (via C-c C-p) per project. 'buffer and nil
   ;; (i.e., one global shell) are also options
@@ -763,35 +767,32 @@
 
 (use-package lsp-mode
   :straight t
-  :config
+  :custom
+  (lsp-keymap-prefix "C-c l")
 
-  ;; Recommended by lsp-mode documentation
-  (setq read-process-output-max (* 1024 1024)) ;; 1mb
-  
+  ;; tell pylsp to drop dupes and let Ruff rule
+  (lsp-pylsp-plugins-ruff-enabled t)
+  (lsp-pylsp-plugins-pycodestyle-enabled nil)
+  (lsp-pylsp-plugins-mccabe-enabled nil)
+  (lsp-pylsp-plugins-pyflakes-enabled nil)
+  (lsp-pylsp-plugins-flake8-enabled nil)
+
+  :config
+  (setq read-process-output-max (* 1024 1024)
+        lsp-enable-snippet nil)
+
   (defun dtb/lsp-setup()
-    (setq lsp-idle-delay 0.5
+    (setq lsp-idle-delay 0.3
           lsp-enable-symbol-highlighting nil
           lsp-enable-snippet nil  ;; Not supported by company capf, which is the recommended company backend
-          lsp-pyls-plugins-flake8-enabled t
+	  lsp-ui-sideline-enable t
 	  lsp-ui-doc-enable nil
-	  )
-    (lsp-register-custom-settings
-     '(
-;       ("pyls.plugins.pyls_mypy.enabled" t t)
-;       ("pyls.plugins.pyls_mypy.live_mode" nil t)
-;       ("pyls.plugins.pyls_black.enabled" t t)
-;       ("pyls.plugins.pyls_isort.enabled" t t)
+	  ))
 
-       ;; Disable these as they're duplicated by flake8
-       ("pyls.plugins.pycodestyle.enabled" nil t)
-       ("pyls.plugins.mccabe.enabled" nil t)
-       ("pyls.plugins.pyflakes.enabled" nil t))))
-  
-  :init
-  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
-  (setq lsp-keymap-prefix "C-c l")
   :hook (
 	 (lsp-before-initialize-hook . dtb/lsp-setup)
+	 (python-mode-hook . lsp-deferred)
+
 	 ;; It appears that python-mode-hook will run *before* the
 	 ;; directory-local variables are loaded and the correct
 	 ;; virtual env is activated. So in order to automatically
@@ -816,7 +817,8 @@
 ;         ;; if you want which-key integration
 ;         ;; (lsp-mode-hook . lsp-enable-which-key-integration)
 	 )
-  :commands lsp)
+  )
+
 
 ;; To turn off the documentation part of this, I had to set
 ;; lsp-ui-doc-enable to nil in my dtb/lsp-setup function. It didn't
