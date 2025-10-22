@@ -670,6 +670,9 @@
 		 ("dired" (mode . dired-mode))
 		 ("python-shells" (mode . inferior-python-mode))
 		 ("python" (mode . python-mode))
+		 ("julia" (mode . julia-mode))
+		 ("julia-shells" (or (mode . term)
+				     (name . "*julia*")))
 		 ("special" (or (name . "*")
 				(name . "^magit-process:")))
 		 ))))
@@ -799,6 +802,7 @@
   :hook (
 	 (lsp-before-initialize-hook . dtb/lsp-setup)
 	 (python-mode-hook . lsp-deferred)
+	 (rust-mode-hook . lsp-deferred)
 
 	 ;; It appears that python-mode-hook will run *before* the
 	 ;; directory-local variables are loaded and the correct
@@ -854,6 +858,19 @@
 ;; (use-package which-key
 ;;     :config
 ;;     (which-key-mode))
+
+(use-package smartparens
+  :straight t
+  :hook
+  (rust-mode-hook . smartparens-mode)
+  )
+
+;; rust
+
+(use-package rust-mode
+  :straight t
+  :config
+  )
 
 ;; Latex
 (use-package auctex
@@ -912,7 +929,17 @@
   :straight t
   :after julia-mode
   :init
+  (add-hook 'julia-mode-hook 'julia-repl-mode)
+
+  ;; use keybindings I am used to from python
+  :bind
+  (:map julia-repl-mode-map
+	("C-c C-c" . julia-repl-send-buffer)
+	("C-c C-p" . julia-repl)
+	("C-c C-r" . julia-repl-send-region-or-line)
+  
   )
+)
 
 
 ;;
