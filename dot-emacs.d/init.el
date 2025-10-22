@@ -236,7 +236,14 @@
 (use-package magit
   :straight t
   :config
-  ;; More configuration goes here
+  (with-eval-after-load 'git-commit
+    (setq git-commit-summary-max-length 50)
+    (add-hook 'git-commit-setup-hook
+              (lambda ()
+                (setq-local fill-column 72)                  ; wrap body at 72
+                (auto-fill-mode 1)
+                (setq-local display-fill-column-indicator-column 72)
+                (display-fill-column-indicator-mode 1))))
   )
 
 ;; (use-package deft
