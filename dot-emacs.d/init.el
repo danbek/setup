@@ -95,6 +95,13 @@
         modus-themes-bold-constructs t)
   (load-theme 'modus-operandi)
 
+  ;; lines numbers mostly everywhere
+  (global-display-line-numbers-mode 1)
+  (dolist (mode '(org-mode-hook
+		  term-mode-hook
+		  eshell-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
   ;; From [1]; allows a python coding declaration in MASS to not lead to a warning in emacs
   ;; [1]: https://stackoverflow.com/questions/14031724/how-to-make-emacs-accept-utf-8-uppercase-encoding
   (define-coding-system-alias 'UTF-8 'utf-8)
@@ -742,13 +749,6 @@
   ;; one python shell (via C-c C-p) per project. 'buffer and nil
   ;; (i.e., one global shell) are also options
   (setq python-shell-dedicated 'project)
-
-  :hook (
-	 (python-mode-hook . (lambda ()
-			       (if (>= emacs-major-version 29)
-				   (display-line-numbers-mode)
-				 (linum-mode t))))
-	 )
   )
 
 (use-package pyvenv
