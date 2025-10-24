@@ -95,11 +95,17 @@
         modus-themes-bold-constructs t)
   (load-theme 'modus-operandi)
 
+  ;; don't pop up the `*Warnings*` buffer
+  (add-to-list 'display-buffer-alist
+               '("\\*Warnings\\*"
+		 (display-buffer-no-window)))
+
   ;; lines numbers mostly everywhere
   (global-display-line-numbers-mode 1)
   (dolist (mode '(org-mode-hook
 		  term-mode-hook
-		  eshell-mode-hook))
+		  eshell-mode-hook
+		  inferior-python-mode-hook))
     (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
   ;; From [1]; allows a python coding declaration in MASS to not lead to a warning in emacs
@@ -222,7 +228,7 @@
   :straight t
   :after (evil magit)
   :config
-  (setq evil-collection-mode-list '(dired ibuffer replace eshell term magit info help))
+  (setq evil-collection-mode-list '(dired grep ibuffer replace eshell term magit info help))
   (evil-collection-init)
 )
 
@@ -309,7 +315,8 @@
 ** Action Items
 -
 
-")))
+"
+	   )))
 
   (setq org-agenda-files '("~/notes"))
 
@@ -754,6 +761,7 @@
   (setq
    python-shell-interpreter "ipython"
    python-shell-interpreter-args "-i --simple-prompt --matplotlib=qt"
+   python-shell-completion-native-enable nil  ;; use emacs-based completion, not ipython's
    )
 
   ;; one python shell (via C-c C-p) per project. 'buffer and nil
