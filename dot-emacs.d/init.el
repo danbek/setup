@@ -95,10 +95,8 @@
         modus-themes-bold-constructs t)
   (load-theme 'modus-operandi)
 
-  ;; don't pop up the `*Warnings*` buffer
-  (add-to-list 'display-buffer-alist
-               '("\\*Warnings\\*"
-		 (display-buffer-no-window)))
+  ;; These warnings were really annoying; turn them off
+  (setq native-comp-async-report-warnings-errors nil)
 
   ;; lines numbers mostly everywhere
   (global-display-line-numbers-mode 1)
@@ -111,6 +109,11 @@
   ;; From [1]; allows a python coding declaration in MASS to not lead to a warning in emacs
   ;; [1]: https://stackoverflow.com/questions/14031724/how-to-make-emacs-accept-utf-8-uppercase-encoding
   (define-coding-system-alias 'UTF-8 'utf-8)
+
+  ;; On recent WSL installations, needed to do this to get Info working
+  (setq Info-directory-list
+	(delete "" Info-directory-list))  ;; remove empty entry
+  (add-to-list 'Info-directory-list "/usr/share/info")
 
   :hook (after-init-hook . column-number-mode)
   )
@@ -1048,10 +1051,19 @@ buffer (unless it's modified)."
   (set-face-attribute 'default     nil :font font-name)
   )
 
+(defun dtb/set-default-font-2 (family height)
+  (set-face-attribute 'fixed-pitch nil :family family :height height)
+  (set-face-attribute 'default     nil :family family :height height)
+  )
+
 (cond ((string-match "817thzdev" system-name)
        (dtb/set-default-font "Inconsolata-12"))
       ((string-match "68700JJONESLAP" system-name)
        (dtb/set-default-font "Hack-11:autohint=true:hintstyle=hintfull:embeddedbitmap=false"))
+      ((string-match "DESKTOP-27GNTA6" system-name)
+       (dtb/set-default-font-2 "Iosevka" 130)
+       ;; (dtb/set-default-font-2 "Hack" 130)
+       )
       ((string-match "68708DBLAP" system-name)
        (dtb/set-default-font "Hack-10:autohint=true:hintstyle=hintfull:embeddedbitmap=false"))
       ((string-match "687db2-vm5" system-name)
