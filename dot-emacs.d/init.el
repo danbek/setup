@@ -69,6 +69,8 @@
   (setq display-time-day-and-date t) (display-time)
 
   (setq tramp-default-method "ssh")
+
+  (recentf-mode 1)
   
   ;; Follow symlinks without prompting. If this isn't done, then you will
   ;; get a prompt every time you edit, e.g., .profile
@@ -269,6 +271,16 @@
 ;; 	  (case-fn . downcase)))
 ;;   )
 
+(use-package majutsu
+  :straight (:host github :repo "0WD0/majutsu")
+  :after evil
+  :bind ("C-x j" . majutsu)
+  :config 
+  (require 'majutsu-evil)
+  (evil-define-key '(normal visual motion) majutsu-mode-map
+    (kbd "q") #'majutsu-mode-bury-buffer
+    (kbd "TAB") #'magit-section-toggle
+    (kbd "<tab>") #'magit-section-toggle))
 
 (use-package org
   :straight t
@@ -366,6 +378,13 @@
 
   (add-hook 'org-agenda-finalize-hook #'hl-line-mode)
 
+  ;; org-babal
+  
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   
+   '((python . t)))
+
   ;;(use-package org-bullets
   ;;  :config
   ;;  (add-hook 'org-mode-hook (lambda () (org-bullets-mode t))))
@@ -391,7 +410,7 @@
               ("C-c s" . org-download-screenshot))
   :custom
   ;; from https://www.fredgruber.org/post/wsl_emacs_screenshot
-  (org-download-screenshot-method "powershell.exe -Command \"(Get-Clipboard -Format image).Save('$(wslpath -w %s)')\"")
+  (org-download-screenshot-method "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Command \"(Get-Clipboard -Format image).Save('$(wslpath -w %s)')\"")
 
   :config
   (setq org-download-image-dir "images"
@@ -1059,9 +1078,9 @@ buffer (unless it's modified)."
 (cond ((string-match "817thzdev" system-name)
        (dtb/set-default-font "Inconsolata-12"))
       ((string-match "68700JJONESLAP" system-name)
-       (dtb/set-default-font "Hack-11:autohint=true:hintstyle=hintfull:embeddedbitmap=false"))
+       (dtb/set-default-font "Hack-10.5:autohint=true:hintstyle=hintfull:embeddedbitmap=false"))
       ((string-match "DESKTOP-27GNTA6" system-name)
-       (dtb/set-default-font-2 "Iosevka" 130)
+       (dtb/set-default-font-2 "Iosevka" 105)
        ;; (dtb/set-default-font-2 "Hack" 130)
        )
       ((string-match "68708DBLAP" system-name)
